@@ -32,9 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Movie> movies;
     private MovieAdapter movieAdapter;
-    private MovieApiService movieApiService;
     private MovieApiClient client;
-    private Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<MovieResults> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "Error fetching movies", Toast.LENGTH_SHORT).show();
+
                 progressBar.setVisibility(View.GONE);
             }
         });
