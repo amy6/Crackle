@@ -16,11 +16,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+import static example.com.crackle.Constants.IMAGE_URL_SIZE;
 
-    private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
-    private static final String IMAGE_SIZE = "w500/";
-    private static final String IMAGE_URL_SIZE = IMAGE_BASE_URL+IMAGE_SIZE;
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private Context context;
     private List<Movie> movies;
@@ -52,7 +50,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.imageview)
+        @BindView(R.id.poster_image)
         ImageView imageView;
 
         MovieViewHolder(View itemView) {
