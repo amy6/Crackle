@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         movies = new ArrayList<>();
 
-        movieAdapter = new MovieAdapter(movies);
+        movieAdapter = new MovieAdapter(this, movies);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setItemAnimator(new DefaultItemAnimator());

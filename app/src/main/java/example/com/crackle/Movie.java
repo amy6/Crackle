@@ -1,8 +1,11 @@
 package example.com.crackle;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Movie {
+public class Movie implements Parcelable{
 
     @SerializedName("poster_path")
     private String imageUrl;
@@ -24,6 +27,15 @@ public class Movie {
         this.plot = plot;
         this.userRating = userRating;
         this.releaseDate = releaseDate;
+    }
+
+    public Movie(Parcel source) {
+        imageUrl = source.readString();
+        backdropImageUrl = source.readString();
+        title = source.readString();
+        plot = source.readString();
+        userRating = source.readDouble();
+        releaseDate = source.readString();
     }
 
     public String getImageUrl() {
@@ -49,4 +61,31 @@ public class Movie {
     public String getReleaseDate() {
         return releaseDate;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(imageUrl);
+        dest.writeString(backdropImageUrl);
+        dest.writeString(title);
+        dest.writeString(plot);
+        dest.writeDouble(userRating);
+        dest.writeString(releaseDate);
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel source) {
+            return new Movie(source);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }

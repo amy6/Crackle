@@ -1,5 +1,6 @@
 package example.com.crackle;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -21,23 +22,25 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private static final String IMAGE_SIZE = "w500/";
     private static final String IMAGE_URL_SIZE = IMAGE_BASE_URL+IMAGE_SIZE;
 
+    private Context context;
     private List<Movie> movies;
 
-    public MovieAdapter(List<Movie> movies) {
+    public MovieAdapter(Context context, List<Movie> movies) {
+        this.context = context;
         this.movies = movies;
     }
 
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MovieViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_movie_item, parent, false));
+        return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_movie_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         Movie movie = movies.get(position);
         String imageUrl = IMAGE_URL_SIZE.concat(movie.getImageUrl());
-        Glide.with(holder.itemView)
+        Glide.with(context)
                 .load(imageUrl)
                 .into(holder.imageView);
     }
@@ -60,7 +63,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(v.getContext(), MovieDetailsActivity.class);
+            Movie movie = movies.get(getAdapterPosition());
+            Intent intent = new Intent(context, MovieDetailsActivity.class);
+            intent.putExtra(Intent.EXTRA_TEXT, movie);
             v.getContext().startActivity(intent);
         }
     }
