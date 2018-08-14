@@ -16,6 +16,10 @@ import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
+    private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
+    private static final String IMAGE_SIZE = "w500/";
+    private static final String IMAGE_URL_SIZE = IMAGE_BASE_URL+IMAGE_SIZE;
+
     private List<Movie> movies;
 
     public MovieAdapter(List<Movie> movies) {
@@ -31,8 +35,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         Movie movie = movies.get(position);
+        String imageUrl = IMAGE_URL_SIZE.concat(movie.getImageUrl());
         Glide.with(holder.itemView)
-                .load(movie.getImageUrl())
+                .load(imageUrl)
                 .into(holder.imageView);
     }
 
