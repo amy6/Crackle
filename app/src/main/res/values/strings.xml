@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Crackle</string>
     <string name="no_description_available">No description available</string>
+    <string name="plot_label">Plot</string>
 </resources>
