@@ -2,4 +2,7 @@
     <string name="app_name">Crackle</string>
     <string name="no_description_available">No description available</string>
     <string name="plot_label">Plot</string>
+    <string name="action_sort">Sort</string>
+    <string name="sort_popular">Popular</string>
+    <string name="sort_top_rated">Top Rated</string>
 </resources>

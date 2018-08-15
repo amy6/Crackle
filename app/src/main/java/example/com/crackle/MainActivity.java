@@ -1,13 +1,13 @@
 package example.com.crackle;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Movie> movies;
     private MovieAdapter movieAdapter;
     private MovieApiClient client;
+    private Call<MovieResults> call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,50 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(movieAdapter);
 
         client = MovieApiService.getClient().create(MovieApiClient.class);
-        Call<MovieResults> call = client.getPopularMovies(API_KEY);
+        getPopularMovies();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.sort_popular);
+        item.setChecked(true);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sort_popular:
+                if (item.isChecked()) {
+                    return false;
+                } else {
+                    item.setChecked(true);
+                    movies.clear();
+                    movieAdapter.notifyDataSetChanged();
+                    //api call to fetch and display popular movies
+                    getPopularMovies();
+                }
+                break;
+            case R.id.sort_top_rated:
+                if (item.isChecked()) {
+                    return false;
+                } else {
+                    item.setChecked(true);
+                    movies.clear();
+                    movieAdapter.notifyDataSetChanged();
+                    //api call to fetch and display top rated movies
+                    getTopRatedMovies();
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void getPopularMovies() {
+        call = client.getPopularMovies(API_KEY);
         call.enqueue(new Callback<MovieResults>() {
             @Override
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
@@ -64,12 +107,31 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<MovieResults> call, Throwable t) {
+            public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
                 Toast.makeText(MainActivity.this, "Error fetching movies", Toast.LENGTH_SHORT).show();
 
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
 
+    private void getTopRatedMovies() {
+        call = client.getTopRatedMovies(API_KEY);
+        call.enqueue(new Callback<MovieResults>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
+                movies.addAll(response.body().getMovies());
+                movieAdapter.notifyDataSetChanged();
+
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
+                Toast.makeText(MainActivity.this, "Error fetching movies", Toast.LENGTH_SHORT).show();
+
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 }
