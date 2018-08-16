@@ -5,6 +5,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,11 +31,11 @@ import retrofit2.Response;
 
 import static example.com.crackle.Constants.API_KEY;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    @BindView(R.id.recyclerview)
+    @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    @BindView(R.id.progressbar)
+    @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.errorLayout)
     ConstraintLayout errorLayout;
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     TextView errorText;
     @BindView(R.id.errorButton)
     Button errorButton;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout refreshLayout;
 
     private List<Movie> movies;
     private MovieAdapter movieAdapter;
@@ -75,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(movieAdapter);
+
+        refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
+        refreshLayout.setOnRefreshListener(this);
 
         client = MovieApiService.getClient().create(MovieApiClient.class);
         getPopularMovies();
@@ -127,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
                 movies.addAll(response.body().getMovies());
                 movieAdapter.notifyDataSetChanged();
 
+                refreshLayout.setRefreshing(false);
+
                 errorLayout.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
             }
@@ -134,7 +143,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
                 Toast.makeText(MainActivity.this, "Error fetching movies", Toast.LENGTH_SHORT).show();
-                
+
+                refreshLayout.setRefreshing(false);
+
                 errorLayout.setVisibility(View.VISIBLE);
                 updateEmptyStateViews(0, R.string.no_search_results, R.drawable.ic_error_outline, R.string.error_no_results);
                 progressBar.setVisibility(View.GONE);
@@ -151,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
                 movies.addAll(response.body().getMovies());
                 movieAdapter.notifyDataSetChanged();
 
+                refreshLayout.setRefreshing(false);
+
                 errorLayout.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
             }
@@ -158,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
                 Toast.makeText(MainActivity.this, "Error fetching movies", Toast.LENGTH_SHORT).show();
+
+                refreshLayout.setRefreshing(false);
 
                 errorLayout.setVisibility(View.VISIBLE);
                 updateEmptyStateViews(0, R.string.no_search_results, R.drawable.ic_error_outline, R.string.error_no_results);
@@ -171,5 +186,13 @@ public class MainActivity extends AppCompatActivity {
         this.errorText.setText(errorText);
         this.errorText.setCompoundDrawablesWithIntrinsicBounds(0, errorTextDrawable, 0, 0);
         errorButton.setText(errorButtonText);
+    }
+
+    @Override
+    public void onRefresh() {
+        movies.clear();
+        movieAdapter.notifyDataSetChanged();
+
+        getPopularMovies();
     }
 }
