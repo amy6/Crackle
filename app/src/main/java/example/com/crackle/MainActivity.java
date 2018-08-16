@@ -1,7 +1,10 @@
 package example.com.crackle;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,7 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,14 +27,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+import static example.com.crackle.Constants.API_KEY;
 
-    public static final String API_KEY = BuildConfig.TMDB_API_KEY;
+public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
     @BindView(R.id.progressbar)
     ProgressBar progressBar;
+    @BindView(R.id.errorLayout)
+    ConstraintLayout errorLayout;
+    @BindView(R.id.errorImage)
+    ImageView errorImage;
+    @BindView(R.id.errorText)
+    TextView errorText;
+    @BindView(R.id.errorButton)
+    Button errorButton;
 
     private List<Movie> movies;
     private MovieAdapter movieAdapter;
@@ -42,6 +56,16 @@ public class MainActivity extends AppCompatActivity {
 
         //resolve references to view
         ButterKnife.bind(this);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = networkInfo != null && networkInfo.isConnectedOrConnecting();
+        if (!isConnected) {
+            progressBar.setVisibility(View.GONE);
+            errorLayout.setVisibility(View.VISIBLE);
+            updateEmptyStateViews(0, R.string.no_internet_connection, R.drawable.ic_cloud_off, R.string.error_try_again);
+            return;
+        }
 
         movies = new ArrayList<>();
 
@@ -103,17 +127,21 @@ public class MainActivity extends AppCompatActivity {
                 movies.addAll(response.body().getMovies());
                 movieAdapter.notifyDataSetChanged();
 
+                errorLayout.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
                 Toast.makeText(MainActivity.this, "Error fetching movies", Toast.LENGTH_SHORT).show();
-
+                
+                errorLayout.setVisibility(View.VISIBLE);
+                updateEmptyStateViews(0, R.string.no_search_results, R.drawable.ic_error_outline, R.string.error_no_results);
                 progressBar.setVisibility(View.GONE);
             }
         });
     }
+
 
     private void getTopRatedMovies() {
         call = client.getTopRatedMovies(API_KEY);
@@ -123,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 movies.addAll(response.body().getMovies());
                 movieAdapter.notifyDataSetChanged();
 
+                errorLayout.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -130,8 +159,17 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
                 Toast.makeText(MainActivity.this, "Error fetching movies", Toast.LENGTH_SHORT).show();
 
+                errorLayout.setVisibility(View.VISIBLE);
+                updateEmptyStateViews(0, R.string.no_search_results, R.drawable.ic_error_outline, R.string.error_no_results);
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void updateEmptyStateViews(int errorImage, int errorText, int errorTextDrawable, int errorButtonText) {
+        this.errorImage.setImageResource(errorImage);
+        this.errorText.setText(errorText);
+        this.errorText.setCompoundDrawablesWithIntrinsicBounds(0, errorTextDrawable, 0, 0);
+        errorButton.setText(errorButtonText);
     }
 }

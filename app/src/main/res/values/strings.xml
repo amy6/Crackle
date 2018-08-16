@@ -2,7 +2,14 @@
     <string name="app_name">Crackle</string>
     <string name="no_description_available">No description available</string>
     <string name="plot_label">Plot</string>
+
     <string name="action_sort">Sort</string>
     <string name="sort_popular">Popular</string>
     <string name="sort_top_rated">Top Rated</string>
+
+    <string name="no_internet_connection">Uh oh! Your network is unavailable. Please check your data or wifi connection.</string>
+    <string name="no_search_results">Sorry! No results found. Please try again after sometime.</string>
+
+    <string name="error_try_again">Try Again</string>
+    <string name="error_no_results">Okay, Thanks</string>
 </resources>

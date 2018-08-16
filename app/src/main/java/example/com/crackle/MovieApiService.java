@@ -5,9 +5,9 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MovieApiService {
+import static example.com.crackle.Constants.BASE_URL;
 
-    private static final String BASE_URL = "https://api.themoviedb.org/3/";
+public class MovieApiService {
 
     private static Retrofit retrofit;
 
