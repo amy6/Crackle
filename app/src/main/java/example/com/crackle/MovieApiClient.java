@@ -9,8 +9,8 @@ import retrofit2.http.Query;
 public interface MovieApiClient {
 
     @GET("movie/popular")
-    Call<MovieResults> getPopularMovies (@Query("api_key") String apiKey);
+    Call<MovieResults> getPopularMovies (@Query("api_key") String apiKey, @Query("page") int page);
 
     @GET("movie/top_rated")
-    Call<MovieResults> getTopRatedMovies (@Query("api_key") String apiKey);
+    Call<MovieResults> getTopRatedMovies (@Query("api_key") String apiKey, @Query("page") int page);
 }

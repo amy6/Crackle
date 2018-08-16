@@ -4,7 +4,7 @@
     <string name="plot_label">Plot</string>
 
     <string name="action_sort">Sort</string>
-    <string name="sort_popular">Popular</string>
+    <string name="sort_most_popular">Most Popular</string>
     <string name="sort_top_rated">Top Rated</string>
 
     <string name="no_internet_connection">Uh oh! Your network is unavailable. Please check your data or wifi connection.</string>

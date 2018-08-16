@@ -31,7 +31,7 @@ import retrofit2.Response;
 
 import static example.com.crackle.Constants.API_KEY;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -53,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private MovieApiClient client;
     private Call<MovieResults> call;
 
+    private int mostPopularMoviesStartPage = 1;
+    private int topRatedMoviesStartPage = 1;
+    private MenuItem mostPopularMenuItem;
+    private MenuItem topRatedMenuItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +66,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //resolve references to view
         ButterKnife.bind(this);
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        boolean isConnected = networkInfo != null && networkInfo.isConnectedOrConnecting();
-        if (!isConnected) {
+        if (!Utils.checkInternetConnection(this)) {
             progressBar.setVisibility(View.GONE);
             errorLayout.setVisibility(View.VISIBLE);
             updateEmptyStateViews(0, R.string.no_internet_connection, R.drawable.ic_cloud_off, R.string.error_try_again);
@@ -73,12 +75,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         movies = new ArrayList<>();
 
-        movieAdapter = new MovieAdapter(this, movies);
+
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
+
+        movieAdapter = new MovieAdapter(this, movies, recyclerView);
         recyclerView.setAdapter(movieAdapter);
+        movieAdapter.setOnLoadMoreListener(this);
 
         refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
         refreshLayout.setOnRefreshListener(this);
@@ -91,8 +96,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
-        MenuItem item = menu.findItem(R.id.sort_popular);
-        item.setChecked(true);
+        mostPopularMenuItem = menu.findItem(R.id.sort_most_popular);
+        topRatedMenuItem = menu.findItem(R.id.sort_top_rated);
+
+        //default option to be checked
+        mostPopularMenuItem.setChecked(true);
 
         return true;
     }
@@ -100,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.sort_popular:
+            case R.id.sort_most_popular:
                 if (item.isChecked()) {
                     return false;
                 } else {
@@ -127,10 +135,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void getPopularMovies() {
-        call = client.getPopularMovies(API_KEY);
+        call = client.getPopularMovies(API_KEY, mostPopularMoviesStartPage);
         call.enqueue(new Callback<MovieResults>() {
             @Override
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
+                if (mostPopularMoviesStartPage > 1) {
+                    movieAdapter.removeLoader(null);
+                }
                 movies.addAll(response.body().getMovies());
                 movieAdapter.notifyDataSetChanged();
 
@@ -138,12 +149,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                 errorLayout.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
+
+                movieAdapter.setLoading(false);
+                mostPopularMoviesStartPage++;
+                refreshLayout.setEnabled(true);
+
+                movieAdapter.setOnLoadMoreListener(MainActivity.this);
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
-                Toast.makeText(MainActivity.this, "Error fetching movies", Toast.LENGTH_SHORT).show();
-
                 refreshLayout.setRefreshing(false);
 
                 errorLayout.setVisibility(View.VISIBLE);
@@ -155,10 +170,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
     private void getTopRatedMovies() {
-        call = client.getTopRatedMovies(API_KEY);
+        call = client.getTopRatedMovies(API_KEY, topRatedMoviesStartPage);
         call.enqueue(new Callback<MovieResults>() {
             @Override
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
+                if (topRatedMoviesStartPage > 1) {
+                    movieAdapter.removeLoader(null);
+                }
+
                 movies.addAll(response.body().getMovies());
                 movieAdapter.notifyDataSetChanged();
 
@@ -166,12 +185,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                 errorLayout.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
+
+                movieAdapter.setLoading(false);
+                topRatedMoviesStartPage++;
+                refreshLayout.setEnabled(true);
+
+                movieAdapter.setOnLoadMoreListener(MainActivity.this);
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
-                Toast.makeText(MainActivity.this, "Error fetching movies", Toast.LENGTH_SHORT).show();
-
                 refreshLayout.setRefreshing(false);
 
                 errorLayout.setVisibility(View.VISIBLE);
@@ -190,9 +213,34 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+
+        movieAdapter.setOnLoadMoreListener(null);
+        movieAdapter.setLoading(false);
+
+        mostPopularMoviesStartPage = 1;
+        topRatedMoviesStartPage = 1;
+
         movies.clear();
         movieAdapter.notifyDataSetChanged();
 
-        getPopularMovies();
+        if (mostPopularMenuItem.isChecked()) {
+            getPopularMovies();
+        } else {
+            getTopRatedMovies();
+        }
+    }
+
+    @Override
+    public void onLoadMore() {
+        //handle pagination
+
+        refreshLayout.setEnabled(false);
+        movieAdapter.addLoader(null);
+
+        if (mostPopularMenuItem.isChecked()) {
+            getPopularMovies();
+        } else {
+            getTopRatedMovies();
+        }
     }
 }

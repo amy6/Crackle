@@ -15,8 +15,8 @@
                 android:checkableBehavior="single">
 
                 <item
-                    android:id="@+id/sort_popular"
-                    android:title="@string/sort_popular"
+                    android:id="@+id/sort_most_popular"
+                    android:title="@string/sort_most_popular"
                     app:showAsAction="never"/>
 
                 <item
