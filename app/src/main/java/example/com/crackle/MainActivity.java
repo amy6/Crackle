@@ -1,7 +1,5 @@
 package example.com.crackle;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -18,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +52,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private int mostPopularMoviesStartPage = 1;
     private int topRatedMoviesStartPage = 1;
+
     private MenuItem mostPopularMenuItem;
-    private MenuItem topRatedMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
         movies = new ArrayList<>();
-
 
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -97,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
         mostPopularMenuItem = menu.findItem(R.id.sort_most_popular);
-        topRatedMenuItem = menu.findItem(R.id.sort_top_rated);
 
         //default option to be checked
         mostPopularMenuItem.setChecked(true);
@@ -115,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     item.setChecked(true);
                     movies.clear();
                     movieAdapter.notifyDataSetChanged();
+                    mostPopularMoviesStartPage = 1;
                     //api call to fetch and display popular movies
                     getPopularMovies();
                 }
@@ -126,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     item.setChecked(true);
                     movies.clear();
                     movieAdapter.notifyDataSetChanged();
+                    topRatedMoviesStartPage = 1;
                     //api call to fetch and display top rated movies
                     getTopRatedMovies();
                 }
@@ -139,9 +136,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         call.enqueue(new Callback<MovieResults>() {
             @Override
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
-                if (mostPopularMoviesStartPage > 1) {
-                    movieAdapter.removeLoader(null);
-                }
+                movieAdapter.removeLoader(null);
+
                 movies.addAll(response.body().getMovies());
                 movieAdapter.notifyDataSetChanged();
 
@@ -174,9 +170,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         call.enqueue(new Callback<MovieResults>() {
             @Override
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
-                if (topRatedMoviesStartPage > 1) {
-                    movieAdapter.removeLoader(null);
-                }
+                movieAdapter.removeLoader(null);
 
                 movies.addAll(response.body().getMovies());
                 movieAdapter.notifyDataSetChanged();
