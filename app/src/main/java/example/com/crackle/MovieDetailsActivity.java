@@ -1,6 +1,8 @@
 package example.com.crackle;
 
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -20,12 +22,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
     ImageView posterImage;
     @BindView(R.id.title)
     TextView title;
-    @BindView(R.id.plot)
-    TextView plot;
-    @BindView(R.id.release_date)
-    TextView date;
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
+    @BindView(R.id.viewPager)
+    ViewPager viewPager;
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         .load(IMAGE_URL_SIZE.concat(movie.getImageUrl()))
                         .into(posterImage);
                 ratingBar.setRating((float) movie.getUserRating());
-                date.setText(movie.getReleaseDate());
-                plot.setText(movie.getPlot());
             }
         }
+
+        viewPager.setAdapter(new MovieFragmentPagerAdapter(getSupportFragmentManager()));
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

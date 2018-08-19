@@ -12,4 +12,7 @@
 
     <string name="error_try_again">Try Again</string>
     <string name="error_no_results">Okay, Thanks</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
