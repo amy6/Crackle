@@ -5,8 +5,10 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Movie implements Parcelable{
+public class Movie implements Parcelable {
 
+    @SerializedName("id")
+    private int movieId;
     @SerializedName("poster_path")
     private String imageUrl;
     @SerializedName("backdrop_path")
@@ -20,7 +22,8 @@ public class Movie implements Parcelable{
     @SerializedName("release_date")
     private String releaseDate;
 
-    public Movie(String imageUrl, String backdropImageUrl, String title, String plot, double userRating, String releaseDate) {
+    public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double userRating, String releaseDate) {
+        this.movieId = movieId;
         this.imageUrl = imageUrl;
         this.backdropImageUrl = backdropImageUrl;
         this.title = title;
@@ -30,12 +33,17 @@ public class Movie implements Parcelable{
     }
 
     public Movie(Parcel source) {
+        movieId = source.readInt();
         imageUrl = source.readString();
         backdropImageUrl = source.readString();
         title = source.readString();
         plot = source.readString();
         userRating = source.readDouble();
         releaseDate = source.readString();
+    }
+
+    public int getMovieId() {
+        return movieId;
     }
 
     public String getImageUrl() {
@@ -69,6 +77,7 @@ public class Movie implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(movieId);
         dest.writeString(imageUrl);
         dest.writeString(backdropImageUrl);
         dest.writeString(title);
