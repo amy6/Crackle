@@ -8,20 +8,22 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class MovieFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private static final String[] TAB_TITLES = {"INFO", "CAST", "REVIEWS"};
+    private Movie movie;
 
-    public MovieFragmentPagerAdapter(FragmentManager fm) {
+    public MovieFragmentPagerAdapter(FragmentManager fm, Movie movie) {
         super(fm);
+        this.movie = movie;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MovieInfoFragment.newInstance();
+                return MovieInfoFragment.newInstance(movie);
             case 1:
-                return MovieCastFragment.newInstance();
+                return MovieCastFragment.newInstance(movie);
             case 2:
-                return MovieReviewsFragment.newInstance();
+                return MovieReviewsFragment.newInstance(movie);
         }
         return null;
     }

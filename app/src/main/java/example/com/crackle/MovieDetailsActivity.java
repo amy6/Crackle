@@ -28,6 +28,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     ViewPager viewPager;
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
+    private Movie movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
-                Movie movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+                movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
                 setTitle(movie.getTitle());
 
                 title.setText(movie.getTitle());
@@ -54,7 +55,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         }
 
-        viewPager.setAdapter(new MovieFragmentPagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(new MovieFragmentPagerAdapter(getSupportFragmentManager(), movie));
         tabLayout.setupWithViewPager(viewPager);
     }
 

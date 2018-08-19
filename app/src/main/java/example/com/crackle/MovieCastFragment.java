@@ -26,7 +26,7 @@ public class MovieCastFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_movie_cast, container, false);
     }
 
-    public static Fragment newInstance() {
+    public static Fragment newInstance(Movie movie) {
         MovieCastFragment fragment = new MovieCastFragment();
         return fragment;
     }
