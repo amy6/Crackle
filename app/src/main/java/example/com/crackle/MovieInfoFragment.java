@@ -11,14 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static example.com.crackle.Constants.MOVIE;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MovieInfoFragment extends Fragment {
 
-    public static final String MOVIE = "MOVIE";
-    private TextView plotTextView;
+//    @BindView(R.id.plot)
+    TextView plotTextView;
 
 
     public MovieInfoFragment() {
@@ -36,6 +41,9 @@ public class MovieInfoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+//        ButterKnife.bind(this, view);
+
         Movie movie = getArguments().getParcelable(MOVIE);
         plotTextView = view.findViewById(R.id.plot);
         plotTextView.setText(movie.getPlot());

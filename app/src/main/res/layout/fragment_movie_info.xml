@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".MovieInfoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/plot"
         android:layout_width="match_parent"

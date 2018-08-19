@@ -5,10 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".MovieCastFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <include layout="@layout/fragment_list_layout"/>
 
 </FrameLayout>
