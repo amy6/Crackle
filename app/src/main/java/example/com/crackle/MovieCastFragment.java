@@ -64,6 +64,7 @@ public class MovieCastFragment extends Fragment {
 
         castList = new ArrayList<>();
         final MovieCastAdapter adapter = new MovieCastAdapter(getContext(), castList);
+        recyclerView.setAdapter(adapter);
 
         client = MovieApiService.getClient().create(MovieApiClient.class);
         call = client.getMovieCredits(((Movie)getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
@@ -72,7 +73,6 @@ public class MovieCastFragment extends Fragment {
             public void onResponse(Call<CreditResults> call, Response<CreditResults> response) {
                 castList.addAll(response.body().getCastList());
                 adapter.notifyDataSetChanged();
-                recyclerView.setAdapter(adapter);
             }
 
             @Override

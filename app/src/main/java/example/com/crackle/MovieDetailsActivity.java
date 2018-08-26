@@ -20,8 +20,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.poster_image)
     ImageView posterImage;
-    @BindView(R.id.title)
-    TextView title;
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
     @BindView(R.id.viewPager)
@@ -47,7 +45,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
                 setTitle(movie.getTitle());
 
-                title.setText(movie.getTitle());
+//                title.setText(movie.getTitle());
                 Glide.with(this)
                         .load(IMAGE_URL_SIZE.concat(movie.getImageUrl()))
                         .into(posterImage);
