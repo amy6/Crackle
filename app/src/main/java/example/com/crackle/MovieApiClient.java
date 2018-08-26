@@ -1,7 +1,5 @@
 package example.com.crackle;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -17,4 +15,7 @@ public interface MovieApiClient {
 
     @GET("movie/{movie_id}/credits")
     Call<CreditResults> getMovieCredits (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+
+    @GET("movie/{movie_id}/reviews")
+    Call<ReviewResults> getMovieReviews (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 }
