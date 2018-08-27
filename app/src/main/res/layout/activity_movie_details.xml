@@ -98,6 +98,7 @@
                     android:layout_marginStart="16dp"
                     android:max="10"
                     android:stepSize="0.1"
+                    android:isIndicator="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -161,7 +162,7 @@
                     app:srcCompat="@drawable/ic_trending_up" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/popularity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -235,7 +236,7 @@
                     app:srcCompat="@drawable/ic_language" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/language"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"

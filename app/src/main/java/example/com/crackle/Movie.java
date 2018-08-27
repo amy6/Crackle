@@ -2,6 +2,7 @@ package example.com.crackle;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.TextView;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -17,19 +18,25 @@ public class Movie implements Parcelable {
     private String title;
     @SerializedName("overview")
     private String plot;
+    @SerializedName("popularity")
+    private double popularity;
     @SerializedName("vote_average")
     private double userRating;
     @SerializedName("release_date")
     private String releaseDate;
+    @SerializedName("original_language")
+    private String language;
 
-    public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double userRating, String releaseDate) {
+    public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double popularity, double userRating, String releaseDate, String language) {
         this.movieId = movieId;
         this.imageUrl = imageUrl;
         this.backdropImageUrl = backdropImageUrl;
         this.title = title;
         this.plot = plot;
+        this.popularity = popularity;
         this.userRating = userRating;
         this.releaseDate = releaseDate;
+        this.language = language;
     }
 
     public Movie(Parcel source) {
@@ -38,8 +45,10 @@ public class Movie implements Parcelable {
         backdropImageUrl = source.readString();
         title = source.readString();
         plot = source.readString();
+        popularity = source.readDouble();
         userRating = source.readDouble();
         releaseDate = source.readString();
+        language = source.readString();
     }
 
     public int getMovieId() {
@@ -70,6 +79,14 @@ public class Movie implements Parcelable {
         return releaseDate;
     }
 
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -82,8 +99,10 @@ public class Movie implements Parcelable {
         dest.writeString(backdropImageUrl);
         dest.writeString(title);
         dest.writeString(plot);
+        dest.writeDouble(popularity);
         dest.writeDouble(userRating);
         dest.writeString(releaseDate);
+        dest.writeString(language);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {

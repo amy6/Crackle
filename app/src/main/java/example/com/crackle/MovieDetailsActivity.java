@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -20,8 +23,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.poster_image)
     ImageView posterImage;
+    @BindView(R.id.tmdbRating)
+    TextView tmdbRating;
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
+    @BindView(R.id.popularity)
+    TextView popularity;
+    @BindView(R.id.language)
+    TextView language;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     @BindView(R.id.tabLayout)
@@ -45,11 +54,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
                 setTitle(movie.getTitle());
 
-//                title.setText(movie.getTitle());
+                tmdbRating.setText(DecimalFormat.getNumberInstance().format(movie.getUserRating()));
                 Glide.with(this)
                         .load(IMAGE_URL_SIZE.concat(movie.getImageUrl()))
                         .into(posterImage);
                 ratingBar.setRating((float) movie.getUserRating());
+                popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
+                language.setText(movie.getLanguage());
             }
         }
 
