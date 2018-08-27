@@ -8,4 +8,17 @@ public class Crew {
     private String name;
     @SerializedName("job")
     private String job;
+
+    public Crew(String name, String job) {
+        this.name = name;
+        this.job = job;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getJob() {
+        return job;
+    }
 }
