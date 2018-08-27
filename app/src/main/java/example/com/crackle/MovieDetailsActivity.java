@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -16,7 +17,11 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+import static example.com.crackle.Constants.API_KEY;
 import static example.com.crackle.Constants.IMAGE_URL_SIZE;
 
 public class MovieDetailsActivity extends AppCompatActivity {
@@ -31,11 +36,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView popularity;
     @BindView(R.id.language)
     TextView language;
+    @BindView(R.id.duration)
+    TextView duration;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
+
     private Movie movie;
+    private int movieId;
+
+    private MovieApiClient client;
+    private Call<DetailResults> call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,16 +64,35 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (getIntent() != null) {
             if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
                 movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+                movieId = movie.getMovieId();
                 setTitle(movie.getTitle());
 
                 tmdbRating.setText(DecimalFormat.getNumberInstance().format(movie.getUserRating()));
                 Glide.with(this)
                         .load(IMAGE_URL_SIZE.concat(movie.getImageUrl()))
                         .into(posterImage);
-                ratingBar.setRating((float) movie.getUserRating());
+                ratingBar.setRating((float) (movie.getUserRating()/2f));
                 popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
                 language.setText(movie.getLanguage());
             }
+        }
+
+        if (movieId != 0) {
+            client = MovieApiService.getClient().create(MovieApiClient.class);
+            call = client.getMovieDetails(movieId, API_KEY);
+
+            call.enqueue(new Callback<DetailResults>() {
+                @Override
+                public void onResponse(Call<DetailResults> call, Response<DetailResults> response) {
+                    int runtime = response.body().getDuration();
+                    duration.setText(Utils.formatDuration(runtime));
+                }
+
+                @Override
+                public void onFailure(Call<DetailResults> call, Throwable t) {
+                    Toast.makeText(MovieDetailsActivity.this, "Error getting movie duration", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         viewPager.setAdapter(new MovieFragmentPagerAdapter(getSupportFragmentManager(), movie));

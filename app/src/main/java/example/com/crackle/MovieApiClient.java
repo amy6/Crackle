@@ -18,4 +18,7 @@ public interface MovieApiClient {
 
     @GET("movie/{movie_id}/reviews")
     Call<ReviewResults> getMovieReviews (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+
+    @GET("movie/{movie_id}")
+    Call<DetailResults> getMovieDetails (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 }
