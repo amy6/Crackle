@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -13,7 +14,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.text.DecimalFormat;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +27,7 @@ import retrofit2.Response;
 
 import static example.com.crackle.Constants.API_KEY;
 import static example.com.crackle.Constants.IMAGE_URL_SIZE;
+import static example.com.crackle.Constants.LOG_TAG;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
@@ -38,6 +43,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView language;
     @BindView(R.id.duration)
     TextView duration;
+    @BindView(R.id.genre)
+    TextView genre;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     @BindView(R.id.tabLayout)
@@ -48,6 +55,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private MovieApiClient client;
     private Call<DetailResults> call;
+    private HashMap<Integer, String> genreMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_details);
 
         ButterKnife.bind(this);
+
+        genreMap = Utils.fetchAllGenres(this);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -67,13 +77,25 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 movieId = movie.getMovieId();
                 setTitle(movie.getTitle());
 
-                tmdbRating.setText(DecimalFormat.getNumberInstance().format(movie.getUserRating()));
+                tmdbRating.setText(DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10"));
                 Glide.with(this)
                         .load(IMAGE_URL_SIZE.concat(movie.getImageUrl()))
                         .into(posterImage);
                 ratingBar.setRating((float) (movie.getUserRating()/2f));
                 popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
                 language.setText(movie.getLanguage());
+
+                List<Integer> genreId = new ArrayList<>();
+                genreId.addAll(movie.getGenres());
+                int count = 0;
+                for (int id : genreId) {
+                    genre.append(genreMap.get(id));
+                    count++;
+                    if (count < genreId.size() - 1) {
+                        genre.append(", ");
+                    }
+                }
+
             }
         }
 

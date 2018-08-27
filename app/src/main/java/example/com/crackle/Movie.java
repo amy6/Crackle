@@ -2,9 +2,12 @@ package example.com.crackle;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.widget.TextView;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Movie implements Parcelable {
 
@@ -26,8 +29,10 @@ public class Movie implements Parcelable {
     private String releaseDate;
     @SerializedName("original_language")
     private String language;
+    @SerializedName("genre_ids")
+    private ArrayList<Integer> genres;
 
-    public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double popularity, double userRating, String releaseDate, String language) {
+    public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double popularity, double userRating, String releaseDate, String language, ArrayList<Integer> genres) {
         this.movieId = movieId;
         this.imageUrl = imageUrl;
         this.backdropImageUrl = backdropImageUrl;
@@ -37,6 +42,7 @@ public class Movie implements Parcelable {
         this.userRating = userRating;
         this.releaseDate = releaseDate;
         this.language = language;
+        this.genres = genres;
     }
 
     public Movie(Parcel source) {
@@ -49,6 +55,7 @@ public class Movie implements Parcelable {
         userRating = source.readDouble();
         releaseDate = source.readString();
         language = source.readString();
+        genres = (ArrayList<Integer>) source.readSerializable();
     }
 
     public int getMovieId() {
@@ -87,6 +94,10 @@ public class Movie implements Parcelable {
         return language;
     }
 
+    public ArrayList<Integer> getGenres() {
+        return genres;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -103,6 +114,7 @@ public class Movie implements Parcelable {
         dest.writeDouble(userRating);
         dest.writeString(releaseDate);
         dest.writeString(language);
+        dest.writeSerializable(genres);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
