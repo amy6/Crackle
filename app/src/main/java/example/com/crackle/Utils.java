@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
@@ -74,5 +75,11 @@ public class Utils {
             e.printStackTrace();
         }
         return json;
+    }
+
+    public static RequestOptions setupGlide() {
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.error(R.drawable.ic_error_outline);
+        return requestOptions;
     }
 }

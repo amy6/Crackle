@@ -2,7 +2,9 @@ package example.com.crackle;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +15,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
@@ -99,14 +105,28 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
 
         if (holder instanceof MovieViewHolder) {
             MovieViewHolder movieViewHolder = (MovieViewHolder) holder;
             Movie movie = movies.get(position);
             String imageUrl = IMAGE_URL_SIZE.concat(movie.getImageUrl());
             Glide.with(context)
+                    .setDefaultRequestOptions(Utils.setupGlide())
                     .load(imageUrl)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            ((MovieViewHolder) holder).progressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            ((MovieViewHolder) holder).progressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
                     .into(movieViewHolder.imageView);
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
@@ -128,6 +148,8 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         @BindView(R.id.poster_image)
         ImageView imageView;
+        @BindView(R.id.progressBar)
+        ProgressBar progressBar;
 
         MovieViewHolder(View itemView) {
             super(itemView);
