@@ -226,12 +226,12 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/imageView"
+                        app:layout_constraintStart_toEndOf="@+id/tmdb_logo"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="3.5/10" />
 
                     <ImageView
-                        android:id="@+id/imageView"
+                        android:id="@+id/tmdb_logo"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginBottom="16dp"
@@ -259,7 +259,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/imageView"
+                        app:layout_constraintStart_toEndOf="@+id/tmdb_logo"
                         app:layout_constraintTop_toBottomOf="@+id/tmdbRating"
                         tools:rating="3.5" />
 
@@ -303,11 +303,11 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/imageView2"
+                        app:layout_constraintStart_toEndOf="@+id/trending"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/imageView2"
+                        android:id="@+id/trending"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginBottom="16dp"
@@ -334,7 +334,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/imageView2"
+                        app:layout_constraintStart_toEndOf="@+id/trending"
                         app:layout_constraintTop_toBottomOf="@+id/popularityLabel"
                         tools:text="323" />
 
@@ -380,11 +380,11 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/imageView3"
+                        app:layout_constraintStart_toEndOf="@+id/language"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/imageView3"
+                        android:id="@+id/language"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginBottom="8dp"
@@ -411,7 +411,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/imageView3"
+                        app:layout_constraintStart_toEndOf="@+id/language"
                         app:layout_constraintTop_toBottomOf="@+id/languageLabel"
                         tools:text="en" />
 

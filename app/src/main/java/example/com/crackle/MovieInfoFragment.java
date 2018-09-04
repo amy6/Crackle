@@ -9,9 +9,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,15 @@ import static example.com.crackle.Constants.MOVIE;
  * A simple {@link Fragment} subclass.
  */
 public class MovieInfoFragment extends Fragment {
+
+//    @BindView(R.id.tmdbRating)
+    TextView tmdbRating;
+//    @BindView(R.id.ratingBar)
+    RatingBar ratingBar;
+//    @BindView(R.id.popularity)
+    TextView popularity;
+//    @BindView(R.id.language)
+    TextView language;
 
     TextView plotTextView;
     TextView directorTextView;
@@ -59,6 +70,10 @@ public class MovieInfoFragment extends Fragment {
         plotTextView = view.findViewById(R.id.plot);
         directorTextView = view.findViewById(R.id.director);
         releaseDateTextView = view.findViewById(R.id.release_date);
+        tmdbRating = view.findViewById(R.id.tmdbRating);
+        ratingBar = view.findViewById(R.id.ratingBar);
+        popularity = view.findViewById(R.id.popularity);
+        language = view.findViewById(R.id.language);
 
         crewList = new ArrayList<>();
 
@@ -86,7 +101,12 @@ public class MovieInfoFragment extends Fragment {
 
         plotTextView.setText(movie.getPlot());
         releaseDateTextView.setText(movie.getReleaseDate());
+        tmdbRating.setText(DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10"));
+        ratingBar.setRating((float) (movie.getUserRating()/2f));
+        popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
+        language.setText(movie.getLanguage());
     }
+
 
     public static Fragment newInstance(Movie movie) {
         MovieInfoFragment fragment = new MovieInfoFragment();
