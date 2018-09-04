@@ -33,11 +33,11 @@ public class Utils {
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
-    public static String formatDuration(int timeInMins) {
+    public static String formatDuration(Context context, int timeInMins) {
         String duration;
         int hours = timeInMins / 60;
         int minutes = timeInMins % 60;
-        duration = String.format("%dh : %02dm", hours, minutes);
+        duration = String.format(context.getString(R.string.time_format), hours, minutes);
         return duration;
     }
 

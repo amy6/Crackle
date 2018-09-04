@@ -18,4 +18,5 @@
     <string name="popularity">Popularity</string>
     <string name="language">Language</string>
     <string name="bullet">\u2022</string>
+    <string name="time_format">%d hrs : %d mins</string>
 </resources>

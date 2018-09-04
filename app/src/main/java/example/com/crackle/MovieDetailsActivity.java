@@ -2,6 +2,7 @@ package example.com.crackle;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -37,6 +38,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     ImageView backdropImage;
     @BindView(R.id.title)
     TextView title;
+    @BindView(R.id.year)
+    TextView year;
     @BindView(R.id.tmdbRating)
     TextView tmdbRating;
     @BindView(R.id.ratingBar)
@@ -45,7 +48,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView popularity;
     @BindView(R.id.language)
     TextView language;
-    @BindView(R.id.contentRating)
+    @BindView(R.id.duration)
     TextView duration;
     @BindView(R.id.genre)
     TextView genre;
@@ -55,6 +58,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TabLayout tabLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.appbarLayout)
+    AppBarLayout appBarLayout;
     @BindView(R.id.collapsingtoolbar)
     CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -81,12 +86,34 @@ public class MovieDetailsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+
         if (getIntent() != null) {
             if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
                 movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
                 movieId = movie.getMovieId();
 
+                appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                    boolean isShow = true;
+                    int scrollRange = -1;
+
+                    @Override
+                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                        if (scrollRange == -1) {
+                            scrollRange = appBarLayout.getTotalScrollRange();
+                        }
+                        if (scrollRange + verticalOffset == 0) {
+                            collapsingToolbarLayout.setTitle(movie.getTitle());
+                            isShow = true;
+                        } else if (isShow) {
+                            collapsingToolbarLayout.setTitle(" ");
+                            isShow = false;
+                        }
+
+                    }
+                });
+
                 title.setText(movie.getTitle());
+                year.setText(movie.getReleaseDate().substring(0,4));
                 tmdbRating.setText(DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10"));
                 Glide.with(this)
                         .load(IMAGE_URL_SIZE.concat(movie.getImageUrl()))
@@ -119,7 +146,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call<DetailResults> call, @NonNull Response<DetailResults> response) {
                     int runtime = response.body().getDuration();
-                    duration.setText(Utils.formatDuration(runtime));
+                    duration.setText(Utils.formatDuration(MovieDetailsActivity.this, runtime));
                 }
 
                 @Override
