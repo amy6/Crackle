@@ -1,13 +1,13 @@
 package example.com.crackle;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -19,7 +19,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,12 +28,15 @@ import retrofit2.Response;
 
 import static example.com.crackle.Constants.API_KEY;
 import static example.com.crackle.Constants.IMAGE_URL_SIZE;
-import static example.com.crackle.Constants.LOG_TAG;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.poster_image)
     ImageView posterImage;
+    @BindView(R.id.backdrop_image)
+    ImageView backdropImage;
+    @BindView(R.id.title)
+    TextView title;
     @BindView(R.id.tmdbRating)
     TextView tmdbRating;
     @BindView(R.id.ratingBar)
@@ -43,7 +45,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView popularity;
     @BindView(R.id.language)
     TextView language;
-    @BindView(R.id.duration)
+    @BindView(R.id.contentRating)
     TextView duration;
     @BindView(R.id.genre)
     TextView genre;
@@ -83,23 +85,25 @@ public class MovieDetailsActivity extends AppCompatActivity {
             if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
                 movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
                 movieId = movie.getMovieId();
-                setTitle(movie.getTitle());
 
+                title.setText(movie.getTitle());
                 tmdbRating.setText(DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10"));
                 Glide.with(this)
                         .load(IMAGE_URL_SIZE.concat(movie.getImageUrl()))
                         .into(posterImage);
+                Glide.with(this)
+                        .load(IMAGE_URL_SIZE.concat(movie.getBackdropImageUrl()))
+                        .into(backdropImage);
                 ratingBar.setRating((float) (movie.getUserRating()/2f));
                 popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
                 language.setText(movie.getLanguage());
 
-                List<Integer> genreId = new ArrayList<>();
-                genreId.addAll(movie.getGenres());
+                List<Integer> genreId = new ArrayList<>(movie.getGenres());
                 int count = 0;
                 for (int id : genreId) {
                     genre.append(genreMap.get(id));
                     count++;
-                    if (count < genreId.size() - 1) {
+                    if (count < genreId.size()) {
                         genre.append(", ");
                     }
                 }
@@ -113,13 +117,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             call.enqueue(new Callback<DetailResults>() {
                 @Override
-                public void onResponse(Call<DetailResults> call, Response<DetailResults> response) {
+                public void onResponse(@NonNull Call<DetailResults> call, @NonNull Response<DetailResults> response) {
                     int runtime = response.body().getDuration();
                     duration.setText(Utils.formatDuration(runtime));
                 }
 
                 @Override
-                public void onFailure(Call<DetailResults> call, Throwable t) {
+                public void onFailure(@NonNull Call<DetailResults> call, @NonNull Throwable t) {
                     Toast.makeText(MovieDetailsActivity.this, "Error getting movie duration", Toast.LENGTH_SHORT).show();
                 }
             });
