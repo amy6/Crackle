@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".MovieDetailsActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -28,6 +29,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:layout_marginTop="24dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
@@ -38,6 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_collapseMode="pin"
+            app:tabBackground="@color/colorPrimaryLight"
+            app:tabIndicatorHeight="2dp"
             app:tabGravity="fill"
             app:tabMode="fixed" />
 
