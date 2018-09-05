@@ -163,6 +163,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:text="N/A"
             app:layout_constraintStart_toEndOf="@+id/director_label"
             app:layout_constraintTop_toBottomOf="@+id/plot"
             tools:text="James Cameron" />
@@ -185,6 +186,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
+            android:text="N/A"
             app:layout_constraintStart_toEndOf="@+id/release_date_label"
             app:layout_constraintTop_toTopOf="@+id/release_date_label"
             tools:text="24-02-2018" />

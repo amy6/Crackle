@@ -42,7 +42,22 @@ public class Utils {
         int hours = timeInMins / 60;
         int minutes = timeInMins % 60;
         duration = String.format(context.getString(R.string.time_format), hours, minutes);
-        return duration;
+        if (hours <= 0 && minutes <= 0) {
+            duration = "N/A";
+        }
+        if (minutes <= 0 && hours > 0) {
+            duration = duration.split(":") [1];
+        }
+        if (hours <= 0 && minutes > 0) {
+            duration = duration.split(":") [0];
+        }
+        if (hours == 1) {
+            duration = duration.replace("hrs", "hr");
+        }
+        if (minutes == 1) {
+            duration = duration.replace("mins", "min");
+        }
+        return duration.replace(":", "");
     }
 
     public static HashMap<Integer, String> fetchAllGenres(Context context) {

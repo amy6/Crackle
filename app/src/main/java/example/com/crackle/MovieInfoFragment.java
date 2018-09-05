@@ -32,13 +32,9 @@ import static example.com.crackle.Constants.MOVIE;
  */
 public class MovieInfoFragment extends Fragment {
 
-//    @BindView(R.id.tmdbRating)
     TextView tmdbRating;
-//    @BindView(R.id.ratingBar)
     RatingBar ratingBar;
-//    @BindView(R.id.popularity)
     TextView popularity;
-//    @BindView(R.id.language)
     TextView language;
 
     TextView plotTextView;
@@ -83,6 +79,7 @@ public class MovieInfoFragment extends Fragment {
             @Override
             public void onResponse(Call<CreditResults> call, Response<CreditResults> response) {
                 crewList.addAll(response.body().getCrewList());
+                directorTextView.setText("");
                 for (int i = 0; i < crewList.size(); i ++) {
                     if (crewList.get(i).getJob().equalsIgnoreCase("director")) {
                         directorTextView.append(crewList.get(i).getName());
