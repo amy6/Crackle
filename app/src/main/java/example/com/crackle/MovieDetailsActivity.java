@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ import retrofit2.Response;
 
 import static example.com.crackle.Constants.API_KEY;
 import static example.com.crackle.Constants.IMAGE_URL_SIZE;
+import static example.com.crackle.Constants.LOG_TAG;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 

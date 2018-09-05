@@ -8,10 +8,13 @@ class DetailResults {
     private int duration;
     @SerializedName("tagline")
     private String tagLine;
+    @SerializedName("homepage")
+    private String homepage;
 
-    public DetailResults(int duration, String tagLine) {
+    public DetailResults(int duration, String tagLine, String homepage) {
         this.duration = duration;
         this.tagLine = tagLine;
+        this.homepage = homepage;
     }
 
     public int getDuration() {
@@ -20,5 +23,9 @@ class DetailResults {
 
     public String getTagLine() {
         return tagLine;
+    }
+
+    public String getHomepage() {
+        return homepage;
     }
 }

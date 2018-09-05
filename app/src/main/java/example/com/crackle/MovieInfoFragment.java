@@ -2,7 +2,6 @@ package example.com.crackle;
 
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,8 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,9 +37,11 @@ public class MovieInfoFragment extends Fragment {
     TextView plotTextView;
     TextView directorTextView;
     TextView releaseDateTextView;
+    TextView homepage;
 
     private MovieApiClient client;
-    private Call<CreditResults> call;
+    private Call<CreditResults> creditResultsCall;
+    private Call<DetailResults> detailResultsCall;
     private List<Crew> crewList;
     private HashMap<String, String> languageMap;
 
@@ -72,13 +71,14 @@ public class MovieInfoFragment extends Fragment {
         ratingBar = view.findViewById(R.id.ratingBar);
         popularity = view.findViewById(R.id.popularity);
         language = view.findViewById(R.id.language);
+        homepage = view.findViewById(R.id.homepage);
 
         crewList = new ArrayList<>();
         languageMap = Utils.fetchAllLanguages(getContext());
 
         client = MovieApiService.getClient().create(MovieApiClient.class);
-        call = client.getMovieCredits(((Movie)getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
-        call.enqueue(new Callback<CreditResults>() {
+        creditResultsCall = client.getMovieCredits(((Movie)getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
+        creditResultsCall.enqueue(new Callback<CreditResults>() {
             @Override
             public void onResponse(Call<CreditResults> call, Response<CreditResults> response) {
                 crewList.addAll(response.body().getCrewList());
@@ -86,7 +86,7 @@ public class MovieInfoFragment extends Fragment {
                 for (int i = 0; i < crewList.size(); i ++) {
                     if (crewList.get(i).getJob().equalsIgnoreCase("director")) {
                         directorTextView.append(crewList.get(i).getName());
-                        if (i < crewList.size() - 1) {
+                        if (i < crewList.size() - 1 && crewList.get(i+1).getJob().equalsIgnoreCase("director")) {
                             directorTextView.append("\n");
                         }
                     }
@@ -96,6 +96,19 @@ public class MovieInfoFragment extends Fragment {
             @Override
             public void onFailure(Call<CreditResults> call, Throwable t) {
                 Toast.makeText(getContext(), "Error getting movie director details", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        detailResultsCall = client.getMovieDetails(((Movie)getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
+        detailResultsCall.enqueue(new Callback<DetailResults>() {
+            @Override
+            public void onResponse(Call<DetailResults> call, Response<DetailResults> response) {
+                homepage.setText(response.body().getHomepage());
+            }
+
+            @Override
+            public void onFailure(Call<DetailResults> call, Throwable t) {
+                Toast.makeText(getContext(), "Error getting movie details", Toast.LENGTH_SHORT).show();
             }
         });
 
