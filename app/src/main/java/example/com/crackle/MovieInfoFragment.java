@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,13 +37,14 @@ public class MovieInfoFragment extends Fragment {
     RatingBar ratingBar;
     TextView popularity;
     TextView language;
-
     TextView plotTextView;
     TextView directorTextView;
     TextView releaseDateTextView;
+
     private MovieApiClient client;
     private Call<CreditResults> call;
     private List<Crew> crewList;
+    private HashMap<String, String> languageMap;
 
 
     public MovieInfoFragment() {
@@ -72,6 +74,7 @@ public class MovieInfoFragment extends Fragment {
         language = view.findViewById(R.id.language);
 
         crewList = new ArrayList<>();
+        languageMap = Utils.fetchAllLanguages(getContext());
 
         client = MovieApiService.getClient().create(MovieApiClient.class);
         call = client.getMovieCredits(((Movie)getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
@@ -101,7 +104,7 @@ public class MovieInfoFragment extends Fragment {
         tmdbRating.setText(DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10"));
         ratingBar.setRating((float) (movie.getUserRating()/2f));
         popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
-        language.setText(movie.getLanguage());
+        language.setText(languageMap.get(movie.getLanguage()));
     }
 
 

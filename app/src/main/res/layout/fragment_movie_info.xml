@@ -34,6 +34,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:textStyle="bold"
+            android:text="N/A"
             app:layout_constraintStart_toEndOf="@+id/tmdb_logo"
             app:layout_constraintTop_toTopOf="@+id/tmdb_logo"
             tools:text="3.5/10" />
@@ -88,6 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textStyle="bold"
+            android:text="N/A"
             app:layout_constraintBottom_toBottomOf="@+id/language_logo"
             app:layout_constraintStart_toStartOf="@+id/languageLabel"
             app:layout_constraintTop_toBottomOf="@+id/languageLabel"
@@ -124,6 +126,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:textStyle="bold"
+            android:text="N/A"
             app:layout_constraintBottom_toBottomOf="@+id/trending"
             app:layout_constraintStart_toStartOf="@+id/popularityLabel"
             app:layout_constraintTop_toBottomOf="@+id/popularityLabel"

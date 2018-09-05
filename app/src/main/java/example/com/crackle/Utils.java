@@ -62,7 +62,7 @@ public class Utils {
 
     public static HashMap<Integer, String> fetchAllGenres(Context context) {
         HashMap<Integer, String> map = null;
-        String json = loadJsonFromAsset(context);
+        String json = loadJsonFromAsset(context, "genre.json");
         Log.d(LOG_TAG, json);
         try {
             JSONObject jsonObject = new JSONObject(json);
@@ -81,10 +81,30 @@ public class Utils {
         return map;
     }
 
-    private static String loadJsonFromAsset(Context context) {
+    public static HashMap<String, String> fetchAllLanguages(Context context) {
+        HashMap<String, String> map = null;
+        String json = loadJsonFromAsset(context, "language.json");
+        Log.d(LOG_TAG, json);
+        try {
+            JSONArray jsonArray = new JSONArray(json);
+            map = new HashMap<>();
+            for (int i=0 ; i < jsonArray.length(); i++) {
+                JSONObject language = jsonArray.getJSONObject(i);
+                String languageCode = language.getString("iso_639_1");
+                String languageName = language.getString("english_name");
+
+                map.put(languageCode, languageName);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    private static String loadJsonFromAsset(Context context, String fileName) {
         String json = null;
         try {
-            InputStream inputStream = context.getAssets().open("genre.json");
+            InputStream inputStream = context.getAssets().open(fileName);
             int size = inputStream.available();
             byte[] buffer = new byte[size];
             inputStream.read(buffer);
