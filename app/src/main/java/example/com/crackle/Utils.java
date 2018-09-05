@@ -23,6 +23,10 @@ import static example.com.crackle.Constants.LOG_TAG;
 
 public class Utils {
 
+    public static final String POSTER_IMG = "poster";
+    public static final String BACKDROP_IMG = "backdrop";
+    public static final String CAST_IMG = "cast";
+
     public static boolean checkInternetConnection(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = null;
@@ -77,9 +81,21 @@ public class Utils {
         return json;
     }
 
-    public static RequestOptions setupGlide() {
+    public static RequestOptions setupGlide(String type) {
         RequestOptions requestOptions = new RequestOptions();
-        requestOptions.error(R.drawable.ic_error_outline);
+        switch (type) {
+            case POSTER_IMG:
+            case BACKDROP_IMG:
+                requestOptions
+                        .error(R.drawable.ic_error_outline);
+                break;
+            case CAST_IMG:
+                requestOptions
+                        .placeholder(R.drawable.ic_account_circle)
+                        .error(R.drawable.ic_account_circle);
+                break;
+        }
+
         return requestOptions;
     }
 }

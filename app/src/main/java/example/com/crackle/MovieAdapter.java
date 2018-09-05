@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 
 import static example.com.crackle.Constants.IMAGE_URL_SIZE;
 import static example.com.crackle.Constants.LOG_TAG;
+import static example.com.crackle.Utils.POSTER_IMG;
 
 public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -112,7 +113,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Movie movie = movies.get(position);
             String imageUrl = IMAGE_URL_SIZE.concat(movie.getImageUrl());
             Glide.with(context)
-                    .setDefaultRequestOptions(Utils.setupGlide())
+                    .setDefaultRequestOptions(Utils.setupGlide(POSTER_IMG))
                     .load(imageUrl)
                     .listener(new RequestListener<Drawable>() {
                         @Override
