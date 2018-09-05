@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +29,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static example.com.crackle.Constants.API_KEY;
+import static example.com.crackle.Constants.LOG_TAG;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private int topRatedMoviesStartPage = 1;
 
     private MenuItem mostPopularMenuItem;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +67,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //resolve references to view
         ButterKnife.bind(this);
 
-        if (!Utils.checkInternetConnection(this)) {
-            progressBar.setVisibility(View.GONE);
-            errorLayout.setVisibility(View.VISIBLE);
-            updateEmptyStateViews(0, R.string.no_internet_connection, R.drawable.ic_cloud_off, R.string.error_try_again);
-            return;
-        }
-
         movies = new ArrayList<>();
-
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -86,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         client = MovieApiService.getClient().create(MovieApiClient.class);
         getPopularMovies();
+
+        errorButton.setOnClickListener(this);
     }
 
     @Override
@@ -132,23 +130,37 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void getPopularMovies() {
+
+        if (!isInternetConnected()) {
+            return;
+        }
+
         call = client.getPopularMovies(API_KEY, mostPopularMoviesStartPage);
         call.enqueue(new Callback<MovieResults>() {
             @Override
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
+                progressBar.setVisibility(View.VISIBLE);
                 movieAdapter.removeLoader(null);
+                refreshLayout.setRefreshing(false);
+                refreshLayout.setEnabled(true);
+
+                if (response.body() == null || response.body().getMovies().size() == 0) {
+                    errorLayout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                    updateEmptyStateViews(R.drawable.no_search_results, R.string.no_search_results, R.drawable.ic_movie, R.string.error_no_results);
+                    return;
+                }
 
                 movies.addAll(response.body().getMovies());
                 movieAdapter.notifyDataSetChanged();
 
-                refreshLayout.setRefreshing(false);
-
                 errorLayout.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
 
                 movieAdapter.setLoading(false);
                 mostPopularMoviesStartPage++;
-                refreshLayout.setEnabled(true);
 
                 movieAdapter.setOnLoadMoreListener(MainActivity.this);
             }
@@ -158,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 refreshLayout.setRefreshing(false);
 
                 errorLayout.setVisibility(View.VISIBLE);
-                updateEmptyStateViews(0, R.string.no_search_results, R.drawable.ic_error_outline, R.string.error_no_results);
+                updateEmptyStateViews(R.drawable.no_search_results, R.string.no_search_results, R.drawable.ic_error_outline, R.string.error_no_results);
                 progressBar.setVisibility(View.GONE);
             }
         });
@@ -166,11 +178,26 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
     private void getTopRatedMovies() {
+
+        if (!isInternetConnected()) {
+            return;
+        }
+
         call = client.getTopRatedMovies(API_KEY, topRatedMoviesStartPage);
         call.enqueue(new Callback<MovieResults>() {
             @Override
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
+                progressBar.setVisibility(View.VISIBLE);
                 movieAdapter.removeLoader(null);
+
+                if (response.body() == null || response.body().getMovies().size() == 0) {
+                    errorLayout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                    refreshLayout.setRefreshing(false);
+                    updateEmptyStateViews(R.drawable.no_search_results, R.string.no_search_results, R.drawable.ic_movie, R.string.error_no_results);
+                    return;
+                }
 
                 movies.addAll(response.body().getMovies());
                 movieAdapter.notifyDataSetChanged();
@@ -179,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                 errorLayout.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
 
                 movieAdapter.setLoading(false);
                 topRatedMoviesStartPage++;
@@ -192,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 refreshLayout.setRefreshing(false);
 
                 errorLayout.setVisibility(View.VISIBLE);
-                updateEmptyStateViews(0, R.string.no_search_results, R.drawable.ic_error_outline, R.string.error_no_results);
+                updateEmptyStateViews(R.drawable.no_search_results, R.string.no_search_results, R.drawable.ic_error_outline, R.string.error_no_results);
                 progressBar.setVisibility(View.GONE);
             }
         });
@@ -205,8 +233,25 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         errorButton.setText(errorButtonText);
     }
 
+    private boolean isInternetConnected() {
+        if (Utils.checkInternetConnection(this)) {
+            return true;
+        } else {
+            refreshLayout.setRefreshing(false);
+            progressBar.setVisibility(View.GONE);
+            errorLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            updateEmptyStateViews(R.drawable.no_internet_connection, R.string.no_internet_connection, R.drawable.ic_cloud_off, R.string.error_try_again);
+            return false;
+        }
+    }
+
     @Override
     public void onRefresh() {
+
+        recyclerView.setVisibility(View.GONE);
+        errorLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
 
         movieAdapter.setOnLoadMoreListener(null);
         movieAdapter.setLoading(false);
@@ -236,5 +281,28 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         } else {
             getTopRatedMovies();
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.errorButton:
+                if (((Button) view).getText().toString().trim().equalsIgnoreCase(getString(R.string.error_try_again))) {
+                    displayToast("Ok! Checking..");
+                    progressBar.setVisibility(View.VISIBLE);
+                    onRefresh();
+                } else {
+                    finish();
+                }
+                break;
+        }
+    }
+
+    private void displayToast(String message) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

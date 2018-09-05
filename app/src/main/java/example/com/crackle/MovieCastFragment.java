@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class MovieCastFragment extends Fragment {
 
 //    @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    TextView emptyTextView;
 
     private MovieApiClient client;
     private Call<CreditResults> call;
@@ -58,6 +60,8 @@ public class MovieCastFragment extends Fragment {
 
 //        ButterKnife.bind(this, view);
 
+        emptyTextView = view.findViewById(R.id.emptyTextView);
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         recyclerView.setHasFixedSize(true);
@@ -71,8 +75,15 @@ public class MovieCastFragment extends Fragment {
         call.enqueue(new Callback<CreditResults>() {
             @Override
             public void onResponse(Call<CreditResults> call, Response<CreditResults> response) {
-                castList.addAll(response.body().getCastList());
-                adapter.notifyDataSetChanged();
+                if (response.body().getCastList().size() > 0) {
+                    castList.addAll(response.body().getCastList());
+                    adapter.notifyDataSetChanged();
+                    emptyTextView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    emptyTextView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
             }
 
             @Override

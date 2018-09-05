@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import static example.com.crackle.Constants.MOVIE;
 public class MovieReviewsFragment extends Fragment {
 
     RecyclerView recyclerView;
+    TextView emptyTextView;
 
     private MovieApiClient client;
     private Call<ReviewResults> call;
@@ -52,6 +54,8 @@ public class MovieReviewsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        emptyTextView = view.findViewById(R.id.emptyTextView);
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
@@ -65,8 +69,16 @@ public class MovieReviewsFragment extends Fragment {
         call.enqueue(new Callback<ReviewResults>() {
             @Override
             public void onResponse(Call<ReviewResults> call, Response<ReviewResults> response) {
-                reviewList.addAll(response.body().getReviewList());
-                adapter.notifyDataSetChanged();
+                if (response.body().getReviewList().size() > 0) {
+                    reviewList.addAll(response.body().getReviewList());
+                    adapter.notifyDataSetChanged();
+                    emptyTextView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    emptyTextView.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override

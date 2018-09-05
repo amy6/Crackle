@@ -10,6 +10,7 @@
         android:id="@+id/profileImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:padding="4dp"
         tools:src="@tools:sample/avatars" />
 
     <TextView

@@ -19,4 +19,6 @@
     <string name="language">Language</string>
     <string name="bullet">\u2022</string>
     <string name="time_format">%d hrs : %d mins</string>
+    <string name="no_reviews">No reviews available for this movie</string>
+    <string name="no_cast">No cast details available for this movie</string>
 </resources>

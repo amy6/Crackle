@@ -43,14 +43,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView title;
     @BindView(R.id.year)
     TextView year;
-    /*@BindView(R.id.tmdbRating)
-    TextView tmdbRating;
-    @BindView(R.id.ratingBar)
-    RatingBar ratingBar;
-    @BindView(R.id.popularity)
-    TextView popularity;
-    @BindView(R.id.language)
-    TextView language;*/
     @BindView(R.id.duration)
     TextView duration;
     @BindView(R.id.genre)
@@ -122,16 +114,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 title.setText(movie.getTitle());
                 year.setText(movie.getReleaseDate().substring(0,4));
-//                tmdbRating.setText(DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10"));
                 Glide.with(this)
                         .load(IMAGE_URL_SIZE.concat(movie.getImageUrl()))
                         .into(posterImage);
                 Glide.with(this)
                         .load(IMAGE_URL_SIZE.concat(movie.getBackdropImageUrl()))
                         .into(backdropImage);
-//                ratingBar.setRating((float) (movie.getUserRating()/2f));
-//                popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
-//                language.setText(movie.getLanguage());
 
                 List<Integer> genreId = new ArrayList<>(movie.getGenres());
                 int count = 0;
