@@ -3,6 +3,7 @@ package example.com.crackle;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.bumptech.glide.request.RequestOptions;
@@ -132,5 +133,11 @@ public class Utils {
         }
 
         return requestOptions;
+    }
+
+    public static int getSpanCount(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return (int) (dpWidth / 180);
     }
 }

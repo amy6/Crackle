@@ -63,7 +63,7 @@ public class MovieCastFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
 
         recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), Utils.getSpanCount(getContext())));
         recyclerView.setHasFixedSize(true);
 
         castList = new ArrayList<>();

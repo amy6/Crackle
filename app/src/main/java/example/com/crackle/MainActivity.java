@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         movies = new ArrayList<>();
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, Utils.getSpanCount(this)));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
 
