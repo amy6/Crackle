@@ -1,12 +1,13 @@
 package example.com.crackle;
 
 import android.content.Context;
-import android.graphics.Movie;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -16,8 +17,10 @@ import butterknife.ButterKnife;
 
 public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.MovieReviewViewHolder> {
 
+    private static final int MAX_LINES = 3;
     private Context context;
     private List<Review> reviewList;
+    private boolean expandable;
 
     public MovieReviewAdapter(Context context, List<Review> reviewList) {
         this.context = context;
@@ -31,10 +34,40 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieReviewViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MovieReviewViewHolder holder, int position) {
         Review review = reviewList.get(position);
         holder.author.setText(review.getAuthor());
         holder.content.setText(review.getContent());
+
+        holder.content.post(new Runnable() {
+            @Override
+            public void run() {
+                final int lineCount = holder.content.getLineCount();
+
+                if (lineCount > MAX_LINES) {
+                    holder.content.setMaxLines(MAX_LINES);
+                    holder.content.setEllipsize(TextUtils.TruncateAt.END);
+                    holder.button.setVisibility(View.VISIBLE);
+                    holder.button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (expandable) {
+                                expandable = false;
+                                holder.content.setMaxLines(lineCount);
+                                holder.button.setImageResource(R.drawable.ic_keyboard_arrow_up);
+                            } else {
+                                expandable = true;
+                                holder.content.setMaxLines(MAX_LINES);
+                                holder.button.setImageResource(R.drawable.ic_keyboard_arrow_down);
+                            }
+
+                        }
+                    });
+                } else {
+                    holder.button.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override
@@ -49,6 +82,8 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
         TextView author;
         @BindView(R.id.content)
         TextView content;
+        @BindView(R.id.button)
+        ImageButton button;
 
         public MovieReviewViewHolder(View itemView) {
             super(itemView);
