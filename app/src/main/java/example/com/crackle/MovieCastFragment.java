@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,9 +34,9 @@ import static example.com.crackle.Constants.MOVIE;
  */
 public class MovieCastFragment extends Fragment {
 
-//    @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     TextView emptyTextView;
+    ProgressBar progressBar;
 
     private MovieApiClient client;
     private Call<CreditResults> call;
@@ -58,9 +59,8 @@ public class MovieCastFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        ButterKnife.bind(this, view);
-
         emptyTextView = view.findViewById(R.id.emptyTextView);
+        progressBar = view.findViewById(R.id.progressBar);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
@@ -75,6 +75,7 @@ public class MovieCastFragment extends Fragment {
         call.enqueue(new Callback<CreditResults>() {
             @Override
             public void onResponse(Call<CreditResults> call, Response<CreditResults> response) {
+                progressBar.setVisibility(View.GONE);
                 if (response.body().getCastList().size() > 0) {
                     castList.addAll(response.body().getCastList());
                     adapter.notifyDataSetChanged();
@@ -88,6 +89,7 @@ public class MovieCastFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CreditResults> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "Error getting movie cast", Toast.LENGTH_SHORT).show();
             }
         });

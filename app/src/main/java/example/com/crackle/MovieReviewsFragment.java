@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class MovieReviewsFragment extends Fragment {
 
     RecyclerView recyclerView;
     TextView emptyTextView;
+    ProgressBar progressBar;
 
     private MovieApiClient client;
     private Call<ReviewResults> call;
@@ -55,6 +57,7 @@ public class MovieReviewsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         emptyTextView = view.findViewById(R.id.emptyTextView);
+        progressBar = view.findViewById(R.id.progressBar);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -69,6 +72,7 @@ public class MovieReviewsFragment extends Fragment {
         call.enqueue(new Callback<ReviewResults>() {
             @Override
             public void onResponse(Call<ReviewResults> call, Response<ReviewResults> response) {
+                progressBar.setVisibility(View.GONE);
                 if (response.body().getReviewList().size() > 0) {
                     reviewList.addAll(response.body().getReviewList());
                     adapter.notifyDataSetChanged();
@@ -83,6 +87,7 @@ public class MovieReviewsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ReviewResults> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "Error getting movie reviews", Toast.LENGTH_SHORT).show();
 
             }
