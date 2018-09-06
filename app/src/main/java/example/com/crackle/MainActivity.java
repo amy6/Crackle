@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     return false;
                 } else {
                     item.setChecked(true);
+                    Log.d(LOG_TAG, "Clearing popular movies, resetting start page");
+                    movieAdapter.setOnLoadMoreListener(null);
                     movies.clear();
                     movieAdapter.notifyDataSetChanged();
                     mostPopularMoviesStartPage = 1;
@@ -118,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     return false;
                 } else {
                     item.setChecked(true);
+                    Log.d(LOG_TAG, "Clearing top rated movies, resetting start page");
+                    movieAdapter.setOnLoadMoreListener(null);
                     movies.clear();
                     movieAdapter.notifyDataSetChanged();
                     topRatedMoviesStartPage = 1;
