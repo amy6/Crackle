@@ -73,6 +73,9 @@ public class MovieReviewsFragment extends Fragment {
             @Override
             public void onResponse(Call<ReviewResults> call, Response<ReviewResults> response) {
                 progressBar.setVisibility(View.GONE);
+                if (response.body() == null || response.body().getReviewList() == null) {
+                    return;
+                }
                 if (response.body().getReviewList().size() > 0) {
                     reviewList.addAll(response.body().getReviewList());
                     adapter.notifyDataSetChanged();

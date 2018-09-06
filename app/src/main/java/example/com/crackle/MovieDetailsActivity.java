@@ -143,6 +143,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
             call.enqueue(new Callback<DetailResults>() {
                 @Override
                 public void onResponse(@NonNull Call<DetailResults> call, @NonNull Response<DetailResults> response) {
+                    if (response.body() == null) {
+                        return;
+                    }
                     int runtime = response.body().getDuration();
                     duration.setText(Utils.formatDuration(MovieDetailsActivity.this, runtime));
                 }

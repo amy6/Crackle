@@ -81,6 +81,9 @@ public class MovieInfoFragment extends Fragment {
         creditResultsCall.enqueue(new Callback<CreditResults>() {
             @Override
             public void onResponse(Call<CreditResults> call, Response<CreditResults> response) {
+                if (response.body() == null || response.body().getCrewList() == null || response.body().getCrewList().size() == 0) {
+                    return;
+                }
                 crewList.addAll(response.body().getCrewList());
                 directorTextView.setText("");
                 for (int i = 0; i < crewList.size(); i ++) {
@@ -103,6 +106,9 @@ public class MovieInfoFragment extends Fragment {
         detailResultsCall.enqueue(new Callback<DetailResults>() {
             @Override
             public void onResponse(Call<DetailResults> call, Response<DetailResults> response) {
+                if (response.body() == null || response.body().getHomepage() == null) {
+                    return;
+                }
                 homepage.setText(response.body().getHomepage());
             }
 

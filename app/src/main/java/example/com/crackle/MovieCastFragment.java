@@ -76,6 +76,9 @@ public class MovieCastFragment extends Fragment {
             @Override
             public void onResponse(Call<CreditResults> call, Response<CreditResults> response) {
                 progressBar.setVisibility(View.GONE);
+                if (response.body() == null || response.body().getCastList() == null) {
+                    return;
+                }
                 if (response.body().getCastList().size() > 0) {
                     castList.addAll(response.body().getCastList());
                     adapter.notifyDataSetChanged();

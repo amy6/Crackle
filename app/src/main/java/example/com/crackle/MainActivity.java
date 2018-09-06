@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 refreshLayout.setRefreshing(false);
                 refreshLayout.setEnabled(true);
 
-                if (response.body() == null || response.body().getMovies().size() == 0) {
+                if (response.body() == null || response.body().getMovies() == null || response.body().getMovies().size() == 0) {
                     errorLayout.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 progressBar.setVisibility(View.VISIBLE);
                 movieAdapter.removeLoader(null);
 
-                if (response.body() == null || response.body().getMovies().size() == 0) {
+                if (response.body() == null || response.body().getMovies() == null || response.body().getMovies().size() == 0) {
                     errorLayout.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
