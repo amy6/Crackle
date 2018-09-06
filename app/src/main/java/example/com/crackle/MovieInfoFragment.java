@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,13 +32,21 @@ import static example.com.crackle.Constants.MOVIE;
  */
 public class MovieInfoFragment extends Fragment {
 
+    @BindView(R.id.tmdbRating)
     TextView tmdbRating;
+    @BindView(R.id.ratingBar)
     RatingBar ratingBar;
+    @BindView(R.id.popularity)
     TextView popularity;
+    @BindView(R.id.language)
     TextView language;
+    @BindView(R.id.plot)
     TextView plotTextView;
+    @BindView(R.id.director)
     TextView directorTextView;
+    @BindView(R.id.release_date)
     TextView releaseDateTextView;
+    @BindView(R.id.homepage)
     TextView homepage;
 
     private MovieApiClient client;
@@ -63,15 +73,7 @@ public class MovieInfoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Movie movie = getArguments().getParcelable(MOVIE);
-
-        plotTextView = view.findViewById(R.id.plot);
-        directorTextView = view.findViewById(R.id.director);
-        releaseDateTextView = view.findViewById(R.id.release_date);
-        tmdbRating = view.findViewById(R.id.tmdbRating);
-        ratingBar = view.findViewById(R.id.ratingBar);
-        popularity = view.findViewById(R.id.popularity);
-        language = view.findViewById(R.id.language);
-        homepage = view.findViewById(R.id.homepage);
+        ButterKnife.bind(this, view);
 
         crewList = new ArrayList<>();
         languageMap = Utils.fetchAllLanguages(getContext());

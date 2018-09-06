@@ -18,6 +18,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,8 +33,11 @@ import static example.com.crackle.Constants.MOVIE;
  */
 public class MovieReviewsFragment extends Fragment {
 
+    @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.emptyTextView)
     TextView emptyTextView;
+    @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
     private MovieApiClient client;
@@ -56,10 +61,8 @@ public class MovieReviewsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        emptyTextView = view.findViewById(R.id.emptyTextView);
-        progressBar = view.findViewById(R.id.progressBar);
+        ButterKnife.bind(this, view);
 
-        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
 
