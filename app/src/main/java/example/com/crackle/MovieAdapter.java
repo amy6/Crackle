@@ -3,6 +3,7 @@ package example.com.crackle;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -180,7 +181,13 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void addLoader(Movie movie) {
         movies.add(movie);
-        notifyItemInserted(movies.size() - 1);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemInserted(movies.size() - 1);
+            }
+        });
+
     }
 
     public void removeLoader(Movie movie) {
