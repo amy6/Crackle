@@ -119,11 +119,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 title.setText(movie.getTitle());
                 year.setText(movie.getReleaseDate().substring(0,4));
+                String posterImageUrl = movie.getImageUrl() != null ? IMAGE_URL_SIZE.concat(movie.getImageUrl()) : "";
                 Glide.with(this)
-                        .load(IMAGE_URL_SIZE.concat(movie.getImageUrl()))
+                        .load(posterImageUrl)
                         .into(posterImage);
+                String backdropImageUrl = movie.getBackdropImageUrl() != null ? IMAGE_URL_SIZE.concat(movie.getBackdropImageUrl()) : "";
                 Glide.with(this)
-                        .load(IMAGE_URL_SIZE.concat(movie.getBackdropImageUrl()))
+                        .load(backdropImageUrl)
                         .into(backdropImage);
 
                 List<Integer> genreId = new ArrayList<>(movie.getGenres());

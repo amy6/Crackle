@@ -130,7 +130,8 @@ public class MovieInfoFragment extends Fragment {
 
         plotTextView.setText(movie.getPlot());
         releaseDateTextView.setText(movie.getReleaseDate());
-        tmdbRating.setText(DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10"));
+        String rating = movie.getUserRating() == 0 ? "No ratings" : DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10");
+        tmdbRating.setText(rating);
         ratingBar.setRating((float) (movie.getUserRating()/2f));
         popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
         language.setText(languageMap.get(movie.getLanguage()));
