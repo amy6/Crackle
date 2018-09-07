@@ -141,10 +141,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/view"
+            app:layout_constraintTop_toBottomOf="@+id/view"
             tools:text="Movie summary goes here!" />
 
         <TextView
@@ -153,11 +153,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="Director: "
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/plot" />
+            app:layout_constraintTop_toBottomOf="@+id/originalTitle" />
 
         <TextView
             android:id="@+id/director"
@@ -206,16 +206,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="end"
-            app:constraint_referenced_ids="tmdbRating,ratingBar"
-            tools:layout_editor_absoluteX="144dp" />
+            app:constraint_referenced_ids="tmdbRating,ratingBar" />
 
         <android.support.constraint.Barrier
             android:id="@+id/barrier6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="left"
-            app:constraint_referenced_ids="trending"
-            tools:layout_editor_absoluteX="262dp" />
+            app:constraint_referenced_ids="trending" />
 
         <View
             android:id="@+id/view"
@@ -264,6 +262,37 @@
             app:layout_constraintTop_toTopOf="@+id/homepage_label"
             app:layout_constraintVertical_bias="0.0"
             tools:text="http://www.interstellarmovie.net/" />
+
+        <TextView
+            android:id="@+id/title_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/original_title"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/barrier2"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/plot" />
+
+        <TextView
+            android:id="@+id/originalTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:text="N/A"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/title_label"
+            app:layout_constraintTop_toTopOf="@+id/title_label"
+            tools:text="Movie Title" />
 
 
     </android.support.constraint.ConstraintLayout>

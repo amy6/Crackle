@@ -23,4 +23,10 @@
     <string name="no_cast">No cast details available for this movie</string>
     <string name="trying_again_alert">Ok! Checking..</string>
     <string name="error_movie_duration">Error getting movie duration</string>
+    <string name="error_movie_cast">Error getting movie cast</string>
+    <string name="error_movie_review">Error getting movie reviews</string>
+    <string name="error_movie_director">Error getting movie director details</string>
+    <string name="error_movie_details">Error getting movie details</string>
+    <string name="no_ratings">No ratings</string>
+    <string name="original_title">Original Title: </string>
 </resources>
