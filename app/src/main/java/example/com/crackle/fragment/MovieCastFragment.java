@@ -32,6 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
+import static example.com.crackle.utils.Constants.GRID_LAYOUT;
 import static example.com.crackle.utils.Constants.MOVIE;
 
 
@@ -70,8 +71,7 @@ public class MovieCastFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), Utils.getSpanCount(getContext())));
-        recyclerView.setHasFixedSize(true);
+        Utils.setupRecyclerView(getContext(), recyclerView, GRID_LAYOUT);
 
         castList = new ArrayList<>();
         final MovieCastAdapter adapter = new MovieCastAdapter(getContext(), castList);

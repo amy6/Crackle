@@ -14,7 +14,7 @@ public class Constants {
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
     public static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
     public static final String IMAGE_SIZE = "w780/";
-    public static final String IMAGE_URL_SIZE = IMAGE_BASE_URL+IMAGE_SIZE;
+    public static final String IMAGE_URL_SIZE = IMAGE_BASE_URL + IMAGE_SIZE;
 
     //constant to save and restore default sort order selected by the user on activity state changes
     public static final String DEFAULT_OPTION_CHECKED = "DEFAULT_OPTION_CHECKED";
@@ -35,4 +35,11 @@ public class Constants {
     public static final String POSTER_IMG = "poster";
     public static final String BACKDROP_IMG = "backdrop";
     public static final String CAST_IMG = "cast";
+
+    //define item view cache size for RecyclerView
+    public static final int ITEM_VIEW_CACHE_SIZE = 10;
+
+    //layout types for RecyclerView
+    public static final int GRID_LAYOUT = 0;
+    public static final int LINEAR_LAYOUT = 1;
 }

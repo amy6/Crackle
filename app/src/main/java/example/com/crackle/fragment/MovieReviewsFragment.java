@@ -26,11 +26,13 @@ import example.com.crackle.model.Movie;
 import example.com.crackle.model.Review;
 import example.com.crackle.model.ReviewResults;
 import example.com.crackle.utils.MovieApiService;
+import example.com.crackle.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
+import static example.com.crackle.utils.Constants.LINEAR_LAYOUT;
 import static example.com.crackle.utils.Constants.MOVIE;
 
 
@@ -69,8 +71,7 @@ public class MovieReviewsFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setHasFixedSize(true);
+        Utils.setupRecyclerView(getContext(), recyclerView, LINEAR_LAYOUT);
 
         reviewList = new ArrayList<>();
         final MovieReviewAdapter adapter = new MovieReviewAdapter(getContext(), reviewList);
