@@ -19,9 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:adjustViewBounds="true"
+            android:transitionName="poster_image"
             android:contentDescription="@string/no_description_available"
             android:scaleType="centerCrop"
-            tools:src="@tools:sample/avatars" />
+            tools:src="@tools:sample/avatars"
+            tools:targetApi="lollipop" />
 
         <ProgressBar
             android:id="@+id/progressBar"

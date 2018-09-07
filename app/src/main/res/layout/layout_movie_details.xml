@@ -29,6 +29,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:transitionName="poster_image"
             android:contentDescription="@string/no_description_available"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/backdrop_image"
@@ -384,7 +385,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/language"
+                        android:id="@+id/language_label"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginBottom="8dp"
@@ -411,7 +412,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/language"
+                        app:layout_constraintStart_toEndOf="@+id/language_label"
                         app:layout_constraintTop_toBottomOf="@+id/languageLabel"
                         tools:text="en" />
 

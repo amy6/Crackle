@@ -1,11 +1,13 @@
 package example.com.crackle;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -164,7 +166,11 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Movie movie = movies.get(getAdapterPosition());
             Intent intent = new Intent(context, MovieDetailsActivity.class);
             intent.putExtra(Intent.EXTRA_TEXT, movie);
-            v.getContext().startActivity(intent);
+            ActivityOptionsCompat options = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                options = ActivityOptionsCompat.makeSceneTransitionAnimation((MainActivity)context, imageView, imageView.getTransitionName());
+            }
+            v.getContext().startActivity(intent,options.toBundle());
         }
     }
 
