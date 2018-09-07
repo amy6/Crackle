@@ -8,16 +8,16 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:padding="4dp"
+        android:layout_width="@dimen/dimens_100dp"
+        android:layout_height="@dimen/dimens_100dp"
+        android:padding="@dimen/dimens_4dp"
         tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="@dimen/dimens_4dp"
         android:gravity="center"
         android:textColor="@android:color/black"
         tools:text="Daniel Radcliffe" />

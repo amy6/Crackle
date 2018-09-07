@@ -14,21 +14,21 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="@dimen/dimens_8dp" />
 
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="64dp" />
+            android:layout_margin="@dimen/dimens_64dp" />
 
         <TextView
             android:id="@+id/emptyTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="64dp"
+            android:layout_margin="@dimen/dimens_64dp"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="@dimen/dimens_8dp"
             android:text="@string/no_cast"
             android:textAppearance="?android:textAppearanceMedium"
             android:visibility="gone" />

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="4dp"
+    app:cardCornerRadius="@dimen/dimens_4dp"
+    app:cardElevation="@dimen/dimens_4dp"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 
@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/poster_image"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="@dimen/dimens_300dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/no_description_available"
             android:scaleType="centerCrop"
@@ -27,8 +27,8 @@
 
         <ProgressBar
             android:id="@+id/progressBar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/dimens_30dp"
+            android:layout_height="@dimen/dimens_30dp"
             android:layout_centerInParent="true"
             android:indeterminate="true"
             android:indeterminateTint="@android:color/white"
