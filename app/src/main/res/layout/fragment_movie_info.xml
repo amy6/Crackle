@@ -25,7 +25,7 @@
             app:layout_constraintEnd_toStartOf="@+id/tmdbRating"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/tmdb_logo" />
+            android:src="@drawable/tmdb_logo" />
 
         <TextView
             android:id="@+id/tmdbRating"
@@ -65,7 +65,7 @@
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@+id/ratingBar"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_language" />
+            android:src="@drawable/ic_language" />
 
         <TextView
             android:id="@+id/languageLabel"
@@ -105,7 +105,7 @@
             android:contentDescription="@string/no_description_available"
             app:layout_constraintEnd_toStartOf="@+id/popularityLabel"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_trending_up" />
+            android:src="@drawable/ic_trending_up" />
 
         <TextView
             android:id="@+id/popularityLabel"

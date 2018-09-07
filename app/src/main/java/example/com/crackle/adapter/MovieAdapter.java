@@ -206,12 +206,15 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Intent intent = new Intent(context, MovieDetailsActivity.class);
             //pass the movie object data
             intent.putExtra(Intent.EXTRA_TEXT, movie);
-            ActivityOptionsCompat options = null;
+            ActivityOptionsCompat options;
             //define shared element transition for the movie poster image
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 options = ActivityOptionsCompat.makeSceneTransitionAnimation((MainActivity) context, imageView, imageView.getTransitionName());
+                v.getContext().startActivity(intent, options.toBundle());
+            } else {
+                v.getContext().startActivity(intent);
             }
-            v.getContext().startActivity(intent, options.toBundle());
+
         }
     }
 
