@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Crackle</string>
     <string name="no_description_available">No description available</string>
-    <string name="plot_label">Plot</string>
 
     <string name="action_sort">Sort</string>
     <string name="sort_most_popular">Most Popular</string>
@@ -14,7 +13,6 @@
     <string name="error_no_results">Okay, Thanks</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="popularity">Popularity</string>
     <string name="language">Language</string>
     <string name="bullet">\u2022</string>
@@ -29,4 +27,8 @@
     <string name="error_movie_details">Error getting movie details</string>
     <string name="no_ratings">No ratings</string>
     <string name="original_title">Original Title: </string>
+    <string name="not_available">N/A</string>
+    <string name="director">Director:</string>
+    <string name="release_date">Release Date:</string>
+    <string name="homepage">Homepage:</string>
 </resources>

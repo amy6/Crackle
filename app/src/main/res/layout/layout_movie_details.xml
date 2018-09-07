@@ -20,7 +20,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
+            tools:src="@tools:sample/avatars"
+            android:contentDescription="@string/no_description_available" />
 
         <ImageView
             android:id="@+id/poster_image"
@@ -36,7 +37,8 @@
             app:layout_constraintDimensionRatio="w,2:3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/backdrop_image"
-            tools:src="@tools:sample/avatars" />
+            tools:src="@tools:sample/avatars"
+            tools:targetApi="lollipop" />
 
         <TextView
             android:id="@+id/duration"
@@ -47,7 +49,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="16dp"
-            android:text="N/A"
+            android:text="@string/not_available"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/bullet"
@@ -60,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            android:text="N/A"
+            android:text="@string/not_available"
             app:layout_constraintBaseline_toBaselineOf="@+id/bullet"
             app:layout_constraintEnd_toStartOf="@+id/bullet"
             app:layout_constraintHorizontal_bias="0.5"
@@ -116,7 +118,6 @@
             tools:text="Genre" />
 
         <android.support.constraint.Barrier
-            android:id="@+id/barrier3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -147,7 +148,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/poster_image_"
                 android:layout_width="200dp"
                 android:layout_height="300dp"
                 android:contentDescription="@string/no_description_available"
@@ -401,7 +401,6 @@
         android:visibility="gone">
 
         <TextView
-            android:id="@+id/duration_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -416,7 +415,6 @@
             tools:text="2h 26m" />
 
         <TextView
-            android:id="@+id/genre_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

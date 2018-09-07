@@ -3,16 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_sort"
         android:title="@string/action_sort"
         android:icon="@drawable/ic_sort"
         app:showAsAction="ifRoom">
 
         <menu>
 
-            <group
-                android:id="@+id/sort_group"
-                android:checkableBehavior="single">
+            <group android:checkableBehavior="single">
 
                 <item
                     android:id="@+id/sort_most_popular"

@@ -39,7 +39,8 @@
             android:layout_marginRight="8dp"
             android:background="@android:color/transparent"
             android:visibility="gone"
-            app:srcCompat="@drawable/ic_keyboard_arrow_down" />
+            app:srcCompat="@drawable/ic_keyboard_arrow_down"
+            android:contentDescription="@string/no_description_available" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

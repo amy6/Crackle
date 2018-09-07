@@ -11,8 +11,8 @@
         android:id="@+id/appbarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
         android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay"
         app:toolbarId="@id/toolbar">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -23,7 +23,7 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <include layout="@layout/layout_movie_details"/>
+            <include layout="@layout/layout_movie_details" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -41,8 +41,8 @@
             android:layout_height="wrap_content"
             app:layout_collapseMode="pin"
             app:tabBackground="@color/colorPrimaryLight"
-            app:tabIndicatorHeight="2dp"
             app:tabGravity="fill"
+            app:tabIndicatorHeight="2dp"
             app:tabMode="fixed" />
 
     </android.support.design.widget.AppBarLayout>
