@@ -37,11 +37,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
+import static example.com.crackle.utils.Constants.DEFAULT_OPTION_CHECKED;
 import static example.com.crackle.utils.Constants.LOG_TAG;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
 
-    public static final String DEFAULT_OPTION_CHECKED = "DEFAULT_OPTION_CHECKED";
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.progressBar)

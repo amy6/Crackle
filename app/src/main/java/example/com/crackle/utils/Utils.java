@@ -19,13 +19,13 @@ import java.util.HashMap;
 import example.com.crackle.R;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
+import static example.com.crackle.utils.Constants.BACKDROP_IMG;
+import static example.com.crackle.utils.Constants.CAST_IMG;
 import static example.com.crackle.utils.Constants.LOG_TAG;
+import static example.com.crackle.utils.Constants.POSTER_IMG;
 
 public class Utils {
 
-    public static final String POSTER_IMG = "poster";
-    public static final String BACKDROP_IMG = "backdrop";
-    public static final String CAST_IMG = "cast";
 
     public static boolean checkInternetConnection(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);

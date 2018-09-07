@@ -17,9 +17,10 @@ import butterknife.ButterKnife;
 import example.com.crackle.R;
 import example.com.crackle.model.Review;
 
+import static example.com.crackle.utils.Constants.MAX_LINES;
+
 public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.MovieReviewViewHolder> {
 
-    private static final int MAX_LINES = 3;
     private Context context;
     private List<Review> reviewList;
     private boolean expandable;

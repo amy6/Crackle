@@ -26,21 +26,20 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import example.com.crackle.R;
+import example.com.crackle.activity.MainActivity;
 import example.com.crackle.activity.MovieDetailsActivity;
 import example.com.crackle.listener.OnLoadMoreListener;
-import example.com.crackle.R;
-import example.com.crackle.utils.Utils;
-import example.com.crackle.activity.MainActivity;
 import example.com.crackle.model.Movie;
+import example.com.crackle.utils.Utils;
 
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
+import static example.com.crackle.utils.Constants.ITEM;
 import static example.com.crackle.utils.Constants.LOG_TAG;
-import static example.com.crackle.utils.Utils.POSTER_IMG;
+import static example.com.crackle.utils.Constants.POSTER_IMG;
+import static example.com.crackle.utils.Constants.PROGRESS;
 
 public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    private static final int ITEM = 0;
-    private static final int PROGRESS = 1;
 
     private Context context;
     private List<Movie> movies;

@@ -16,11 +16,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import example.com.crackle.R;
-import example.com.crackle.utils.Utils;
 import example.com.crackle.model.Cast;
+import example.com.crackle.utils.Utils;
 
+import static example.com.crackle.utils.Constants.CAST_IMG;
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
-import static example.com.crackle.utils.Utils.CAST_IMG;
 
 public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.MovieCastViewHolder> {
 
