@@ -33,6 +33,7 @@ import static example.com.crackle.Constants.LOG_TAG;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
 
+    public static final String DEFAULT_OPTION_CHECKED = "DEFAULT_OPTION_CHECKED";
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.progressBar)
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private int topRatedMoviesStartPage = 1;
 
     private MenuItem mostPopularMenuItem;
+    private MenuItem topRatedMenuItem;
+    private boolean defaultOptionChecked = true;
     private Toast toast;
 
     @Override
@@ -81,9 +84,20 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         refreshLayout.setOnRefreshListener(this);
 
         client = MovieApiService.getClient().create(MovieApiClient.class);
-        getPopularMovies();
 
         errorButton.setOnClickListener(this);
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(DEFAULT_OPTION_CHECKED)) {
+                defaultOptionChecked = savedInstanceState.getBoolean(DEFAULT_OPTION_CHECKED);
+            }
+        }
+
+        if (defaultOptionChecked) {
+            getPopularMovies();
+        } else {
+            getTopRatedMovies();
+        }
     }
 
     @Override
@@ -91,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
         mostPopularMenuItem = menu.findItem(R.id.sort_most_popular);
+        topRatedMenuItem = menu.findItem(R.id.sort_top_rated);
 
         //default option to be checked
         mostPopularMenuItem.setChecked(true);
@@ -133,11 +148,23 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (defaultOptionChecked) {
+            mostPopularMenuItem.setChecked(true);
+        } else {
+            topRatedMenuItem.setChecked(true);
+        }
+        return true;
+    }
+
     private void getPopularMovies() {
 
         if (!isInternetConnected()) {
             return;
         }
+
+        defaultOptionChecked = true;
 
         call = client.getPopularMovies(API_KEY, mostPopularMoviesStartPage);
         call.enqueue(new Callback<MovieResults>() {
@@ -186,6 +213,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         if (!isInternetConnected()) {
             return;
         }
+
+        defaultOptionChecked = false;
 
         call = client.getTopRatedMovies(API_KEY, topRatedMoviesStartPage);
         call.enqueue(new Callback<MovieResults>() {
@@ -308,5 +337,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
         toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(DEFAULT_OPTION_CHECKED, defaultOptionChecked);
+        super.onSaveInstanceState(outState);
     }
 }
