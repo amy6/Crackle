@@ -29,9 +29,9 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:transitionName="poster_image"
             android:contentDescription="@string/no_description_available"
             android:scaleType="centerCrop"
+            android:transitionName="poster_image"
             app:layout_constraintBottom_toBottomOf="@+id/backdrop_image"
             app:layout_constraintDimensionRatio="w,2:3"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,8 +49,8 @@
             android:layout_marginTop="16dp"
             android:text="N/A"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/bullet2"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/bullet"
             app:layout_constraintTop_toBottomOf="@+id/backdrop_image"
             tools:text="2h 35m" />
 
@@ -58,54 +58,25 @@
             android:id="@+id/year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:text="N/A"
-            app:layout_constraintBaseline_toBaselineOf="@+id/bullet2"
-            app:layout_constraintEnd_toStartOf="@+id/bullet2"
+            app:layout_constraintBaseline_toBaselineOf="@+id/bullet"
+            app:layout_constraintEnd_toStartOf="@+id/bullet"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/bullet1"
+            app:layout_constraintStart_toEndOf="@+id/poster_image"
             tools:text="2018" />
 
         <TextView
-            android:id="@+id/contentRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:padding="4dp"
-            android:text="N/A"
-            android:background="@drawable/border"
-            app:layout_constraintBaseline_toBaselineOf="@+id/bullet1"
-            app:layout_constraintEnd_toStartOf="@+id/bullet1"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@+id/poster_image"
-            tools:text="PG - 13" />
-
-        <TextView
-            android:id="@+id/bullet1"
+            android:id="@+id/bullet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
             android:text="@string/bullet"
-            app:layout_constraintBaseline_toBaselineOf="@+id/year"
-            app:layout_constraintEnd_toStartOf="@+id/year"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/contentRating" />
-
-        <TextView
-            android:id="@+id/bullet2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp"
-            android:text="@string/bullet"
-            app:layout_constraintBaseline_toBaselineOf="@+id/duration"
-            app:layout_constraintEnd_toStartOf="@+id/duration"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/year" />
+            app:layout_constraintStart_toEndOf="@+id/year"
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_image" />
 
         <TextView
             android:id="@+id/title"
@@ -118,9 +89,9 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
             android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/poster_image"
             app:layout_constraintTop_toBottomOf="@+id/year"
