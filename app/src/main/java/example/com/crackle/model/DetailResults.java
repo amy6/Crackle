@@ -1,8 +1,8 @@
-package example.com.crackle;
+package example.com.crackle.model;
 
 import com.google.gson.annotations.SerializedName;
 
-class DetailResults {
+public class DetailResults {
 
     @SerializedName("runtime")
     private int duration;

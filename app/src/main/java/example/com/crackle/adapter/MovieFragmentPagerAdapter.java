@@ -1,9 +1,14 @@
-package example.com.crackle;
+package example.com.crackle.adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import example.com.crackle.fragment.MovieCastFragment;
+import example.com.crackle.fragment.MovieInfoFragment;
+import example.com.crackle.fragment.MovieReviewsFragment;
+import example.com.crackle.model.Movie;
 
 public class MovieFragmentPagerAdapter extends FragmentPagerAdapter {
 

@@ -1,4 +1,4 @@
-package example.com.crackle;
+package example.com.crackle.activity;
 
 import android.content.Intent;
 import android.os.Build;
@@ -10,30 +10,33 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import example.com.crackle.R;
+import example.com.crackle.utils.Utils;
+import example.com.crackle.adapter.MovieFragmentPagerAdapter;
+import example.com.crackle.listener.MovieApiClient;
+import example.com.crackle.model.DetailResults;
+import example.com.crackle.model.Movie;
+import example.com.crackle.utils.MovieApiService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static example.com.crackle.Constants.API_KEY;
-import static example.com.crackle.Constants.IMAGE_URL_SIZE;
-import static example.com.crackle.Constants.LOG_TAG;
+import static example.com.crackle.utils.Constants.API_KEY;
+import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 

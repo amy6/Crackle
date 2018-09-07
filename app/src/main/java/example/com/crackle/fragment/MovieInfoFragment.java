@@ -1,4 +1,4 @@
-package example.com.crackle;
+package example.com.crackle.fragment;
 
 
 import android.os.Bundle;
@@ -19,12 +19,20 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import example.com.crackle.R;
+import example.com.crackle.listener.MovieApiClient;
+import example.com.crackle.model.CreditResults;
+import example.com.crackle.model.Crew;
+import example.com.crackle.model.DetailResults;
+import example.com.crackle.model.Movie;
+import example.com.crackle.utils.MovieApiService;
+import example.com.crackle.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static example.com.crackle.Constants.API_KEY;
-import static example.com.crackle.Constants.MOVIE;
+import static example.com.crackle.utils.Constants.API_KEY;
+import static example.com.crackle.utils.Constants.MOVIE;
 
 
 /**

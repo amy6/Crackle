@@ -1,4 +1,4 @@
-package example.com.crackle;
+package example.com.crackle.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -14,6 +14,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import example.com.crackle.R;
+import example.com.crackle.model.Review;
 
 public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.MovieReviewViewHolder> {
 

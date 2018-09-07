@@ -1,11 +1,10 @@
-package example.com.crackle;
+package example.com.crackle.fragment;
 
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,12 +19,19 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import example.com.crackle.R;
+import example.com.crackle.adapter.MovieReviewAdapter;
+import example.com.crackle.listener.MovieApiClient;
+import example.com.crackle.model.Movie;
+import example.com.crackle.model.Review;
+import example.com.crackle.model.ReviewResults;
+import example.com.crackle.utils.MovieApiService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static example.com.crackle.Constants.API_KEY;
-import static example.com.crackle.Constants.MOVIE;
+import static example.com.crackle.utils.Constants.API_KEY;
+import static example.com.crackle.utils.Constants.MOVIE;
 
 
 /**

@@ -1,4 +1,4 @@
-package example.com.crackle;
+package example.com.crackle.listener;
 
 public interface OnLoadMoreListener {
     void onLoadMore();

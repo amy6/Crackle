@@ -1,4 +1,4 @@
-package example.com.crackle;
+package example.com.crackle.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -7,7 +7,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,12 +14,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
+import example.com.crackle.R;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
-import static example.com.crackle.Constants.LOG_TAG;
+import static example.com.crackle.utils.Constants.LOG_TAG;
 
 public class Utils {
 

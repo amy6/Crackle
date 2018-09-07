@@ -1,4 +1,4 @@
-package example.com.crackle;
+package example.com.crackle.model;
 
 import com.google.gson.annotations.SerializedName;
 

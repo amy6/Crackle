@@ -1,6 +1,5 @@
-package example.com.crackle;
+package example.com.crackle.adapter;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -27,10 +26,16 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import example.com.crackle.activity.MovieDetailsActivity;
+import example.com.crackle.listener.OnLoadMoreListener;
+import example.com.crackle.R;
+import example.com.crackle.utils.Utils;
+import example.com.crackle.activity.MainActivity;
+import example.com.crackle.model.Movie;
 
-import static example.com.crackle.Constants.IMAGE_URL_SIZE;
-import static example.com.crackle.Constants.LOG_TAG;
-import static example.com.crackle.Utils.POSTER_IMG;
+import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
+import static example.com.crackle.utils.Constants.LOG_TAG;
+import static example.com.crackle.utils.Utils.POSTER_IMG;
 
 public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

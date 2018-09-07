@@ -1,4 +1,7 @@
-package example.com.crackle;
+package example.com.crackle.utils;
+
+import example.com.crackle.BuildConfig;
+import example.com.crackle.activity.MainActivity;
 
 public class Constants {
 

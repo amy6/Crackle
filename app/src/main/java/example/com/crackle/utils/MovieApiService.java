@@ -1,11 +1,11 @@
-package example.com.crackle;
+package example.com.crackle.utils;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static example.com.crackle.Constants.BASE_URL;
+import static example.com.crackle.utils.Constants.BASE_URL;
 
 public class MovieApiService {
 

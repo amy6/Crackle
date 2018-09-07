@@ -1,13 +1,11 @@
-package example.com.crackle;
+package example.com.crackle.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Movie implements Parcelable {
 

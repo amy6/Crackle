@@ -1,4 +1,4 @@
-package example.com.crackle;
+package example.com.crackle.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,12 +24,20 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import example.com.crackle.model.Movie;
+import example.com.crackle.adapter.MovieAdapter;
+import example.com.crackle.listener.MovieApiClient;
+import example.com.crackle.utils.MovieApiService;
+import example.com.crackle.model.MovieResults;
+import example.com.crackle.listener.OnLoadMoreListener;
+import example.com.crackle.R;
+import example.com.crackle.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static example.com.crackle.Constants.API_KEY;
-import static example.com.crackle.Constants.LOG_TAG;
+import static example.com.crackle.utils.Constants.API_KEY;
+import static example.com.crackle.utils.Constants.LOG_TAG;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
 
