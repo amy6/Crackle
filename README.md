@@ -71,3 +71,5 @@ App logo - <a href="https://www.freepik.com/free-photos-vectors/logo">Freepik</a
 
 <a href="https://stackoverflow.com/a/38472370/8342168">Handling RecyclerView Grid span count dynamically</a>
 
+<a href="https://www.themoviedb.org/apps/585fdb2c92514115d301e7f8?language=en-US">UI inspired by Cinematics App</a>
+
