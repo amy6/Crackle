@@ -5,12 +5,14 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -20,7 +22,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,7 +40,7 @@ import retrofit2.Response;
 import static example.com.crackle.utils.Constants.API_KEY;
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
 
-public class MovieDetailsActivity extends AppCompatActivity {
+public class MovieDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     @BindView(R.id.poster_image)
     ImageView posterImage;
@@ -63,6 +64,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     AppBarLayout appBarLayout;
     @BindView(R.id.collapsingtoolbar)
     CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.favorites)
+    FloatingActionButton favorites;
 
     private Movie movie;
     private int movieId;
@@ -89,6 +92,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
+
+        //set up click listener for favorites button
+        favorites.setOnClickListener(this);
 
         //set title on on collapsed toolbar
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -193,5 +199,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
         //close the current activity
         finish();
         return true;
+    }
+
+    /**
+     * handle click events on views
+     * @param view reference to the view that receives the click event
+     */
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.favorites:
+                //TODO: Implement favorites functionality
+                Toast.makeText(this, "Favorites clicked", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }
