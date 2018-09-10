@@ -31,4 +31,5 @@
     <string name="director">Director:</string>
     <string name="release_date">Release Date:</string>
     <string name="homepage">Homepage:</string>
+    <string name="sort_favorites">Favorites</string>
 </resources>

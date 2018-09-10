@@ -4,6 +4,7 @@ import example.com.crackle.model.MovieResults;
 import example.com.crackle.model.ReviewResults;
 import example.com.crackle.model.CreditResults;
 import example.com.crackle.model.DetailResults;
+import example.com.crackle.model.VideoResults;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -25,4 +26,7 @@ public interface MovieApiClient {
 
     @GET("movie/{movie_id}")
     Call<DetailResults> getMovieDetails (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+
+    @GET("movie/{movie_id}/videos")
+    Call<VideoResults> getMovieVideos (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 }

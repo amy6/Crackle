@@ -185,6 +185,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     getTopRatedMovies();
                 }
                 break;
+            case R.id.favorites:
+                //TODO: display user's favorites movie list
+                break;
         }
         return true;
     }
