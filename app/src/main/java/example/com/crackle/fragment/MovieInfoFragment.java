@@ -25,6 +25,8 @@ import example.com.crackle.model.CreditResults;
 import example.com.crackle.model.Crew;
 import example.com.crackle.model.DetailResults;
 import example.com.crackle.model.Movie;
+import example.com.crackle.model.Video;
+import example.com.crackle.model.VideoResults;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
@@ -60,6 +62,7 @@ public class MovieInfoFragment extends Fragment {
     TextView originalTitle;
 
     private List<Crew> crewList;
+    private List<Video> videoList;
 
 
     public MovieInfoFragment() {
@@ -149,6 +152,24 @@ public class MovieInfoFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call<DetailResults> call, @NonNull Throwable t) {
                 Toast.makeText(getContext(), R.string.error_movie_details, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        final Call<VideoResults> videoResultsCall = client.getMovieVideos(((Movie)getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
+        videoResultsCall.enqueue(new Callback<VideoResults>() {
+            @Override
+            public void onResponse(Call<VideoResults> call, Response<VideoResults> response) {
+                //verify if the response body or the fetched results are empty/null
+                if (response.body() == null || response.body().getVideos() == null) {
+                    return;
+                }
+
+                videoList.addAll(response.body().getVideos());
+            }
+
+            @Override
+            public void onFailure(Call<VideoResults> call, Throwable t) {
+
             }
         });
 
