@@ -233,34 +233,28 @@
             android:id="@+id/homepage_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimens_8dp"
             android:layout_marginLeft="@dimen/dimens_16dp"
             android:layout_marginStart="@dimen/dimens_16dp"
             android:layout_marginTop="@dimen/dimens_8dp"
             android:text="@string/homepage"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/release_date_label"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/release_date_label" />
 
         <TextView
             android:id="@+id/homepage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimens_8dp"
             android:layout_marginEnd="@dimen/dimens_8dp"
             android:layout_marginLeft="@dimen/dimens_8dp"
             android:layout_marginRight="@dimen/dimens_8dp"
             android:layout_marginStart="@dimen/dimens_8dp"
             android:autoLink="web"
             android:text="@string/not_available"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/homepage_label"
             app:layout_constraintTop_toTopOf="@+id/homepage_label"
-            app:layout_constraintVertical_bias="0.0"
             tools:text="http://www.interstellarmovie.net/" />
 
         <TextView
@@ -293,6 +287,38 @@
             app:layout_constraintStart_toEndOf="@+id/title_label"
             app:layout_constraintTop_toTopOf="@+id/title_label"
             tools:text="Movie Title" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/trailers_label"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/trailers_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Trailers:"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/homepage" />
 
 
     </android.support.constraint.ConstraintLayout>
