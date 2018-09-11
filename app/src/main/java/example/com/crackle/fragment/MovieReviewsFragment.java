@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
-import static example.com.crackle.utils.Constants.LINEAR_LAYOUT;
+import static example.com.crackle.utils.Constants.LINEAR_LAYOUT_VERTICAL;
 import static example.com.crackle.utils.Constants.MOVIE;
 
 
@@ -85,7 +84,7 @@ public class MovieReviewsFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         //set up RecyclerView - define caching properties and default animator
-        Utils.setupRecyclerView(getContext(), recyclerView, LINEAR_LAYOUT);
+        Utils.setupRecyclerView(getContext(), recyclerView, LINEAR_LAYOUT_VERTICAL);
         ;
 
         //initialize data set and set up the adapter

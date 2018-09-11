@@ -193,10 +193,16 @@ public class Utils {
      * @param recyclerView reference to RecyclerView
      */
     public static void setupRecyclerView(Context context, RecyclerView recyclerView, int layoutType) {
-        if (layoutType == 0) {
-            recyclerView.setLayoutManager(new GridLayoutManager(context, getSpanCount(context)));
-        } else {
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        switch (layoutType) {
+            case 0:
+                recyclerView.setLayoutManager(new GridLayoutManager(context, getSpanCount(context)));
+                break;
+            case 1:
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                break;
+            case 2:
+                recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                break;
         }
         recyclerView.setItemViewCacheSize(ITEM_VIEW_CACHE_SIZE);
         recyclerView.setDrawingCacheEnabled(true);

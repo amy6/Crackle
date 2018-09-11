@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import example.com.crackle.R;
 import example.com.crackle.model.Video;
+
+import static example.com.crackle.utils.Constants.LOG_TAG;
 
 public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.VideoViewHolder> {
 
@@ -41,7 +44,8 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
         Video video = videos.get(position);
         if (video.getSite().equalsIgnoreCase("youtube")) {
-            Uri uri = Uri.parse(YOUTUBE_IMG_BASE_URI + video.getId() + YOUTUBE_IMG_EXTENSION);
+            Uri uri = Uri.parse(YOUTUBE_IMG_BASE_URI + video.getKey() + YOUTUBE_IMG_EXTENSION);
+            Log.d(LOG_TAG, "Uri is : " + uri.toString());
             Glide.with(context)
                     .load(uri)
                     .into(holder.imageView);

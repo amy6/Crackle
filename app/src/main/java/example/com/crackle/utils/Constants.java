@@ -41,5 +41,6 @@ public class Constants {
 
     //layout types for RecyclerView
     public static final int GRID_LAYOUT = 0;
-    public static final int LINEAR_LAYOUT = 1;
+    public static final int LINEAR_LAYOUT_VERTICAL = 1;
+    public static final int LINEAR_LAYOUT_HORIZONTAL = 2;
 }

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import example.com.crackle.R;
+import example.com.crackle.adapter.MovieVideoAdapter;
 import example.com.crackle.listener.MovieApiClient;
 import example.com.crackle.model.CreditResults;
 import example.com.crackle.model.Crew;
@@ -34,6 +37,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
+import static example.com.crackle.utils.Constants.LINEAR_LAYOUT_HORIZONTAL;
+import static example.com.crackle.utils.Constants.LINEAR_LAYOUT_VERTICAL;
+import static example.com.crackle.utils.Constants.LOG_TAG;
 import static example.com.crackle.utils.Constants.MOVIE;
 
 
@@ -60,6 +66,8 @@ public class MovieInfoFragment extends Fragment {
     TextView homepage;
     @BindView(R.id.originalTitle)
     TextView originalTitle;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
 
     private List<Crew> crewList;
     private List<Video> videoList;
@@ -95,6 +103,14 @@ public class MovieInfoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ButterKnife.bind(this, view);
+
+        //set up RecyclerView - define caching properties and default animator
+        Utils.setupRecyclerView(getContext(), recyclerView, LINEAR_LAYOUT_HORIZONTAL);
+
+        //initialize data set and set up the adapter
+        videoList = new ArrayList<>();
+        final MovieVideoAdapter adapter = new MovieVideoAdapter(getContext(), videoList);
+        recyclerView.setAdapter(adapter);
 
         //get movie object
         Movie movie = getArguments().getParcelable(MOVIE);
@@ -155,21 +171,27 @@ public class MovieInfoFragment extends Fragment {
             }
         });
 
-        final Call<VideoResults> videoResultsCall = client.getMovieVideos(((Movie)getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
+        Call<VideoResults> videoResultsCall = client.getMovieVideos(((Movie)getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
         videoResultsCall.enqueue(new Callback<VideoResults>() {
             @Override
-            public void onResponse(Call<VideoResults> call, Response<VideoResults> response) {
+            public void onResponse(@NonNull Call<VideoResults> call, @NonNull Response<VideoResults> response) {
                 //verify if the response body or the fetched results are empty/null
                 if (response.body() == null || response.body().getVideos() == null) {
                     return;
                 }
 
-                videoList.addAll(response.body().getVideos());
+                if (response.body().getVideos().size() > 0) {
+                    Log.d(LOG_TAG, "Videos fetched from API, updating list and notifying adapter");
+                    videoList.addAll(response.body().getVideos());
+                    adapter.notifyDataSetChanged();
+                }
+
             }
 
             @Override
-            public void onFailure(Call<VideoResults> call, Throwable t) {
-
+            public void onFailure(@NonNull Call<VideoResults> call, @NonNull Throwable t) {
+                Log.d(LOG_TAG, t.getMessage());
+                Toast.makeText(getContext(), R.string.error_movie_trailers, Toast.LENGTH_SHORT).show();
             }
         });
 

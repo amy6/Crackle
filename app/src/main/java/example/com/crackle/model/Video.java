@@ -4,18 +4,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class Video {
 
-    @SerializedName("id")
-    private long id;
+    @SerializedName("key")
+    private String key;
     @SerializedName("site")
     private String site;
 
-    public Video(long id, String site) {
-        this.id = id;
+    public Video(String key, String site) {
+        this.key = key;
         this.site = site;
     }
 
-    public long getId() {
-        return id;
+    public String getKey() {
+        return key;
     }
 
     public String getSite() {
