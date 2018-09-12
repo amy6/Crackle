@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -25,6 +26,7 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
 
     public static final String YOUTUBE_IMG_BASE_URI = "http://img.youtube.com/vi/";
     public static final String YOUTUBE_IMG_EXTENSION = "/mqdefault.jpg";
+    public static final String SITE_FILTER_YOUTUBE = "youtube";
 
     private Context context;
     private List<Video> videos;
@@ -43,9 +45,9 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
         Video video = videos.get(position);
-        if (video.getSite().equalsIgnoreCase("youtube")) {
+        if (video.getSite().equalsIgnoreCase(SITE_FILTER_YOUTUBE)) {
             Uri uri = Uri.parse(YOUTUBE_IMG_BASE_URI + video.getKey() + YOUTUBE_IMG_EXTENSION);
-            Log.d(LOG_TAG, "Uri is : " + uri.toString());
+            holder.name.setText(video.getTitle());
             Glide.with(context)
                     .load(uri)
                     .into(holder.imageView);
@@ -61,6 +63,8 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
 
         @BindView(R.id.thumbnail)
         ImageView imageView;
+        @BindView(R.id.name)
+        TextView name;
 
         public VideoViewHolder(View itemView) {
             super(itemView);

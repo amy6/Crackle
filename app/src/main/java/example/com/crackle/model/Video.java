@@ -8,10 +8,13 @@ public class Video {
     private String key;
     @SerializedName("site")
     private String site;
+    @SerializedName("name")
+    private String title;
 
-    public Video(String key, String site) {
+    public Video(String key, String site, String title) {
         this.key = key;
         this.site = site;
+        this.title = title;
     }
 
     public String getKey() {
@@ -20,5 +23,9 @@ public class Video {
 
     public String getSite() {
         return site;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
