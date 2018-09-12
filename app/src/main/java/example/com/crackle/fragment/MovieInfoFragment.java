@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +37,6 @@ import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
 import static example.com.crackle.utils.Constants.LINEAR_LAYOUT_HORIZONTAL;
-import static example.com.crackle.utils.Constants.LINEAR_LAYOUT_VERTICAL;
-import static example.com.crackle.utils.Constants.LOG_TAG;
 import static example.com.crackle.utils.Constants.MOVIE;
 
 
@@ -171,7 +168,7 @@ public class MovieInfoFragment extends Fragment {
             }
         });
 
-        Call<VideoResults> videoResultsCall = client.getMovieVideos(((Movie)getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
+        Call<VideoResults> videoResultsCall = client.getMovieVideos(((Movie) getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
         videoResultsCall.enqueue(new Callback<VideoResults>() {
             @Override
             public void onResponse(@NonNull Call<VideoResults> call, @NonNull Response<VideoResults> response) {
@@ -180,8 +177,8 @@ public class MovieInfoFragment extends Fragment {
                     return;
                 }
 
+                //update data set and notify the adapter
                 if (response.body().getVideos().size() > 0) {
-                    Log.d(LOG_TAG, "Videos fetched from API, updating list and notifying adapter");
                     videoList.addAll(response.body().getVideos());
                     adapter.notifyDataSetChanged();
                 }
@@ -190,7 +187,6 @@ public class MovieInfoFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<VideoResults> call, @NonNull Throwable t) {
-                Log.d(LOG_TAG, t.getMessage());
                 Toast.makeText(getContext(), R.string.error_movie_trailers, Toast.LENGTH_SHORT).show();
             }
         });

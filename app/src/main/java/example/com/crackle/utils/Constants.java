@@ -43,4 +43,10 @@ public class Constants {
     public static final int GRID_LAYOUT = 0;
     public static final int LINEAR_LAYOUT_VERTICAL = 1;
     public static final int LINEAR_LAYOUT_HORIZONTAL = 2;
+
+    //constants for handling youtube intent to play movie trailers
+    public static final String YOUTUBE_VID_BASE_URI = "https://youtube.com/watch?v=";
+    public static final String YOUTUBE_IMG_BASE_URI = "http://img.youtube.com/vi/";
+    public static final String YOUTUBE_IMG_EXTENSION = "/mqdefault.jpg";
+    public static final String SITE_FILTER_YOUTUBE = "youtube";
 }
