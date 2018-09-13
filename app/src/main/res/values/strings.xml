@@ -34,4 +34,11 @@
     <string name="sort_favorites">Favorites</string>
     <string name="error_movie_trailers">Error getting movie trailers</string>
     <string name="error_video_play">No suitable app to play the video</string>
+    <string name="action_share">Share</string>
+    <string name="action_playstore">View on Google Playstore</string>
+    <string name="action_tmdb">View on TMDB</string>
+    <string name="action_imdb">View on IMDB</string>
+    <string name="error_movie_intent">No suitable app to perform the action</string>
+    <string name="movie_share_intent_text">Check out %s  on TMDB\n%s %s\n\nBrought to you by Crackle</string>
+    <string name="movie_share_intent_chooser_text">Share \"%s\" via</string>
 </resources>

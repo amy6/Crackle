@@ -1,6 +1,7 @@
 package example.com.crackle.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -42,6 +45,10 @@ import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
 
 public class MovieDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String TMDB_MOVIE_BASE_URI = "https://www.themoviedb.org/movie/";
+    public static final String PLAYSTORE_BASE_URI = "market://search?q=";
+    public static final String PLAYSTORE_QUERY_PARAMETER_CATEGORY = "c";
+    public static final String PLAYSTORE_QUERY_VALUE_CATEGORY = "movies";
     @BindView(R.id.poster_image)
     ImageView posterImage;
     @BindView(R.id.backdrop_image)
@@ -190,6 +197,71 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     }
 
     /**
+     * inflate menu options
+     *
+     * @param menu reference to menu object
+     * @return boolean flag indicating whether the menu create action was handled successfully
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail_menu, menu);
+        return true;
+    }
+
+    /**
+     * handle selection of menu options
+     *
+     * @param item reference to the menu item clicked
+     * @return boolean flag indicating whether the menu click action was handled successfully
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent();
+        switch (item.getItemId()) {
+
+            //start an intent to share movie TMDB profile url
+            case R.id.action_share:
+                intent.setAction(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                //set text content
+                intent.putExtra(Intent.EXTRA_TEXT,
+                        String.format(getString(R.string.movie_share_intent_text),
+                                movie.getTitle(),
+                                TMDB_MOVIE_BASE_URI,
+                                String.valueOf(movie.getMovieId())));
+                //set custom chooser title
+                intent = Intent.createChooser(intent,
+                        String.format(getString(R.string.movie_share_intent_chooser_text),
+                                movie.getTitle()));
+                break;
+
+            //intent to open movie in PlayStore "movies" category
+            case R.id.action_playstore:
+                intent.setAction(Intent.ACTION_VIEW);
+                //set PlayStore category to movies
+                intent.setData(Uri.parse(PLAYSTORE_BASE_URI +
+                        movie.getTitle()).buildUpon()
+                        .appendQueryParameter(PLAYSTORE_QUERY_PARAMETER_CATEGORY,
+                                PLAYSTORE_QUERY_VALUE_CATEGORY).build());
+                break;
+
+            //intent to open movie profile on TMDB
+            case R.id.action_tmdb:
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(TMDB_MOVIE_BASE_URI + movie.getMovieId()));
+                break;
+        }
+
+        //verify if the intent can be opened with a suitable app on the device
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.error_movie_intent, Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
+
+    /**
      * handles back navigation on toolbar
      *
      * @return
@@ -203,6 +275,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * handle click events on views
+     *
      * @param view reference to the view that receives the click event
      */
     @Override
