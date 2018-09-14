@@ -62,10 +62,10 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
         Video video = videos.get(position);
         if (video.getSite().equalsIgnoreCase(SITE_FILTER_YOUTUBE)) {
             //set up url for thumbnail
-            Uri uri = Uri.parse(YOUTUBE_IMG_BASE_URI + video.getKey() + YOUTUBE_IMG_EXTENSION);
+            Uri uri = Uri.parse(YOUTUBE_IMG_BASE_URI + video.getKey()  + YOUTUBE_IMG_EXTENSION);
             holder.name.setText(video.getTitle());
             Glide.with(context)
-                    .load(uri)
+                    .load(video.getKey() != null ? uri : "")
                     .into(holder.imageView);
         }
     }

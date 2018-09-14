@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,8 +83,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private Movie movie;
     private int movieId;
-    private MovieApiClient client;
+    private boolean isFavorite;
     private List<Image> images;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +111,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         }
 
         //set up Retrofit client
-        client = MovieApiService.getClient().create(MovieApiClient.class);
+        MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
 
         //initialize image array list
         images = new ArrayList<>();
@@ -160,12 +163,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 Glide.with(this)
                         .load(posterImageUrl)
                         .into(posterImage);
-                //define default image in case the result is null
-                String backdropImageUrl = movie.getBackdropImageUrl() != null ?
-                        IMAGE_URL_SIZE.concat(movie.getBackdropImageUrl()) : "";
-                /*Glide.with(this)
-                        .load(backdropImageUrl)
-                        .into(backdropImageViewPager);*/
 
                 //get genre names based on genre codes
                 List<Integer> genreId = new ArrayList<>(movie.getGenres());
@@ -198,7 +195,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
                 @Override
                 public void onFailure(@NonNull Call<DetailResults> call, @NonNull Throwable t) {
-                    Toast.makeText(MovieDetailsActivity.this, R.string.error_movie_duration, Toast.LENGTH_SHORT).show();
+                    displayToastMessage(R.string.error_movie_duration);
                 }
             });
 
@@ -213,7 +210,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
                     //add fetched images to the list
                     if (response.body().getBackdrops().size() > 8) {
-                        for (int i = 0; i < 8 ; i ++) {
+                        for (int i = 0; i < 8; i++) {
                             images.add(response.body().getBackdrops().get(i));
                         }
                     } else {
@@ -228,7 +225,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
                 @Override
                 public void onFailure(@NonNull Call<ImageResults> call, @NonNull Throwable t) {
-                    Toast.makeText(MovieDetailsActivity.this, R.string.error_movie_images, Toast.LENGTH_SHORT).show();
+                    displayToastMessage(R.string.error_movie_images);
                 }
             });
         }
@@ -292,26 +289,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(TMDB_MOVIE_BASE_URI + movie.getMovieId()));
                 break;
+
+            //close details screen on click of back
+            case android.R.id.home:
+                finish();
+                return true;
         }
 
         //verify if the intent can be opened with a suitable app on the device
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         } else {
-            Toast.makeText(this, R.string.error_movie_intent, Toast.LENGTH_SHORT).show();
+            displayToastMessage(R.string.error_movie_intent);
         }
-        return true;
-    }
-
-    /**
-     * handles back navigation on toolbar
-     *
-     * @return boolean flag indicating whether the call was successfully handled
-     */
-    @Override
-    public boolean onSupportNavigateUp() {
-        //close the current activity
-        finish();
         return true;
     }
 
@@ -325,8 +315,30 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         switch (view.getId()) {
             case R.id.favorites:
                 //TODO: Implement favorites functionality
-                Toast.makeText(this, "Favorites clicked", Toast.LENGTH_SHORT).show();
+                Animation anim = AnimationUtils.loadAnimation(this, R.anim.shake);
+                favorites.startAnimation(anim);
+                if (isFavorite) {
+                    displayToastMessage(R.string.favorites_removed);
+                    favorites.setImageResource(R.drawable.ic_favorite_border);
+                } else {
+                    displayToastMessage(R.string.favorites_added);
+                    favorites.setImageResource(R.drawable.ic_favorite);
+                }
+                isFavorite = !isFavorite;
                 break;
         }
+    }
+
+    /**
+     * display message in toast
+     * @param messageId string resource id for the message to be displayed
+     */
+    private void displayToastMessage(int messageId) {
+        //dismiss any outstanding toast messages
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(this, messageId, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

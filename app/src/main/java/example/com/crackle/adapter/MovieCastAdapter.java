@@ -56,9 +56,10 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Movi
         //get the current cast
         Cast cast = castList.get(position);
         //update view data
+        String imageUrl = IMAGE_URL_SIZE.concat(cast.getProfileUrl() != null ? cast.getProfileUrl() : "");
         Glide.with(context)
                 .setDefaultRequestOptions(Utils.setupGlide(CAST_IMG))
-                .load(IMAGE_URL_SIZE + cast.getProfileUrl())
+                .load(imageUrl)
                 .into(holder.profileImage);
         holder.name.setText(cast.getName());
     }

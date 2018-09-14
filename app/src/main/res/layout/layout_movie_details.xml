@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="24dp"
             android:elevation="@dimen/dimens_4dp"
             app:layout_constraintBottom_toBottomOf="@+id/backdrop_image_viewpager"
             app:layout_constraintEnd_toEndOf="parent"

@@ -42,4 +42,6 @@
     <string name="movie_share_intent_text">Check out %s  on TMDB\n%s %s\n\nBrought to you by Crackle</string>
     <string name="movie_share_intent_chooser_text">Share \"%s\" via</string>
     <string name="error_movie_images">Error getting movie images</string>
+    <string name="favorites_removed">Removed from favorites</string>
+    <string name="favorites_added">Added to favorites</string>
 </resources>

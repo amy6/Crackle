@@ -33,8 +33,10 @@ public class MovieImageAdapter extends PagerAdapter {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_movie_image, container, false);
 
         ImageView imageView = view.findViewById(R.id.backdrop_image);
+        String backdropImageUrl = IMAGE_URL_SIZE.concat(imageUrl.get(position).getFilePath()
+                != null ? imageUrl.get(position).getFilePath() : "");
         Glide.with(context)
-                .load(IMAGE_URL_SIZE + imageUrl.get(position).getFilePath())
+                .load(backdropImageUrl)
                 .into(imageView);
 
         container.addView(view);

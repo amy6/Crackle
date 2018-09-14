@@ -138,7 +138,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             //get the current movie
             Movie movie = movies.get(position);
             //update view data
-            String imageUrl = IMAGE_URL_SIZE.concat(movie.getImageUrl());
+            String imageUrl = IMAGE_URL_SIZE.concat(movie.getImageUrl() != null ? movie.getImageUrl() : "");
             Glide.with(context)
                     .setDefaultRequestOptions(Utils.setupGlide(POSTER_IMG))
                     .load(imageUrl)
