@@ -1,5 +1,6 @@
 package example.com.crackle.listener;
 
+import example.com.crackle.model.ImageResults;
 import example.com.crackle.model.MovieResults;
 import example.com.crackle.model.ReviewResults;
 import example.com.crackle.model.CreditResults;
@@ -29,4 +30,7 @@ public interface MovieApiClient {
 
     @GET("movie/{movie_id}/videos")
     Call<VideoResults> getMovieVideos (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+
+    @GET("movie/{movie_id}/images")
+    Call<ImageResults> getMovieImages (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 }

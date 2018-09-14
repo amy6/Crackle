@@ -41,4 +41,5 @@
     <string name="error_movie_intent">No suitable app to perform the action</string>
     <string name="movie_share_intent_text">Check out %s  on TMDB\n%s %s\n\nBrought to you by Crackle</string>
     <string name="movie_share_intent_chooser_text">Share \"%s\" via</string>
+    <string name="error_movie_images">Error getting movie images</string>
 </resources>

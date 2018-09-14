@@ -49,4 +49,10 @@ public class Constants {
     public static final String YOUTUBE_IMG_BASE_URI = "http://img.youtube.com/vi/";
     public static final String YOUTUBE_IMG_EXTENSION = "/mqdefault.jpg";
     public static final String SITE_FILTER_YOUTUBE = "youtube";
+
+    //constants for tmdb profile url and google play store link for the movie
+    public static final String TMDB_MOVIE_BASE_URI = "https://www.themoviedb.org/movie/";
+    public static final String PLAYSTORE_BASE_URI = "market://search?q=";
+    public static final String PLAYSTORE_QUERY_PARAMETER_CATEGORY = "c";
+    public static final String PLAYSTORE_QUERY_VALUE_CATEGORY = "movies";
 }

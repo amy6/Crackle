@@ -30,6 +30,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import example.com.crackle.R;
+import example.com.crackle.model.Image;
+import example.com.crackle.model.ImageResults;
 import example.com.crackle.utils.Utils;
 import example.com.crackle.adapter.MovieFragmentPagerAdapter;
 import example.com.crackle.listener.MovieApiClient;
@@ -42,13 +44,13 @@ import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
+import static example.com.crackle.utils.Constants.PLAYSTORE_BASE_URI;
+import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_PARAMETER_CATEGORY;
+import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_VALUE_CATEGORY;
+import static example.com.crackle.utils.Constants.TMDB_MOVIE_BASE_URI;
 
 public class MovieDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String TMDB_MOVIE_BASE_URI = "https://www.themoviedb.org/movie/";
-    public static final String PLAYSTORE_BASE_URI = "market://search?q=";
-    public static final String PLAYSTORE_QUERY_PARAMETER_CATEGORY = "c";
-    public static final String PLAYSTORE_QUERY_VALUE_CATEGORY = "movies";
     @BindView(R.id.poster_image)
     ImageView posterImage;
     @BindView(R.id.backdrop_image)
@@ -76,6 +78,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private Movie movie;
     private int movieId;
+    private MovieApiClient client;
+    private List<Image> images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
+
+        //set up Retrofit client
+        client = MovieApiService.getClient().create(MovieApiClient.class);
+
+        //initialize image array list
+        images = new ArrayList<>();
 
         //set up click listener for favorites button
         favorites.setOnClickListener(this);
@@ -169,10 +179,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         }
 
         if (movieId != 0) {
-            MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
-            Call<DetailResults> call = client.getMovieDetails(movieId, API_KEY);
+            Call<DetailResults> detailResultsCall = client.getMovieDetails(movieId, API_KEY);
 
-            call.enqueue(new Callback<DetailResults>() {
+            detailResultsCall.enqueue(new Callback<DetailResults>() {
                 @Override
                 public void onResponse(@NonNull Call<DetailResults> call, @NonNull Response<DetailResults> response) {
                     if (response.body() == null) {
@@ -187,6 +196,26 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 @Override
                 public void onFailure(@NonNull Call<DetailResults> call, @NonNull Throwable t) {
                     Toast.makeText(MovieDetailsActivity.this, R.string.error_movie_duration, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            Call<ImageResults> imageResultsCall = client.getMovieImages(movieId, API_KEY);
+
+            imageResultsCall.enqueue(new Callback<ImageResults>() {
+                @Override
+                public void onResponse(@NonNull Call<ImageResults> call, @NonNull Response<ImageResults> response) {
+                    if (response.body() == null || response.body().getBackdrops() == null || response.body().getBackdrops().size() == 0) {
+                        return;
+                    }
+
+                    //add fetched images to the list
+                    images.addAll(response.body().getBackdrops());
+                }
+
+
+                @Override
+                public void onFailure(@NonNull Call<ImageResults> call, @NonNull Throwable t) {
+                    Toast.makeText(MovieDetailsActivity.this, R.string.error_movie_images, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -264,7 +293,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     /**
      * handles back navigation on toolbar
      *
-     * @return
+     * @return boolean flag indicating whether the call was successfully handled
      */
     @Override
     public boolean onSupportNavigateUp() {
