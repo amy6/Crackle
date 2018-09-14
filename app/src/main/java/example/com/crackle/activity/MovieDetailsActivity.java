@@ -56,6 +56,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     ImageView posterImage;
     @BindView(R.id.backdrop_image_viewpager)
     ViewPager backdropImageViewPager;
+    @BindView(R.id.viewpager_indicator)
+    TabLayout viewPagerIndicator;
     @BindView(R.id.title)
     TextView title;
     @BindView(R.id.year)
@@ -211,7 +213,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
                     //add fetched images to the list
                     images.addAll(response.body().getBackdrops());
-                    backdropImageViewPager.setAdapter(new MovieImageAdapter(MovieDetailsActivity.this, images));
+
+                    viewPagerIndicator.setupWithViewPager(backdropImageViewPager);
+                    MovieImageAdapter adapter = new MovieImageAdapter(MovieDetailsActivity.this, images);
+                    backdropImageViewPager.setAdapter(adapter);
                 }
 
 

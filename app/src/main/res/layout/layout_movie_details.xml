@@ -12,6 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/viewpager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:elevation="@dimen/dimens_4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/backdrop_image_viewpager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:tabBackground="@drawable/tab_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp" />
+
+
         <android.support.v4.view.ViewPager
             android:id="@+id/backdrop_image_viewpager"
             android:layout_width="match_parent"
