@@ -12,16 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/backdrop_image"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/backdrop_image_viewpager"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimens_256dp"
-            android:contentDescription="@string/no_description_available"
-            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/poster_image"
@@ -33,10 +30,10 @@
             android:contentDescription="@string/no_description_available"
             android:scaleType="centerCrop"
             android:transitionName="poster_image"
-            app:layout_constraintBottom_toBottomOf="@+id/backdrop_image"
+            app:layout_constraintBottom_toBottomOf="@+id/backdrop_image_viewpager"
             app:layout_constraintDimensionRatio="w,2:3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backdrop_image"
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_image_viewpager"
             tools:src="@tools:sample/avatars"
             tools:targetApi="lollipop" />
 
@@ -53,7 +50,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/bullet"
-            app:layout_constraintTop_toBottomOf="@+id/backdrop_image"
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_image_viewpager"
             tools:text="2h 35m" />
 
         <TextView
@@ -78,7 +75,7 @@
             android:layout_marginTop="@dimen/dimens_16dp"
             android:text="@string/bullet"
             app:layout_constraintStart_toEndOf="@+id/year"
-            app:layout_constraintTop_toBottomOf="@+id/backdrop_image" />
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_image_viewpager" />
 
         <TextView
             android:id="@+id/title"
@@ -138,11 +135,11 @@
             android:focusable="true"
             android:src="@drawable/ic_favorite_border"
             android:tint="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/backdrop_image"
+            app:layout_constraintBottom_toBottomOf="@+id/backdrop_image_viewpager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/poster_image"
-            app:layout_constraintTop_toBottomOf="@+id/backdrop_image" />
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_image_viewpager" />
 
 
     </android.support.constraint.ConstraintLayout>

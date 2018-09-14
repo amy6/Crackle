@@ -30,6 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import example.com.crackle.R;
+import example.com.crackle.adapter.MovieImageAdapter;
 import example.com.crackle.model.Image;
 import example.com.crackle.model.ImageResults;
 import example.com.crackle.utils.Utils;
@@ -53,8 +54,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
     @BindView(R.id.poster_image)
     ImageView posterImage;
-    @BindView(R.id.backdrop_image)
-    ImageView backdropImage;
+    @BindView(R.id.backdrop_image_viewpager)
+    ViewPager backdropImageViewPager;
     @BindView(R.id.title)
     TextView title;
     @BindView(R.id.year)
@@ -160,9 +161,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 //define default image in case the result is null
                 String backdropImageUrl = movie.getBackdropImageUrl() != null ?
                         IMAGE_URL_SIZE.concat(movie.getBackdropImageUrl()) : "";
-                Glide.with(this)
+                /*Glide.with(this)
                         .load(backdropImageUrl)
-                        .into(backdropImage);
+                        .into(backdropImageViewPager);*/
 
                 //get genre names based on genre codes
                 List<Integer> genreId = new ArrayList<>(movie.getGenres());
@@ -210,6 +211,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
                     //add fetched images to the list
                     images.addAll(response.body().getBackdrops());
+                    backdropImageViewPager.setAdapter(new MovieImageAdapter(MovieDetailsActivity.this, images));
                 }
 
 
