@@ -25,7 +25,8 @@
             app:layout_constraintVertical_bias="0.0"
             app:tabBackground="@drawable/tab_selector"
             app:tabGravity="center"
-            app:tabIndicatorHeight="0dp" />
+            app:tabIndicatorHeight="0dp"
+            tools:targetApi="lollipop" />
 
 
         <android.support.v4.view.ViewPager

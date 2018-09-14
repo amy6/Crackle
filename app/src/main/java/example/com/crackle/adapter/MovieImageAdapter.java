@@ -3,7 +3,6 @@ package example.com.crackle.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import example.com.crackle.R;
 import example.com.crackle.model.Image;
 
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
-import static example.com.crackle.utils.Constants.LOG_TAG;
 
 public class MovieImageAdapter extends PagerAdapter {
 

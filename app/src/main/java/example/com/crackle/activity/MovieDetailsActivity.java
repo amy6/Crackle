@@ -212,7 +212,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     }
 
                     //add fetched images to the list
-                    images.addAll(response.body().getBackdrops());
+                    if (response.body().getBackdrops().size() > 8) {
+                        for (int i = 0; i < 8 ; i ++) {
+                            images.add(response.body().getBackdrops().get(i));
+                        }
+                    } else {
+                        images.addAll(response.body().getBackdrops());
+                    }
 
                     viewPagerIndicator.setupWithViewPager(backdropImageViewPager);
                     MovieImageAdapter adapter = new MovieImageAdapter(MovieDetailsActivity.this, images);
