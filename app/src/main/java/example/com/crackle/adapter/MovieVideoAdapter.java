@@ -21,7 +21,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import example.com.crackle.R;
 import example.com.crackle.model.Video;
+import example.com.crackle.utils.Utils;
 
+import static example.com.crackle.utils.Constants.BACKDROP_IMG;
 import static example.com.crackle.utils.Constants.SITE_FILTER_YOUTUBE;
 import static example.com.crackle.utils.Constants.YOUTUBE_IMG_BASE_URI;
 import static example.com.crackle.utils.Constants.YOUTUBE_IMG_EXTENSION;
@@ -65,6 +67,7 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
             Uri uri = Uri.parse(YOUTUBE_IMG_BASE_URI + video.getKey()  + YOUTUBE_IMG_EXTENSION);
             holder.name.setText(video.getTitle());
             Glide.with(context)
+                    .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
                     .load(video.getKey() != null ? uri : "")
                     .into(holder.imageView);
         }

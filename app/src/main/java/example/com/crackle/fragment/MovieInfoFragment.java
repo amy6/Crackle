@@ -65,6 +65,8 @@ public class MovieInfoFragment extends Fragment {
     TextView originalTitle;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.emptyTextView)
+    TextView emptyTextView;
 
     private List<Crew> crewList;
     private List<Video> videoList;
@@ -179,8 +181,13 @@ public class MovieInfoFragment extends Fragment {
 
                 //update data set and notify the adapter
                 if (response.body().getVideos().size() > 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyTextView.setVisibility(View.GONE);
                     videoList.addAll(response.body().getVideos());
                     adapter.notifyDataSetChanged();
+                } else {
+                    emptyTextView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
 
             }

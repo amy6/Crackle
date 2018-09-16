@@ -22,10 +22,10 @@
             android:layout_marginStart="@dimen/dimens_16dp"
             android:layout_marginTop="@dimen/dimens_16dp"
             android:contentDescription="@string/no_description_available"
+            android:src="@drawable/tmdb_logo"
             app:layout_constraintEnd_toStartOf="@+id/tmdbRating"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/tmdb_logo" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tmdbRating"
@@ -60,12 +60,12 @@
             android:layout_marginStart="@dimen/dimens_8dp"
             android:layout_marginTop="@dimen/dimens_16dp"
             android:contentDescription="@string/no_description_available"
+            android:src="@drawable/ic_language"
             app:layout_constraintEnd_toStartOf="@+id/languageLabel"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@+id/ratingBar"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_language" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/languageLabel"
@@ -103,9 +103,9 @@
             android:layout_marginRight="@dimen/dimens_8dp"
             android:layout_marginTop="@dimen/dimens_16dp"
             android:contentDescription="@string/no_description_available"
+            android:src="@drawable/ic_trending_up"
             app:layout_constraintEnd_toStartOf="@+id/popularityLabel"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_trending_up" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/popularityLabel"
@@ -307,17 +307,31 @@
             android:id="@+id/trailers_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:text="Trailers:"
+            android:text="@string/trailers"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/homepage" />
+
+        <TextView
+            android:id="@+id/emptyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/not_available"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/trailers_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/trailers_label"
+            app:layout_constraintTop_toTopOf="@+id/trailers_label"
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </android.support.constraint.ConstraintLayout>

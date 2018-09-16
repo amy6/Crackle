@@ -14,7 +14,9 @@ import java.util.List;
 
 import example.com.crackle.R;
 import example.com.crackle.model.Image;
+import example.com.crackle.utils.Utils;
 
+import static example.com.crackle.utils.Constants.BACKDROP_IMG;
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
 
 public class MovieImageAdapter extends PagerAdapter {
@@ -36,6 +38,7 @@ public class MovieImageAdapter extends PagerAdapter {
         String backdropImageUrl = IMAGE_URL_SIZE.concat(imageUrl.get(position).getFilePath()
                 != null ? imageUrl.get(position).getFilePath() : "");
         Glide.with(context)
+                .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
                 .load(backdropImageUrl)
                 .into(imageView);
 

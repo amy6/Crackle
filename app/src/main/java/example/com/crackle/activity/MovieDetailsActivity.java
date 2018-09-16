@@ -46,6 +46,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
+import static example.com.crackle.utils.Constants.BACKDROP_IMG;
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
 import static example.com.crackle.utils.Constants.PLAYSTORE_BASE_URI;
 import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_PARAMETER_CATEGORY;
@@ -161,6 +162,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 String posterImageUrl = movie.getImageUrl() != null ?
                         IMAGE_URL_SIZE.concat(movie.getImageUrl()) : "";
                 Glide.with(this)
+                        .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
                         .load(posterImageUrl)
                         .into(posterImage);
 

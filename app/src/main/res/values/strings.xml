@@ -26,9 +26,9 @@
     <string name="error_movie_director">Error getting movie director details</string>
     <string name="error_movie_details">Error getting movie details</string>
     <string name="no_ratings">No ratings</string>
-    <string name="original_title">Original Title: </string>
+    <string name="original_title">Original Title:</string>
     <string name="not_available">N/A</string>
-    <string name="director">Director:</string>
+    <string name="director">Directed by:</string>
     <string name="release_date">Release Date:</string>
     <string name="homepage">Homepage:</string>
     <string name="sort_favorites">Favorites</string>
@@ -44,4 +44,6 @@
     <string name="error_movie_images">Error getting movie images</string>
     <string name="favorites_removed">Removed from favorites</string>
     <string name="favorites_added">Added to favorites</string>
+    <string name="trailers">Trailers:</string>
+    <string name="no_trailers">No trailers available</string>
 </resources>
