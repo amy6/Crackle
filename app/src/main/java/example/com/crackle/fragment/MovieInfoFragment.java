@@ -151,7 +151,8 @@ public class MovieInfoFragment extends Fragment {
             }
         });
 
-        Call<DetailResults> detailResultsCall = client.getMovieDetails(((Movie) getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
+        String append_to_response = "images,videos,releases";
+        Call<DetailResults> detailResultsCall = client.getMovieDetails(((Movie) getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY, append_to_response);
         detailResultsCall.enqueue(new Callback<DetailResults>() {
             @Override
             public void onResponse(@NonNull Call<DetailResults> call, @NonNull Response<DetailResults> response) {

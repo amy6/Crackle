@@ -181,7 +181,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         }
 
         if (movieId != 0) {
-            Call<DetailResults> detailResultsCall = client.getMovieDetails(movieId, API_KEY);
+            String append_to_response = "images,videos,releases";
+            Call<DetailResults> detailResultsCall = client.getMovieDetails(movieId, API_KEY, append_to_response);
 
             detailResultsCall.enqueue(new Callback<DetailResults>() {
                 @Override
