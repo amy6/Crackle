@@ -29,8 +29,15 @@ public class Movie implements Parcelable {
     private String language;
     @SerializedName("genre_ids")
     private ArrayList<Integer> genres;
+    @SerializedName("images")
+    private ImageResults imageResults;
+    @SerializedName("videos")
+    private VideoResults videoResults;
+    @SerializedName("releases")
+    private CertificationResults certificationResults;
 
-    public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double popularity, double userRating, String releaseDate, String language, ArrayList<Integer> genres) {
+
+    public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double popularity, double userRating, String releaseDate, String language, ArrayList<Integer> genres, ImageResults imageResults, VideoResults videoResults, CertificationResults certificationResults) {
         this.movieId = movieId;
         this.imageUrl = imageUrl;
         this.backdropImageUrl = backdropImageUrl;
@@ -41,6 +48,9 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
         this.language = language;
         this.genres = genres;
+        this.imageResults = imageResults;
+        this.videoResults = videoResults;
+        this.certificationResults = certificationResults;
     }
 
     public Movie(Parcel source) {
@@ -54,6 +64,9 @@ public class Movie implements Parcelable {
         releaseDate = source.readString();
         language = source.readString();
         genres = (ArrayList<Integer>) source.readSerializable();
+        imageResults = source.readParcelable(ImageResults.class.getClassLoader());
+        videoResults = source.readParcelable(VideoResults.class.getClassLoader());
+        certificationResults = source.readParcelable(CertificationResults.class.getClassLoader());
     }
 
     public int getMovieId() {
@@ -96,6 +109,18 @@ public class Movie implements Parcelable {
         return genres;
     }
 
+    public ImageResults getImageResults() {
+        return imageResults;
+    }
+
+    public VideoResults getVideoResults() {
+        return videoResults;
+    }
+
+    public CertificationResults getCertificationResults() {
+        return certificationResults;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -113,6 +138,9 @@ public class Movie implements Parcelable {
         dest.writeString(releaseDate);
         dest.writeString(language);
         dest.writeSerializable(genres);
+        dest.writeParcelable(imageResults, 0);
+        dest.writeParcelable(videoResults, 0);
+        dest.writeParcelable(certificationResults, 0);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
