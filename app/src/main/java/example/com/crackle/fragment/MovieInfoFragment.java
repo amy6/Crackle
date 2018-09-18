@@ -155,7 +155,7 @@ public class MovieInfoFragment extends Fragment {
         });
 
         //display trailer thumbnails
-        if (movie.getVideoResults().getVideos().size() > 0) {
+        if (movie.getVideoResults() != null && movie.getVideoResults().getVideos() != null && movie.getVideoResults().getVideos().size() > 0) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.GONE);
             videoList.addAll(movie.getVideoResults().getVideos());

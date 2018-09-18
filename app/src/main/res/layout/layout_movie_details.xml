@@ -67,7 +67,7 @@
             android:text="@string/not_available"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/bullet"
+            app:layout_constraintStart_toEndOf="@+id/bullet2"
             app:layout_constraintTop_toBottomOf="@+id/backdrop_image_viewpager"
             tools:text="2h 35m" />
 
@@ -75,17 +75,18 @@
             android:id="@+id/year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimens_16dp"
-            android:layout_marginStart="@dimen/dimens_16dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
             android:text="@string/not_available"
-            app:layout_constraintBaseline_toBaselineOf="@+id/bullet"
-            app:layout_constraintEnd_toStartOf="@+id/bullet"
+            app:layout_constraintEnd_toStartOf="@+id/bullet2"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/poster_image"
+            app:layout_constraintStart_toEndOf="@+id/bullet1"
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_image_viewpager"
             tools:text="2018" />
 
         <TextView
-            android:id="@+id/bullet"
+            android:id="@+id/bullet2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimens_4dp"
@@ -157,6 +158,31 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/poster_image"
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_image_viewpager" />
+
+        <TextView
+            android:id="@+id/content_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:paddingStart="@dimen/dimens_4dp"
+            android:paddingEnd="@dimen/dimens_4dp"
+            android:background="@drawable/rect_border"
+            android:text="@string/not_available"
+            app:layout_constraintStart_toEndOf="@+id/poster_image"
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_image_viewpager" />
+
+        <TextView
+            android:id="@+id/bullet1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/bullet"
+            app:layout_constraintStart_toEndOf="@+id/content_rating"
             app:layout_constraintTop_toBottomOf="@+id/backdrop_image_viewpager" />
 
 

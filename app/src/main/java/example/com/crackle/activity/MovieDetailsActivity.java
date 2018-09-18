@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import example.com.crackle.R;
 import example.com.crackle.adapter.MovieFragmentPagerAdapter;
 import example.com.crackle.adapter.MovieImageAdapter;
 import example.com.crackle.listener.MovieApiClient;
+import example.com.crackle.model.Certification;
 import example.com.crackle.model.Image;
 import example.com.crackle.model.Movie;
 import example.com.crackle.model.Video;
@@ -49,6 +51,7 @@ import static example.com.crackle.utils.Constants.API_KEY;
 import static example.com.crackle.utils.Constants.APPEND_TO_RESPONSE_VALUE;
 import static example.com.crackle.utils.Constants.BACKDROP_IMG;
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
+import static example.com.crackle.utils.Constants.LOG_TAG;
 import static example.com.crackle.utils.Constants.PLAYSTORE_BASE_URI;
 import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_PARAMETER_CATEGORY;
 import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_VALUE_CATEGORY;
@@ -70,6 +73,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     TextView duration;
     @BindView(R.id.genre)
     TextView genre;
+    @BindView(R.id.content_rating)
+    TextView contentRating;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     @BindView(R.id.tabLayout)
@@ -88,6 +93,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     private boolean isFavorite;
     private List<Image> images;
     private List<Video> videos;
+    private List<Certification> certifications;
     private Toast toast;
 
     @Override
@@ -119,6 +125,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         //initialize data sets
         images = new ArrayList<>();
         videos = new ArrayList<>();
+        certifications = new ArrayList<>();
 
         //set up click listener for favorites button
         favorites.setOnClickListener(this);
@@ -209,7 +216,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     }
 
                     //fetch backdrop images
-                    if (response.body().getImageResults().getBackdrops() != null && response.body().getImageResults().getBackdrops().size() > 0) {
+                    if (response.body().getImageResults() != null && response.body().getImageResults().getBackdrops() != null && response.body().getImageResults().getBackdrops().size() > 0) {
                         //add fetched images to the list
                         if (response.body().getImageResults().getBackdrops().size() > 8) {
                             for (int i = 0; i < 8; i++) {
@@ -221,8 +228,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     }
 
                     //fetch movie trailers
-                    if (response.body().getVideoResults().getVideos() != null && response.body().getVideoResults().getVideos().size() > 0) {
+                    if (response.body().getVideoResults() != null && response.body().getVideoResults().getVideos() != null && response.body().getVideoResults().getVideos().size() > 0) {
                         movie.setVideoResults(response.body().getVideoResults());
+                    }
+
+                    if (response.body().getCertificationResults() != null && response.body().getCertificationResults().getCertificationList() != null && response.body().getCertificationResults().getCertificationList().size() > 0) {
+                        certifications = response.body().getCertificationResults().getCertificationList();
+                        for (Certification certification : certifications) {
+                            if (certification.getIso().equals("IN")) {
+                                if (!TextUtils.isEmpty(certification.getCertification())) {
+                                    contentRating.setText(certification.getCertification());
+                                }
+                            }
+                        }
                     }
 
                     //set up viewpager for backdrop image list
