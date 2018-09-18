@@ -3,6 +3,7 @@ package example.com.crackle.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,8 +11,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,20 +33,19 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import example.com.crackle.R;
-import example.com.crackle.adapter.MovieImageAdapter;
-import example.com.crackle.model.Image;
-import example.com.crackle.model.ImageResults;
-import example.com.crackle.utils.Utils;
 import example.com.crackle.adapter.MovieFragmentPagerAdapter;
+import example.com.crackle.adapter.MovieImageAdapter;
 import example.com.crackle.listener.MovieApiClient;
-import example.com.crackle.model.DetailResults;
+import example.com.crackle.model.Image;
 import example.com.crackle.model.Movie;
 import example.com.crackle.utils.MovieApiService;
+import example.com.crackle.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
+import static example.com.crackle.utils.Constants.APPEND_TO_RESPONSE_VALUE;
 import static example.com.crackle.utils.Constants.BACKDROP_IMG;
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
 import static example.com.crackle.utils.Constants.PLAYSTORE_BASE_URI;
@@ -181,61 +181,54 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         }
 
         if (movieId != 0) {
-            String append_to_response = "images,videos,releases";
-            Call<DetailResults> detailResultsCall = client.getMovieDetails(movieId, API_KEY, append_to_response);
+            Call<Movie> detailResultsCall = client.getMovieDetails(movieId, API_KEY, APPEND_TO_RESPONSE_VALUE);
 
-            detailResultsCall.enqueue(new Callback<DetailResults>() {
+            detailResultsCall.enqueue(new Callback<Movie>() {
                 @Override
-                public void onResponse(@NonNull Call<DetailResults> call, @NonNull Response<DetailResults> response) {
+                public void onResponse(@NonNull Call<Movie> call, @NonNull Response<Movie> response) {
                     if (response.body() == null) {
                         return;
                     }
+
                     //fetch movie duration from details api call
                     int runtime = response.body().getDuration();
                     //display run time in h:m format
                     duration.setText(Utils.formatDuration(MovieDetailsActivity.this, runtime));
-                }
 
-                @Override
-                public void onFailure(@NonNull Call<DetailResults> call, @NonNull Throwable t) {
-                    displayToastMessage(R.string.error_movie_duration);
-                }
-            });
-
-            Call<ImageResults> imageResultsCall = client.getMovieImages(movieId, API_KEY);
-
-            imageResultsCall.enqueue(new Callback<ImageResults>() {
-                @Override
-                public void onResponse(@NonNull Call<ImageResults> call, @NonNull Response<ImageResults> response) {
-                    if (response.body() == null || response.body().getBackdrops() == null || response.body().getBackdrops().size() == 0) {
-                        return;
-                    }
-
-                    //add fetched images to the list
-                    if (response.body().getBackdrops().size() > 8) {
-                        for (int i = 0; i < 8; i++) {
-                            images.add(response.body().getBackdrops().get(i));
+                    if (response.body().getImageResults().getBackdrops() != null && response.body().getImageResults().getBackdrops().size() > 0) {
+                        //add fetched images to the list
+                        if (response.body().getImageResults().getBackdrops().size() > 8) {
+                            for (int i = 0; i < 8; i++) {
+                                images.add(response.body().getImageResults().getBackdrops().get(i));
+                            }
+                        } else {
+                            images.addAll(response.body().getImageResults().getBackdrops());
                         }
-                    } else {
-                        images.addAll(response.body().getBackdrops());
                     }
 
                     viewPagerIndicator.setupWithViewPager(backdropImageViewPager);
                     MovieImageAdapter adapter = new MovieImageAdapter(MovieDetailsActivity.this, images);
                     backdropImageViewPager.setAdapter(adapter);
+
+                    if (response.body().getHomepage() != null && !TextUtils.isEmpty(response.body().getHomepage())) {
+                        movie.setHomepage(response.body().getHomepage());
+                    }
+
+                    if (response.body().getOriginalTitle() != null && !TextUtils.isEmpty(response.body().getOriginalTitle())) {
+                        movie.setOriginalTitle(response.body().getOriginalTitle());
+                    }
+
+                    //set up viewpager to display movie info, cast and reviews
+                    viewPager.setAdapter(new MovieFragmentPagerAdapter(getSupportFragmentManager(), movie));
+                    tabLayout.setupWithViewPager(viewPager);
                 }
 
-
                 @Override
-                public void onFailure(@NonNull Call<ImageResults> call, @NonNull Throwable t) {
-                    displayToastMessage(R.string.error_movie_images);
+                public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
+                    displayToastMessage(R.string.error_movie_duration);
                 }
             });
         }
-
-        //set up viewpager to display movie info, cast and reviews
-        viewPager.setAdapter(new MovieFragmentPagerAdapter(getSupportFragmentManager(), movie));
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     /**

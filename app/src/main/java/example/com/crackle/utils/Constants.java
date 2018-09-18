@@ -55,4 +55,7 @@ public class Constants {
     public static final String PLAYSTORE_BASE_URI = "market://search?q=";
     public static final String PLAYSTORE_QUERY_PARAMETER_CATEGORY = "c";
     public static final String PLAYSTORE_QUERY_VALUE_CATEGORY = "movies";
+
+    //append_to_response query parameter value
+    public static final String APPEND_TO_RESPONSE_VALUE = "images,videos,releases";
 }

@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
 import static example.com.crackle.utils.Constants.LINEAR_LAYOUT_HORIZONTAL;
+import static example.com.crackle.utils.Constants.LOG_TAG;
 import static example.com.crackle.utils.Constants.MOVIE;
 
 
@@ -151,25 +154,13 @@ public class MovieInfoFragment extends Fragment {
             }
         });
 
-        String append_to_response = "images,videos,releases";
-        Call<DetailResults> detailResultsCall = client.getMovieDetails(((Movie) getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY, append_to_response);
-        detailResultsCall.enqueue(new Callback<DetailResults>() {
-            @Override
-            public void onResponse(@NonNull Call<DetailResults> call, @NonNull Response<DetailResults> response) {
-                //verify if the response body or the fetched results are empty/null
-                if (response.body() == null || response.body().getHomepage() == null) {
-                    return;
-                }
-                //update view with the fetched data
-                homepage.setText(response.body().getHomepage());
-                originalTitle.setText(response.body().getOriginalTitle());
-            }
+        if (!TextUtils.isEmpty(movie.getHomepage())) {
+            homepage.setText(movie.getHomepage());
+        }
 
-            @Override
-            public void onFailure(@NonNull Call<DetailResults> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), R.string.error_movie_details, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (!TextUtils.isEmpty(movie.getOriginalTitle())) {
+            originalTitle.setText(movie.getOriginalTitle());
+        }
 
         Call<VideoResults> videoResultsCall = client.getMovieVideos(((Movie) getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
         videoResultsCall.enqueue(new Callback<VideoResults>() {
