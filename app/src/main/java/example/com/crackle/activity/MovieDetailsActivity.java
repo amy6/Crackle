@@ -38,6 +38,7 @@ import example.com.crackle.adapter.MovieImageAdapter;
 import example.com.crackle.listener.MovieApiClient;
 import example.com.crackle.model.Image;
 import example.com.crackle.model.Movie;
+import example.com.crackle.model.Video;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
@@ -86,6 +87,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     private int movieId;
     private boolean isFavorite;
     private List<Image> images;
+    private List<Video> videos;
     private Toast toast;
 
     @Override
@@ -114,8 +116,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         //set up Retrofit client
         MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
 
-        //initialize image array list
+        //initialize data sets
         images = new ArrayList<>();
+        videos = new ArrayList<>();
 
         //set up click listener for favorites button
         favorites.setOnClickListener(this);
@@ -195,6 +198,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     //display run time in h:m format
                     duration.setText(Utils.formatDuration(MovieDetailsActivity.this, runtime));
 
+                    //set movie homepage
+                    if (response.body().getHomepage() != null && !TextUtils.isEmpty(response.body().getHomepage())) {
+                        movie.setHomepage(response.body().getHomepage());
+                    }
+
+                    //set movie title
+                    if (response.body().getOriginalTitle() != null && !TextUtils.isEmpty(response.body().getOriginalTitle())) {
+                        movie.setOriginalTitle(response.body().getOriginalTitle());
+                    }
+
+                    //fetch backdrop images
                     if (response.body().getImageResults().getBackdrops() != null && response.body().getImageResults().getBackdrops().size() > 0) {
                         //add fetched images to the list
                         if (response.body().getImageResults().getBackdrops().size() > 8) {
@@ -206,17 +220,15 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                         }
                     }
 
+                    //fetch movie trailers
+                    if (response.body().getVideoResults().getVideos() != null && response.body().getVideoResults().getVideos().size() > 0) {
+                        movie.setVideoResults(response.body().getVideoResults());
+                    }
+
+                    //set up viewpager for backdrop image list
                     viewPagerIndicator.setupWithViewPager(backdropImageViewPager);
                     MovieImageAdapter adapter = new MovieImageAdapter(MovieDetailsActivity.this, images);
                     backdropImageViewPager.setAdapter(adapter);
-
-                    if (response.body().getHomepage() != null && !TextUtils.isEmpty(response.body().getHomepage())) {
-                        movie.setHomepage(response.body().getHomepage());
-                    }
-
-                    if (response.body().getOriginalTitle() != null && !TextUtils.isEmpty(response.body().getOriginalTitle())) {
-                        movie.setOriginalTitle(response.body().getOriginalTitle());
-                    }
 
                     //set up viewpager to display movie info, cast and reviews
                     viewPager.setAdapter(new MovieFragmentPagerAdapter(getSupportFragmentManager(), movie));
@@ -225,7 +237,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
                 @Override
                 public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
-                    displayToastMessage(R.string.error_movie_duration);
+                    displayToastMessage(R.string.error_movie_details);
                 }
             });
         }

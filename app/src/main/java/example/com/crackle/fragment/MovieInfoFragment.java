@@ -154,52 +154,32 @@ public class MovieInfoFragment extends Fragment {
             }
         });
 
+        //display trailer thumbnails
+        if (movie.getVideoResults().getVideos().size() > 0) {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyTextView.setVisibility(View.GONE);
+            videoList.addAll(movie.getVideoResults().getVideos());
+            adapter.notifyDataSetChanged();
+        } else {
+            emptyTextView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+
+
+        //set up view data
+        plotTextView.setText(movie.getPlot());
+        releaseDateTextView.setText(movie.getReleaseDate());
+        String rating = movie.getUserRating() == 0 ? getString(R.string.no_ratings) : DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10");
+        tmdbRating.setText(rating);
+        ratingBar.setRating((float) (movie.getUserRating() / 2f));
+        popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
+        language.setText(languageMap.get(movie.getLanguage()));
         if (!TextUtils.isEmpty(movie.getHomepage())) {
             homepage.setText(movie.getHomepage());
         }
-
         if (!TextUtils.isEmpty(movie.getOriginalTitle())) {
             originalTitle.setText(movie.getOriginalTitle());
         }
-
-        Call<VideoResults> videoResultsCall = client.getMovieVideos(((Movie) getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
-        videoResultsCall.enqueue(new Callback<VideoResults>() {
-            @Override
-            public void onResponse(@NonNull Call<VideoResults> call, @NonNull Response<VideoResults> response) {
-                //verify if the response body or the fetched results are empty/null
-                if (response.body() == null || response.body().getVideos() == null) {
-                    return;
-                }
-
-                //update data set and notify the adapter
-                if (response.body().getVideos().size() > 0) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    emptyTextView.setVisibility(View.GONE);
-                    videoList.addAll(response.body().getVideos());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    emptyTextView.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }
-
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<VideoResults> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), R.string.error_movie_trailers, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        if (movie != null) {
-            plotTextView.setText(movie.getPlot());
-            releaseDateTextView.setText(movie.getReleaseDate());
-            String rating = movie.getUserRating() == 0 ? getString(R.string.no_ratings) : DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10");
-            tmdbRating.setText(rating);
-            ratingBar.setRating((float) (movie.getUserRating() / 2f));
-            popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
-            language.setText(languageMap.get(movie.getLanguage()));
-        }
-
     }
 
 
