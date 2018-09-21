@@ -92,7 +92,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     private int movieId;
     private boolean isFavorite;
     private List<Image> images;
-    private List<Video> videos;
     private List<Certification> certifications;
     private Toast toast;
 
@@ -124,72 +123,27 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
         //initialize data sets
         images = new ArrayList<>();
-        videos = new ArrayList<>();
         certifications = new ArrayList<>();
 
         //set up click listener for favorites button
         favorites.setOnClickListener(this);
 
-        //set title on on collapsed toolbar
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = true;
-            int scrollRange = -1;
+        //display toolbar title only when collapsed
+        handleCollapsedToolbarTitle();
 
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                //verify if the toolbar is completely collapsed and set the movie name as the title
-                if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.setTitle(movie.getTitle());
-                    isShow = true;
-                } else if (isShow) {
-                    //display an empty string when toolbar is expanded
-                    collapsingToolbarLayout.setTitle(" ");
-                    isShow = false;
-                }
+        //get the list of genres for the movie
+        fetchMovieGenre();
 
-            }
-        });
+        //set up Retrofit call to get movie details
+        fetchMovieDetails(client);
+    }
 
-        //get the list of all genre code and corresponding names from local json file
-        SparseArray<String> genreMap = Utils.fetchAllGenres(this);
-
-        if (getIntent() != null) {
-            if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
-                //get movie object from intent
-                movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
-
-                //fetch movie id
-                movieId = movie.getMovieId();
-
-                //set the fields for the movie
-                title.setText(movie.getTitle());
-                year.setText(movie.getReleaseDate().substring(0, 4));
-
-                //define default image in case the result is null
-                String posterImageUrl = movie.getImageUrl() != null ?
-                        IMAGE_URL_SIZE.concat(movie.getImageUrl()) : "";
-                Glide.with(this)
-                        .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
-                        .load(posterImageUrl)
-                        .into(posterImage);
-
-                //get genre names based on genre codes
-                List<Integer> genreId = new ArrayList<>(movie.getGenres());
-                int count = 0;
-                for (int id : genreId) {
-                    genre.append(genreMap.get(id));
-                    count++;
-                    if (count < genreId.size()) {
-                        genre.append(", ");
-                    }
-                }
-
-            }
-        }
-
+    /**
+     * invokes TMDB API to get movie details
+     *
+     * @param client reference to Retrofit client
+     */
+    private void fetchMovieDetails(MovieApiClient client) {
         if (movieId != 0) {
             Call<Movie> detailResultsCall = client.getMovieDetails(movieId, API_KEY, APPEND_TO_RESPONSE_VALUE);
 
@@ -259,6 +213,76 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 }
             });
         }
+    }
+
+    /**
+     * gets the applicable genre category for the movie based on genre code
+     */
+    private void fetchMovieGenre() {
+        //get the list of all genre code and corresponding names from local json file
+        SparseArray<String> genreMap = Utils.fetchAllGenres(this);
+
+        if (getIntent() != null) {
+            if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
+                //get movie object from intent
+                movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+
+                //fetch movie id
+                movieId = movie.getMovieId();
+
+                //set the fields for the movie
+                title.setText(movie.getTitle());
+                year.setText(movie.getReleaseDate().substring(0, 4));
+
+                //define default image in case the result is null
+                String posterImageUrl = movie.getImageUrl() != null ?
+                        IMAGE_URL_SIZE.concat(movie.getImageUrl()) : "";
+                Glide.with(this)
+                        .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
+                        .load(posterImageUrl)
+                        .into(posterImage);
+
+                //get genre names based on genre codes
+                List<Integer> genreId = new ArrayList<>(movie.getGenres());
+                int count = 0;
+                for (int id : genreId) {
+                    genre.append(genreMap.get(id));
+                    count++;
+                    if (count < genreId.size()) {
+                        genre.append(", ");
+                    }
+                }
+
+            }
+        }
+    }
+
+    /**
+     * sets the title on the toolbar only if the toolbar is collapsed
+     */
+    private void handleCollapsedToolbarTitle() {
+        //set title on on collapsed toolbar
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = true;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                //verify if the toolbar is completely collapsed and set the movie name as the title
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbarLayout.setTitle(movie.getTitle());
+                    isShow = true;
+                } else if (isShow) {
+                    //display an empty string when toolbar is expanded
+                    collapsingToolbarLayout.setTitle(" ");
+                    isShow = false;
+                }
+
+            }
+        });
     }
 
     /**
@@ -357,6 +381,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * display message in toast
+     *
      * @param messageId string resource id for the message to be displayed
      */
     private void displayToastMessage(int messageId) {
