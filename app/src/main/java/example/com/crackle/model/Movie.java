@@ -1,5 +1,9 @@
 package example.com.crackle.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,41 +11,76 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+@Entity(tableName = "movie")
 public class Movie implements Parcelable {
 
+    @PrimaryKey
+    @ColumnInfo(name = "movie_id")
     @SerializedName("id")
     private int movieId;
+
+    @ColumnInfo(name = "poster_path")
     @SerializedName("poster_path")
     private String imageUrl;
+
+    @ColumnInfo(name = "backdrop_path")
     @SerializedName("backdrop_path")
     private String backdropImageUrl;
+
+    @ColumnInfo(name = "title")
     @SerializedName("title")
     private String title;
+
+    @ColumnInfo(name = "overview")
     @SerializedName("overview")
     private String plot;
+
+    @ColumnInfo(name = "popularity")
     @SerializedName("popularity")
     private double popularity;
+
+    @ColumnInfo(name = "vote_average")
     @SerializedName("vote_average")
     private double userRating;
+
+    @ColumnInfo(name = "release_date")
     @SerializedName("release_date")
     private String releaseDate;
+
+    @ColumnInfo(name = "original_language")
     @SerializedName("original_language")
     private String language;
+
+    @ColumnInfo(name = "runtime")
     @SerializedName("runtime")
     private int duration;
+
+    @ColumnInfo(name = "original_title")
     @SerializedName("original_title")
     private String originalTitle;
+
+    @ColumnInfo(name = "homepage")
     @SerializedName("homepage")
     private String homepage;
+
+    @Ignore
     @SerializedName("genre_ids")
     private ArrayList<Integer> genres;
+
+    @Ignore
     @SerializedName("images")
     private ImageResults imageResults;
+
+    @Ignore
     @SerializedName("videos")
     private VideoResults videoResults;
+
+    @Ignore
     @SerializedName("releases")
     private CertificationResults certificationResults;
 
+    public Movie() {
+    }
 
     public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double popularity, double userRating, String releaseDate, String language, int duration, String originalTitle, String homepage, ArrayList<Integer> genres, ImageResults imageResults, VideoResults videoResults, CertificationResults certificationResults) {
         this.movieId = movieId;
