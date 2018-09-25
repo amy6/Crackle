@@ -41,6 +41,7 @@ import example.com.crackle.model.Certification;
 import example.com.crackle.model.Image;
 import example.com.crackle.model.Movie;
 import example.com.crackle.model.Video;
+import example.com.crackle.room.MovieDatabase;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
@@ -94,6 +95,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     private List<Image> images;
     private List<Certification> certifications;
     private Toast toast;
+    private MovieDatabase movieDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +138,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
         //set up Retrofit call to get movie details
         fetchMovieDetails(client);
+
+        //get database instance
+        movieDatabase = MovieDatabase.getInstance(this);
     }
 
     /**
@@ -364,13 +369,24 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.favorites:
-                //TODO: Implement favorites functionality
                 Animation anim = AnimationUtils.loadAnimation(this, R.anim.shake);
                 favorites.startAnimation(anim);
                 if (isFavorite) {
+                    /*new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            movieDatabase.movieDao().removeMovieFromFavorites(movie);
+                        }
+                    });*/
                     displayToastMessage(R.string.favorites_removed);
                     favorites.setImageResource(R.drawable.ic_favorite_border);
                 } else {
+                    /*new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            movieDatabase.movieDao().addMovieToFavorites(movie);
+                        }
+                    });*/
                     displayToastMessage(R.string.favorites_added);
                     favorites.setImageResource(R.drawable.ic_favorite);
                 }

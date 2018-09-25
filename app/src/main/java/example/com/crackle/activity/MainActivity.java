@@ -185,8 +185,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     getTopRatedMovies();
                 }
                 break;
-            case R.id.favorites:
-                //TODO: display user's favorites movie list
+            case R.id.sort_favorites:
+                //if the item is already selected, exit early
+                if (item.isChecked()) {
+                    return false;
+                } else {
+                    //set the item as selected
+                    item.setChecked(true);
+                }
                 break;
         }
         return true;
