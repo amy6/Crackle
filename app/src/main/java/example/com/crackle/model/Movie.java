@@ -79,10 +79,32 @@ public class Movie implements Parcelable {
     @SerializedName("releases")
     private CertificationResults certificationResults;
 
+    @ColumnInfo(name = "is_favorite")
+    private boolean isFavorite;
+
+    @Ignore
     public Movie() {
     }
 
-    public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double popularity, double userRating, String releaseDate, String language, int duration, String originalTitle, String homepage, ArrayList<Integer> genres, ImageResults imageResults, VideoResults videoResults, CertificationResults certificationResults) {
+    //this constructor will be used by Room
+    public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double popularity, double userRating, String releaseDate, String language, int duration, String originalTitle, String homepage, boolean isFavorite) {
+        this.movieId = movieId;
+        this.imageUrl = imageUrl;
+        this.backdropImageUrl = backdropImageUrl;
+        this.title = title;
+        this.plot = plot;
+        this.popularity = popularity;
+        this.userRating = userRating;
+        this.releaseDate = releaseDate;
+        this.language = language;
+        this.duration = duration;
+        this.originalTitle = originalTitle;
+        this.homepage = homepage;
+        this.isFavorite = isFavorite;
+    }
+
+    @Ignore
+    public Movie(int movieId, String imageUrl, String backdropImageUrl, String title, String plot, double popularity, double userRating, String releaseDate, String language, int duration, String originalTitle, String homepage, ArrayList<Integer> genres, ImageResults imageResults, VideoResults videoResults, CertificationResults certificationResults, boolean isFavorite) {
         this.movieId = movieId;
         this.imageUrl = imageUrl;
         this.backdropImageUrl = backdropImageUrl;
@@ -99,8 +121,11 @@ public class Movie implements Parcelable {
         this.imageResults = imageResults;
         this.videoResults = videoResults;
         this.certificationResults = certificationResults;
+        this.isFavorite = isFavorite;
     }
 
+
+    @Ignore
     public Movie(Parcel source) {
         movieId = source.readInt();
         imageUrl = source.readString();
@@ -118,6 +143,7 @@ public class Movie implements Parcelable {
         imageResults = source.readParcelable(ImageResults.class.getClassLoader());
         videoResults = source.readParcelable(VideoResults.class.getClassLoader());
         certificationResults = source.readParcelable(CertificationResults.class.getClassLoader());
+        isFavorite = source.readByte() != 0;
     }
 
     public int getMovieId() {
@@ -248,6 +274,14 @@ public class Movie implements Parcelable {
         this.certificationResults = certificationResults;
     }
 
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -271,6 +305,7 @@ public class Movie implements Parcelable {
         dest.writeParcelable(imageResults, 0);
         dest.writeParcelable(videoResults, 0);
         dest.writeParcelable(certificationResults, 0);
+        dest.writeByte((byte) (isFavorite ? 1 : 0));
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {

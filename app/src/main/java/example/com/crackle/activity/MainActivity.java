@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import butterknife.ButterKnife;
 import example.com.crackle.model.Movie;
 import example.com.crackle.adapter.MovieAdapter;
 import example.com.crackle.listener.MovieApiClient;
+import example.com.crackle.room.MovieDatabase;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.model.MovieResults;
 import example.com.crackle.listener.OnLoadMoreListener;
@@ -36,6 +38,7 @@ import retrofit2.Response;
 import static example.com.crackle.utils.Constants.API_KEY;
 import static example.com.crackle.utils.Constants.DEFAULT_OPTION_CHECKED;
 import static example.com.crackle.utils.Constants.GRID_LAYOUT;
+import static example.com.crackle.utils.Constants.LOG_TAG;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
 
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private boolean defaultOptionChecked = true;
     private boolean fromErrorButton;
 
+    private MovieDatabase movieDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         //set up RecyclerView - define caching properties and default animator
         Utils.setupRecyclerView(this, recyclerView, GRID_LAYOUT);
+
+        //get reference to favorites movie database
+        movieDatabase = MovieDatabase.getInstance(this);
 
         //set up adapter
         movieAdapter = new MovieAdapter(this, movies, recyclerView);
@@ -190,8 +197,23 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 if (item.isChecked()) {
                     return false;
                 } else {
+                    progressBar.setVisibility(View.VISIBLE);
                     //set the item as selected
                     item.setChecked(true);
+                    movies.clear();
+                    movieAdapter.notifyDataSetChanged();
+                    movieAdapter.setOnLoadMoreListener(null);
+                    refreshLayout.setEnabled(false);
+
+                    ArrayList<Movie> favoriteMovies = new ArrayList<>(movieDatabase.movieDao()
+                            .getFavoritesMovies());
+                    progressBar.setVisibility(View.GONE);
+                    if (favoriteMovies.size() > 0) {
+                        movies.addAll(favoriteMovies);
+                        movieAdapter.notifyDataSetChanged();
+                    } else {
+                        updateEmptyStateViews(R.drawable.no_search_results, R.string.no_favorites, R.drawable.ic_error_outline, R.string.browse_movies);
+                    }
                 }
                 break;
         }
@@ -271,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
                 //display error messages on failure
-                updateEmptyStateViews(R.drawable.no_search_results, R.string.no_search_results, R.drawable.ic_error_outline, R.string.error_no_results);
+                updateEmptyStateViews(R.drawable.no_search_results, R.string.no_search_results, R.drawable.ic_error_outline, R.string.browse_movies);
             }
         });
     }
@@ -397,7 +419,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //invoke API call based on selected sort order
         if (mostPopularMenuItem.isChecked()) {
             getPopularMovies();
-        } else {
+        } else if (topRatedMenuItem.isChecked()) {
             getTopRatedMovies();
         }
     }
@@ -417,7 +439,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //invoke API call based on selected sort order
         if (mostPopularMenuItem.isChecked()) {
             getPopularMovies();
-        } else {
+        } else if (topRatedMenuItem.isChecked()) {
             getTopRatedMovies();
         }
     }

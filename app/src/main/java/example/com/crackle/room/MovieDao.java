@@ -16,8 +16,11 @@ public interface MovieDao {
     @Query("SELECT * FROM movie")
     List<Movie> getFavoritesMovies();
 
-    @Query("SELECT * FROM movie WHERE movie_id = :movieId")
-    Movie getMovie(String movieId);
+    @Query("SELECT is_favorite FROM movie WHERE movie_id = :movieId")
+    boolean isFavorite(int movieId);
+
+    @Query("UPDATE movie SET is_favorite = :isFavorite WHERE movie_id = :movieId" )
+    void updateMovieFavorite(int movieId, boolean isFavorite);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addMovieToFavorites(Movie movie);

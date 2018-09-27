@@ -1,10 +1,14 @@
 package example.com.crackle.activity;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -95,6 +99,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     private List<Image> images;
     private List<Certification> certifications;
     private Toast toast;
+
+    private MovieDetailsViewModel viewModel;
     private MovieDatabase movieDatabase;
 
     @Override
@@ -123,6 +129,27 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         //set up Retrofit client
         MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
 
+        //get database instance
+        movieDatabase = MovieDatabase.getInstance(this);
+
+        //get reference to ViewModel
+        viewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel.class);
+
+        //set up observer to observer changes to database
+        viewModel.getMovie().observe(this, movie -> {
+            if (movie != null){
+                Log.d(LOG_TAG, "Movie " + movie.getOriginalTitle() + " was added/deleted");
+                ArrayList<Movie> favoriteMovies = new ArrayList<>(movieDatabase.movieDao().getFavoritesMovies());
+                Log.d(LOG_TAG, "Total favorite movies = " + favoriteMovies.size());
+                if (favoriteMovies.size() > 0) {
+                    for (Movie favoriteMovie : favoriteMovies) {
+                        Log.d(LOG_TAG, "Favorite movie present in DB : " + favoriteMovie.getOriginalTitle());
+                        Log.d(LOG_TAG, "Boolean : " + favoriteMovie.isFavorite());
+                    }
+                }
+            }
+        });
+
         //initialize data sets
         images = new ArrayList<>();
         certifications = new ArrayList<>();
@@ -133,14 +160,23 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         //display toolbar title only when collapsed
         handleCollapsedToolbarTitle();
 
+        if (getIntent() != null) {
+            if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
+                //get movie object from intent
+                movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+                if (movieDatabase.movieDao().isFavorite(movie.getMovieId())) {
+                    favorites.setImageResource(R.drawable.ic_favorite);
+                } else {
+                    favorites.setImageResource(R.drawable.ic_favorite_border);
+                }
+            }
+        }
+
         //get the list of genres for the movie
         fetchMovieGenre();
 
         //set up Retrofit call to get movie details
         fetchMovieDetails(client);
-
-        //get database instance
-        movieDatabase = MovieDatabase.getInstance(this);
     }
 
     /**
@@ -227,37 +263,29 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         //get the list of all genre code and corresponding names from local json file
         SparseArray<String> genreMap = Utils.fetchAllGenres(this);
 
-        if (getIntent() != null) {
-            if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
-                //get movie object from intent
-                movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+        //fetch movie id
+        movieId = movie.getMovieId();
 
-                //fetch movie id
-                movieId = movie.getMovieId();
+        //set the fields for the movie
+        title.setText(movie.getTitle());
+        year.setText(movie.getReleaseDate().substring(0, 4));
 
-                //set the fields for the movie
-                title.setText(movie.getTitle());
-                year.setText(movie.getReleaseDate().substring(0, 4));
+        //define default image in case the result is null
+        String posterImageUrl = movie.getImageUrl() != null ?
+                IMAGE_URL_SIZE.concat(movie.getImageUrl()) : "";
+        Glide.with(this)
+                .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
+                .load(posterImageUrl)
+                .into(posterImage);
 
-                //define default image in case the result is null
-                String posterImageUrl = movie.getImageUrl() != null ?
-                        IMAGE_URL_SIZE.concat(movie.getImageUrl()) : "";
-                Glide.with(this)
-                        .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
-                        .load(posterImageUrl)
-                        .into(posterImage);
-
-                //get genre names based on genre codes
-                List<Integer> genreId = new ArrayList<>(movie.getGenres());
-                int count = 0;
-                for (int id : genreId) {
-                    genre.append(genreMap.get(id));
-                    count++;
-                    if (count < genreId.size()) {
-                        genre.append(", ");
-                    }
-                }
-
+        //get genre names based on genre codes
+        List<Integer> genreId = new ArrayList<>(movie.getGenres());
+        int count = 0;
+        for (int id : genreId) {
+            genre.append(genreMap.get(id));
+            count++;
+            if (count < genreId.size()) {
+                genre.append(", ");
             }
         }
     }
@@ -371,25 +399,43 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
             case R.id.favorites:
                 Animation anim = AnimationUtils.loadAnimation(this, R.anim.shake);
                 favorites.startAnimation(anim);
+                isFavorite = movieDatabase.movieDao().isFavorite(movieId);
                 if (isFavorite) {
                     /*new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            movieDatabase.movieDao().removeMovieFromFavorites(movie);
+                            viewModel.getMovie().observe(MovieDetailsActivity.this, new Observer<Movie>() {
+                                @Override
+                                public void onChanged(@Nullable Movie movie) {
+                                    if (movie != null) {
+                                        Log.d(LOG_TAG, "Movie " + movie.getOriginalTitle() +
+                                                " REMOVED from favorites");
+                                    }
+                                }
+                            });
                         }
-                    });*/
+                    }).start();*/
+                    movieDatabase.movieDao().removeMovieFromFavorites(movie);
+                    movie.setFavorite(false);
+                    viewModel.setMovie(movie);
                     displayToastMessage(R.string.favorites_removed);
                     favorites.setImageResource(R.drawable.ic_favorite_border);
                 } else {
                     /*new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            movieDatabase.movieDao().addMovieToFavorites(movie);
+                            viewModel.setMovie(movie);
+                            Log.d(LOG_TAG, "Movie " + movie.getOriginalTitle() +
+                                    " ADDED from favorites");
                         }
-                    });*/
+                    }).start();*/
+                    movieDatabase.movieDao().addMovieToFavorites(movie);
+                    movie.setFavorite(true);
+                    viewModel.setMovie(movie);
                     displayToastMessage(R.string.favorites_added);
                     favorites.setImageResource(R.drawable.ic_favorite);
                 }
+                movieDatabase.movieDao().updateMovieFavorite(movieId, movie.isFavorite());
                 isFavorite = !isFavorite;
                 break;
         }

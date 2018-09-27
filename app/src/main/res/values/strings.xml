@@ -46,4 +46,6 @@
     <string name="favorites_added">Added to favorites</string>
     <string name="trailers">Trailers:</string>
     <string name="no_trailers">No trailers available</string>
+    <string name="no_favorites">No favorites saved.</string>
+    <string name="browse_movies">Browse Movies</string>
 </resources>

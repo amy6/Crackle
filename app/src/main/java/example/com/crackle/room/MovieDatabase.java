@@ -4,10 +4,13 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.util.Log;
 
 import example.com.crackle.model.Movie;
 
-@Database(entities = {Movie.class}, version = 1, exportSchema = false)
+import static example.com.crackle.utils.Constants.LOG_TAG;
+
+@Database(entities = {Movie.class}, version = 2, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "movie";
@@ -24,7 +27,11 @@ public abstract class MovieDatabase extends RoomDatabase {
             synchronized (LOCK) {
                 if (movieDatabaseInstance == null) {
                     movieDatabaseInstance = Room.databaseBuilder(context, MovieDatabase.class,
-                            MovieDatabase.DATABASE_NAME).build();
+                            MovieDatabase.DATABASE_NAME)
+                            .allowMainThreadQueries()
+                            .fallbackToDestructiveMigration()
+                            .build();
+                    Log.d(LOG_TAG, "Initializing the database instance");
                 }
             }
         }
