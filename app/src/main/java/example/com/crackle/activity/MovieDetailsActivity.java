@@ -46,6 +46,7 @@ import example.com.crackle.model.Image;
 import example.com.crackle.model.Movie;
 import example.com.crackle.model.Video;
 import example.com.crackle.room.MovieDatabase;
+import example.com.crackle.utils.AppExecutors;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
@@ -102,6 +103,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private MovieDetailsViewModel viewModel;
     private MovieDatabase movieDatabase;
+    private AppExecutors appExecutors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
         //get reference to ViewModel
         viewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel.class);
+
+        //get reference to executor instance to handle background tasks
+        appExecutors = AppExecutors.getExecutorInstance();
 
         //set up observer to observer changes to database
         viewModel.getMovie().observe(this, movie -> {
@@ -401,41 +406,26 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 favorites.startAnimation(anim);
                 isFavorite = movieDatabase.movieDao().isFavorite(movieId);
                 if (isFavorite) {
-                    /*new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewModel.getMovie().observe(MovieDetailsActivity.this, new Observer<Movie>() {
-                                @Override
-                                public void onChanged(@Nullable Movie movie) {
-                                    if (movie != null) {
-                                        Log.d(LOG_TAG, "Movie " + movie.getOriginalTitle() +
-                                                " REMOVED from favorites");
-                                    }
-                                }
-                            });
-                        }
-                    }).start();*/
-                    movieDatabase.movieDao().removeMovieFromFavorites(movie);
-                    movie.setFavorite(false);
-                    viewModel.setMovie(movie);
-                    displayToastMessage(R.string.favorites_removed);
-                    favorites.setImageResource(R.drawable.ic_favorite_border);
+                    appExecutors.getDiskIO().execute(() -> {
+                        movieDatabase.movieDao().removeMovieFromFavorites(movie);
+                        runOnUiThread(() -> {
+                            displayToastMessage(R.string.favorites_removed);
+                            favorites.setImageResource(R.drawable.ic_favorite_border);
+                        });
+                    });
                 } else {
-                    /*new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewModel.setMovie(movie);
-                            Log.d(LOG_TAG, "Movie " + movie.getOriginalTitle() +
-                                    " ADDED from favorites");
-                        }
-                    }).start();*/
-                    movieDatabase.movieDao().addMovieToFavorites(movie);
-                    movie.setFavorite(true);
-                    viewModel.setMovie(movie);
-                    displayToastMessage(R.string.favorites_added);
-                    favorites.setImageResource(R.drawable.ic_favorite);
+                    appExecutors.getDiskIO().execute(() -> {
+                        movieDatabase.movieDao().addMovieToFavorites(movie);
+                        runOnUiThread(() -> {
+                            displayToastMessage(R.string.favorites_added);
+                            favorites.setImageResource(R.drawable.ic_favorite);
+                        });
+                    });
                 }
-                movieDatabase.movieDao().updateMovieFavorite(movieId, movie.isFavorite());
+                movie.setFavorite(!isFavorite);
+                appExecutors.getDiskIO().execute(() -> {
+                    movieDatabase.movieDao().updateMovieFavorite(movieId, movie.isFavorite());
+                });
                 isFavorite = !isFavorite;
                 break;
         }

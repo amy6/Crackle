@@ -22,7 +22,7 @@ public class AppExecutors {
     }
 
     public static AppExecutors getExecutorInstance() {
-        if (executorInstance != null) {
+        if (executorInstance == null) {
             synchronized (LOCK) {
                 executorInstance = new AppExecutors(Executors.newSingleThreadExecutor(),
                         Executors.newFixedThreadPool(3),
