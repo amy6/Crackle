@@ -134,26 +134,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         //get database instance
         movieDatabase = MovieDatabase.getInstance(this);
 
-        //get reference to ViewModel
-        viewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel.class);
-
         //get reference to executor instance to handle background tasks
         appExecutors = AppExecutors.getExecutorInstance();
 
-        //set up observer to observer changes to database
-        viewModel.getMovie().observe(this, movie -> {
-            if (movie != null){
-                Log.d(LOG_TAG, "Movie " + movie.getOriginalTitle() + " was added/deleted");
-                ArrayList<Movie> favoriteMovies = new ArrayList<>(movieDatabase.movieDao().getFavoritesMovies());
-                Log.d(LOG_TAG, "Total favorite movies = " + favoriteMovies.size());
-                if (favoriteMovies.size() > 0) {
-                    for (Movie favoriteMovie : favoriteMovies) {
-                        Log.d(LOG_TAG, "Favorite movie present in DB : " + favoriteMovie.getOriginalTitle());
-                        Log.d(LOG_TAG, "Boolean : " + favoriteMovie.isFavorite());
-                    }
-                }
-            }
-        });
 
         //initialize data sets
         images = new ArrayList<>();
@@ -284,15 +267,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 .into(posterImage);
 
         //get genre names based on genre codes
-        List<Integer> genreId = new ArrayList<>(movie.getGenres());
-        int count = 0;
-        for (int id : genreId) {
-            genre.append(genreMap.get(id));
-            count++;
-            if (count < genreId.size()) {
-                genre.append(", ");
+        if (movie.getGenres() != null) {
+            List<Integer> genreId = new ArrayList<>(movie.getGenres());
+            int count = 0;
+            for (int id : genreId) {
+                genre.append(genreMap.get(id));
+                count++;
+                if (count < genreId.size()) {
+                    genre.append(", ");
+                }
             }
         }
+
     }
 
     /**

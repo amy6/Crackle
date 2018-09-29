@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private boolean fromErrorButton;
 
     private MovieDatabase movieDatabase;
+    private ArrayList<Movie> favoriteMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,8 +206,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     movieAdapter.setOnLoadMoreListener(null);
                     refreshLayout.setEnabled(false);
 
-                    ArrayList<Movie> favoriteMovies = new ArrayList<>(movieDatabase.movieDao()
-                            .getFavoritesMovies());
+                    if (favoriteMovies == null) {
+                        favoriteMovies = new ArrayList<>();
+                    } else {
+                        favoriteMovies.clear();
+                    }
+                    favoriteMovies.addAll(movieDatabase.movieDao().getFavoritesMovies());
                     progressBar.setVisibility(View.GONE);
                     if (favoriteMovies.size() > 0) {
                         movies.addAll(favoriteMovies);
