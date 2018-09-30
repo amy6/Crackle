@@ -487,6 +487,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     progressBar.setVisibility(View.VISIBLE);
                     fromErrorButton = true;
                     onRefresh();
+                } else if (((Button) view).getText().toString().trim().equalsIgnoreCase(getString(R.string.browse_movies))){
+                    errorLayout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    mostPopularMoviesStartPage = 1;
+                    topRatedMoviesStartPage = 1;
+                    mostPopularMenuItem.setChecked(true);
+                    getPopularMovies();
                 } else {
                     //close the app on server error
                     finish();
