@@ -17,7 +17,8 @@ public class Constants {
     public static final String IMAGE_URL_SIZE = IMAGE_BASE_URL + IMAGE_SIZE;
 
     //constant to save and restore default sort order selected by the user on activity state changes
-    public static final String DEFAULT_OPTION_CHECKED = "DEFAULT_OPTION_CHECKED";
+    public static final String MOST_POPULAR_OPTION_CHECKED = "MOST_POPULAR_OPTION_CHECKED";
+    public static final String TOP_RATED_OPTION_CHECKED = "TOP_RATED_OPTION_CHECKED";
 
     //define item type to load on pagination - grid item or progress bar
     public static final int ITEM = 0;

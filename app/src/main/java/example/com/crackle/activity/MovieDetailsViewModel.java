@@ -1,27 +1,30 @@
 package example.com.crackle.activity;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
+import java.util.List;
+
 import example.com.crackle.model.Movie;
+import example.com.crackle.room.MovieDao;
+import example.com.crackle.room.MovieDatabase;
 
 import static example.com.crackle.utils.Constants.LOG_TAG;
 
-public class MovieDetailsViewModel extends ViewModel {
+public class MovieDetailsViewModel extends AndroidViewModel {
 
-    private MutableLiveData<Movie> movie;
+    private LiveData<List<Movie>> movies;
 
-    public MovieDetailsViewModel() {
+    public MovieDetailsViewModel(Application application) {
+        super(application);
         Log.d(LOG_TAG, "Initializing Movie Mutable LiveData object inside ViewModel");
-        movie = new MutableLiveData<>();
+        MovieDao movieDao = MovieDatabase.getInstance(application).movieDao();
+        movies = movieDao.getFavoritesMovies();
     }
 
-    public MutableLiveData<Movie> getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie.postValue(movie);
+    public LiveData<List<Movie>> getFavoriteMovies() {
+        return movies;
     }
 }
