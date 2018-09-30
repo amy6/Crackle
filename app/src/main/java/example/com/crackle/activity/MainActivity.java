@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.errorLayout)
-    ConstraintLayout errorLayout;
+    ScrollView errorLayout;
     @BindView(R.id.errorImage)
     ImageView errorImage;
     @BindView(R.id.errorText)

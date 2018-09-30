@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/errorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/errorImage"
+            android:layout_width="@dimen/dimens_200dp"
+            android:layout_height="@dimen/dimens_200dp"
+            android:layout_marginStart="@dimen/dimens_16dp"
+            android:layout_marginLeft="@dimen/dimens_16dp"
+            android:layout_marginTop="@dimen/dimens_8dp"
+            android:layout_marginBottom="@dimen/dimens_8dp"
+            android:contentDescription="@string/no_description_available"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_8dp"
+            android:layout_marginEnd="@dimen/dimens_16dp"
+            android:layout_marginRight="@dimen/dimens_16dp"
+            android:gravity="center"
+            android:textAppearance="?android:textAppearanceMedium"
+            app:layout_constraintBottom_toTopOf="@+id/errorButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="@+id/errorImage"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:drawableTop="@drawable/ic_cloud_off"
+            tools:text="@string/no_internet_connection" />
+
+        <Button
+            android:id="@+id/errorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_8dp"
+            android:layout_marginLeft="@dimen/dimens_8dp"
+            android:layout_marginTop="@dimen/dimens_8dp"
+            android:layout_marginEnd="@dimen/dimens_8dp"
+            android:layout_marginRight="@dimen/dimens_8dp"
+            android:layout_marginBottom="@dimen/dimens_8dp"
+            android:background="@android:color/transparent"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="@+id/errorImage"
+            app:layout_constraintEnd_toEndOf="@+id/errorText"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/errorText"
+            app:layout_constraintTop_toBottomOf="@+id/errorText"
+            tools:text="@string/error_try_again" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.45" />
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
