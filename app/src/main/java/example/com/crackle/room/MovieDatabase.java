@@ -3,6 +3,7 @@ package example.com.crackle.room;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.util.Log;
 
@@ -10,7 +11,8 @@ import example.com.crackle.model.Movie;
 
 import static example.com.crackle.utils.Constants.LOG_TAG;
 
-@Database(entities = {Movie.class}, version = 2, exportSchema = false)
+@Database(entities = {Movie.class}, version = 3, exportSchema = false)
+@TypeConverters(GenreConverter.class)
 public abstract class MovieDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "movie";

@@ -63,7 +63,6 @@ public class Movie implements Parcelable {
     @SerializedName("homepage")
     private String homepage;
 
-    @Ignore
     @SerializedName("genre_ids")
     private ArrayList<Integer> genres;
 
