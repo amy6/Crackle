@@ -193,6 +193,16 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        this.movies.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Movie> movies) {
+        this.movies.addAll(movies);
+        notifyDataSetChanged();
+    }
+
     //ViewHolder for movie item view to help reduce findViewById calls
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

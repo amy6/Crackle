@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,11 +63,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private ArrayList<Movie> movies;
     private MovieAdapter movieAdapter;
+    private MovieDetailsViewModel viewModel;
 
     private MovieApiClient client;
     private Call<MovieResults> call;
-
-    private Toast toast;
 
     private int mostPopularMoviesStartPage = 1;
     private int topRatedMoviesStartPage = 1;
@@ -75,10 +75,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private MenuItem favoritesMenuItem;
     private boolean mostPopularOptionChecked = true;
     private boolean topRatedOptionChecked = false;
-    private boolean fromErrorButton;
 
-    private MovieDetailsViewModel viewModel;
-    private Parcelable savedRecyclerViewLayoutState;
+    private Toast toast;
+    private boolean fromErrorButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,16 +100,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //initialize view model
         viewModel = ViewModelProviders.of(this)
                 .get(MovieDetailsViewModel.class);
+        //set up observer to get notified when movies are added/removed from favorites database
         viewModel.getFavoriteMovies().observe(this, favorites -> {
             if (favorites != null && !mostPopularOptionChecked && !topRatedOptionChecked) {
                 if (movies == null) {
                     movies = new ArrayList<>();
                 } else {
-                    movies.clear();
-                    movieAdapter.notifyDataSetChanged();
+                    movieAdapter.clear();
                 }
-                movies.addAll(favorites);
-                movieAdapter.notifyDataSetChanged();
+                movieAdapter.addAll(favorites);
 
                 if (movies.size() == 0) {
                     updateEmptyStateViews(R.drawable.no_search_results, R.string.no_favorites, R.drawable.ic_error_outline, R.string.browse_movies);
@@ -129,37 +127,44 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //set up button click listener for error/empty state views
         errorButton.setOnClickListener(this);
 
-        //restore any previously saved movies sort order on activity state changed
+        //restore any previously saved data on activity state changed
         if (savedInstanceState != null) {
+            //restore movies list data
             if (savedInstanceState.containsKey(MOVIES_LIST)) {
                 progressBar.setVisibility(View.GONE);
                 movies = savedInstanceState.getParcelableArrayList(MOVIES_LIST);
                 movieAdapter.setData(movies);
             }
+            //restore page numbers for paginated data
             if (savedInstanceState.containsKey(MOST_POPULAR_START_PAGE)) {
                 mostPopularMoviesStartPage = savedInstanceState.getInt(MOST_POPULAR_START_PAGE);
             }
             if (savedInstanceState.containsKey(TOP_RATED_START_PAGE)) {
                 topRatedMoviesStartPage = savedInstanceState.getInt(TOP_RATED_START_PAGE);
             }
+            //get the currently selected menu item
             if (savedInstanceState.containsKey(MOST_POPULAR_OPTION_CHECKED)) {
                 mostPopularOptionChecked = savedInstanceState.getBoolean(MOST_POPULAR_OPTION_CHECKED);
             }
             if (savedInstanceState.containsKey(TOP_RATED_OPTION_CHECKED)) {
                 topRatedOptionChecked = savedInstanceState.getBoolean(TOP_RATED_OPTION_CHECKED);
             }
+            //get recycler view layout manager state to restore scroll position
             if (savedInstanceState.containsKey(RECYCLER_VIEW_LAYOUT_MANAGER_STATE)) {
-                savedRecyclerViewLayoutState = savedInstanceState.getParcelable(RECYCLER_VIEW_LAYOUT_MANAGER_STATE);
-                recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewLayoutState);
+                recyclerView.getLayoutManager().onRestoreInstanceState(
+                        savedInstanceState.getParcelable(RECYCLER_VIEW_LAYOUT_MANAGER_STATE));
             }
         }
 
+        //enable pagination only if the list data is fetched from network (most popular/top rated)
+        //rather than favorites which is fetched from DB
         if (mostPopularOptionChecked || topRatedOptionChecked) {
             //set up pagination listener
             movieAdapter.setOnLoadMoreListener(this);
         }
 
         //call API based on the selected sort order - popular movies being default
+        //do not explicitly invoke the API on orientation change, wait for the list to be scrolled to the bottom
         if (savedInstanceState == null) {
             if (mostPopularOptionChecked) {
                 getPopularMovies();
@@ -203,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 if (item.isChecked()) {
                     return false;
                 } else {
-                    savedRecyclerViewLayoutState = null;
 
                     errorLayout.setVisibility(View.GONE);
                     //display progress indicator
@@ -213,8 +217,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     //unregister pagination listener before invoking the API to avoid unexpected behaviours
                     movieAdapter.setOnLoadMoreListener(null);
                     //clear the list, notify the adapter
-                    movies.clear();
-                    movieAdapter.notifyDataSetChanged();
+                    movieAdapter.clear();
 
                     //reset the page number to load from the beginning
                     mostPopularMoviesStartPage = 1;
@@ -227,7 +230,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 if (item.isChecked()) {
                     return false;
                 } else {
-                    savedRecyclerViewLayoutState = null;
 
                     errorLayout.setVisibility(View.GONE);
                     //display progress indicator
@@ -237,8 +239,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     //unregister pagination listener before invoking the API to avoid unexpected behaviours
                     movieAdapter.setOnLoadMoreListener(null);
                     //clear the list, notify the adapter
-                    movies.clear();
-                    movieAdapter.notifyDataSetChanged();
+                    movieAdapter.clear();
 
                     //reset the page number to load from the beginning
                     topRatedMoviesStartPage = 1;
@@ -254,8 +255,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     progressBar.setVisibility(View.VISIBLE);
                     //set the item as selected
                     item.setChecked(true);
-                    movies.clear();
-                    movieAdapter.notifyDataSetChanged();
+                    movieAdapter.clear();
 
                     //disable pagination for favorites
                     movieAdapter.setOnLoadMoreListener(null);
@@ -267,9 +267,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     movieAdapter.setLoading(false);
 
                     progressBar.setVisibility(View.GONE);
-                    if (viewModel.getFavoriteMovies().getValue().size() > 0) {
-                        movies.addAll(viewModel.getFavoriteMovies().getValue());
-                        movieAdapter.notifyDataSetChanged();
+                    List<Movie> favoriteMovies = viewModel.getFavoriteMovies().getValue();
+                    if (favoriteMovies != null && favoriteMovies.size() > 0) {
+                        movieAdapter.addAll(favoriteMovies);
                     } else {
                         updateEmptyStateViews(R.drawable.no_search_results, R.string.no_favorites, R.drawable.ic_error_outline, R.string.browse_movies);
                     }
@@ -334,12 +334,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
 
                 //update data set, notify the adapter
-                movies.addAll(response.body().getMovies());
-                movieAdapter.notifyDataSetChanged();
-
-                if (savedRecyclerViewLayoutState != null) {
-                    recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewLayoutState);
-                }
+                movieAdapter.addAll(response.body().getMovies());
 
                 //hide progress indicator and empty state views
                 errorLayout.setVisibility(View.GONE);
@@ -401,12 +396,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
 
                 //update data set, notify the adapter
-                movies.addAll(response.body().getMovies());
-                movieAdapter.notifyDataSetChanged();
-
-                if (savedRecyclerViewLayoutState != null) {
-                    recyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerViewLayoutState);
-                }
+                movieAdapter.addAll(response.body().getMovies());
 
                 //hide progress indicator and empty state views
                 errorLayout.setVisibility(View.GONE);
@@ -484,8 +474,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         topRatedMoviesStartPage = 1;
 
         //clear the list, notify the adapter
-        movies.clear();
-        movieAdapter.notifyDataSetChanged();
+        movieAdapter.clear();
 
         //invoke API call based on selected sort order
         if (mostPopularMenuItem.isChecked()) {
@@ -506,8 +495,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         //add a progress loading indicator at the bottom of the RecyclerView
         movieAdapter.addLoader(null);
-
-        savedRecyclerViewLayoutState = null;
 
         //invoke API call based on selected sort order
         if (mostPopularMenuItem.isChecked()) {
