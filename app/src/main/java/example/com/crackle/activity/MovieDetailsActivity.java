@@ -122,14 +122,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         //set up Retrofit client
         MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
 
-        //get database instance
-
         //get reference to executor instance to handle background tasks
         appExecutors = AppExecutors.getExecutorInstance();
 
         //get reference to view model
         viewModel = ViewModelProviders.of(this).get(MovieDetailsActivityViewModel.class);
-
 
         //initialize data sets
         images = new ArrayList<>();
@@ -145,7 +142,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
             if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
                 //get movie object from intent
                 movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
-                if (viewModel.movieDao().isFavorite(movie.getMovieId())) {
+                //set whether the movie is saved as a favorite or not
+                if (viewModel.isFavorite(movie.getMovieId())) {
                     favorites.setImageResource(R.drawable.ic_favorite);
                 } else {
                     favorites.setImageResource(R.drawable.ic_favorite_border);
@@ -381,28 +379,33 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.favorites:
+                //set animation on click for favorite button
                 Animation anim = AnimationUtils.loadAnimation(this, R.anim.shake);
                 favorites.startAnimation(anim);
-                boolean isFavorite = viewModel.movieDao().isFavorite(movieId);
+
+                //get saved state of the movie from the database
+                boolean isFavorite = viewModel.isFavorite(movieId);
                 if (isFavorite) {
+                    //handle removing the movie from favorites db
                     appExecutors.getDiskIO().execute(() -> {
-                        viewModel.movieDao().removeMovieFromFavorites(movie);
+                        viewModel.removeMovieFromFavorites(movie);
                         runOnUiThread(() -> {
                             displayToastMessage(R.string.favorites_removed);
                             favorites.setImageResource(R.drawable.ic_favorite_border);
                         });
                     });
                 } else {
+                    //handle adding the movie to the favorites db
                     appExecutors.getDiskIO().execute(() -> {
-                        viewModel.movieDao().addMovieToFavorites(movie);
+                        viewModel.addMovieToFavorites(movie);
                         runOnUiThread(() -> {
                             displayToastMessage(R.string.favorites_added);
                             favorites.setImageResource(R.drawable.ic_favorite);
                         });
                     });
                 }
-                movie.setFavorite(!isFavorite);
-                appExecutors.getDiskIO().execute(() -> viewModel.movieDao().updateMovieFavorite(movieId, movie.isFavorite()));
+                //update saved state
+                appExecutors.getDiskIO().execute(() -> viewModel.updateMovieFavorite(movieId, !isFavorite));
                 break;
         }
     }
