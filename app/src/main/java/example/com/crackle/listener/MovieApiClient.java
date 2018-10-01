@@ -29,9 +29,7 @@ public interface MovieApiClient {
     @GET("movie/{movie_id}")
     Call<Movie> getMovieDetails (@Path("movie_id") int movieId, @Query("api_key") String apiKey, @Query("append_to_response") String append_to_response);
 
-    @GET("movie/{movie_id}/videos")
-    Call<VideoResults> getMovieVideos (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+    @GET("movie/{movie_id}")
+    Call<Movie> getMovieDetails (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 
-    @GET("movie/{movie_id}/images")
-    Call<ImageResults> getMovieImages (@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 }

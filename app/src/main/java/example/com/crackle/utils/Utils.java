@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.View;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONArray;
@@ -174,6 +175,7 @@ public class Utils {
             case POSTER_IMG:
             case BACKDROP_IMG:
                 requestOptions
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .error(R.drawable.ic_error_outline);
                 break;
             case CAST_IMG:

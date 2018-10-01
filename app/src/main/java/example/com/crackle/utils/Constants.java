@@ -42,7 +42,7 @@ public class Constants {
     public static final String CAST_IMG = "cast";
 
     //define item view cache size for RecyclerView
-    public static final int ITEM_VIEW_CACHE_SIZE = 10;
+    public static final int ITEM_VIEW_CACHE_SIZE = 20;
 
     //layout types for RecyclerView
     public static final int GRID_LAYOUT = 0;

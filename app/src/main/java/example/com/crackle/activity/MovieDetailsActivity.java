@@ -2,10 +2,12 @@ package example.com.crackle.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +29,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +117,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+        //postpone shared element transition till the image is loaded from the API
+        supportPostponeEnterTransition();
+
         //make status bar transparent
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow();
@@ -119,8 +128,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
         //set up Retrofit client
         MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
-
-        //get reference to executor instance to handle background tasks
 
         //get reference to view model
         viewModel = ViewModelProviders.of(this).get(MovieDetailsActivityViewModel.class);
@@ -162,7 +169,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
      */
     private void fetchMovieDetails(MovieApiClient client) {
         if (movieId != 0) {
-            Call<Movie> detailResultsCall = client.getMovieDetails(movieId, API_KEY, APPEND_TO_RESPONSE_VALUE);
+            Call<Movie> detailResultsCall = client.getMovieDetails(movieId, API_KEY);
 
             detailResultsCall.enqueue(new Callback<Movie>() {
                 @Override
@@ -184,6 +191,26 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     //set movie title
                     if (response.body().getOriginalTitle() != null && !TextUtils.isEmpty(response.body().getOriginalTitle())) {
                         movie.setOriginalTitle(response.body().getOriginalTitle());
+                    }
+
+                    //set up viewpager to display movie info, cast and reviews
+                    viewPager.setAdapter(new MovieFragmentPagerAdapter(getSupportFragmentManager(), movie));
+                    tabLayout.setupWithViewPager(viewPager);
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
+                    displayToastMessage(R.string.error_movie_details);
+                }
+            });
+
+            Call<Movie> extraDetailResultsCall = client.getMovieDetails(movieId, API_KEY, APPEND_TO_RESPONSE_VALUE);
+
+            extraDetailResultsCall.enqueue(new Callback<Movie>() {
+                @Override
+                public void onResponse(@NonNull Call<Movie> call, @NonNull Response<Movie> response) {
+                    if (response.body() == null) {
+                        return;
                     }
 
                     //fetch backdrop images
@@ -219,9 +246,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     MovieImageAdapter adapter = new MovieImageAdapter(MovieDetailsActivity.this, images);
                     backdropImageViewPager.setAdapter(adapter);
 
-                    //set up viewpager to display movie info, cast and reviews
-                    viewPager.setAdapter(new MovieFragmentPagerAdapter(getSupportFragmentManager(), movie));
-                    tabLayout.setupWithViewPager(viewPager);
+
                 }
 
                 @Override
@@ -252,6 +277,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         Glide.with(this)
                 .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
                 .load(posterImageUrl)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        MovieDetailsActivity.this.supportStartPostponedEnterTransition();
+                        return false;
+                    }
+                })
                 .into(posterImage);
 
         //get genre names based on genre codes
