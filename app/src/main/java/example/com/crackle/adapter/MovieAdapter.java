@@ -22,6 +22,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -87,7 +88,9 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                     //if RecyclerView is scrolled to end, call load more to fetch next page of results
                     if (!loading && itemCount <= (lastVisibleItemPosition + viewThreshold)) {
+                        Log.d(LOG_TAG, "RecyclerView has been scrolled to end");
                         if (onLoadMoreListener != null) {
+                            Log.d(LOG_TAG, "Listener is active");
                             onLoadMoreListener.onLoadMore();
                         }
                         setLoading(true);
@@ -183,6 +186,11 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemViewType(int position) {
         return movies.get(position) != null ? ITEM : PROGRESS;
+    }
+
+    public void setData(List<Movie> movies) {
+        this.movies = movies;
+        notifyDataSetChanged();
     }
 
     //ViewHolder for movie item view to help reduce findViewById calls

@@ -20,6 +20,10 @@ public class Constants {
     public static final String MOST_POPULAR_OPTION_CHECKED = "MOST_POPULAR_OPTION_CHECKED";
     public static final String TOP_RATED_OPTION_CHECKED = "TOP_RATED_OPTION_CHECKED";
 
+    //save page numbers to restore paginated data
+    public static final String MOST_POPULAR_START_PAGE = "MOST_POPULAR_START_PAGE";
+    public static final String TOP_RATED_START_PAGE = "TOP_RATED_START_PAGE";
+
     //define item type to load on pagination - grid item or progress bar
     public static final int ITEM = 0;
     public static final int PROGRESS = 1;
@@ -44,6 +48,12 @@ public class Constants {
     public static final int GRID_LAYOUT = 0;
     public static final int LINEAR_LAYOUT_VERTICAL = 1;
     public static final int LINEAR_LAYOUT_HORIZONTAL = 2;
+
+    //key to save data set
+    public static final String MOVIES_LIST = "MOVIES_LIST";
+
+    //define key for saving RecyclerView Layout Manager state
+    public static final String RECYCLER_VIEW_LAYOUT_MANAGER_STATE = "LAYOUT_MANAGER_STATE";
 
     //constants for handling youtube intent to play movie trailers
     public static final String YOUTUBE_VID_BASE_URI = "https://youtube.com/watch?v=";
