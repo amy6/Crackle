@@ -22,7 +22,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -188,16 +187,29 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return movies.get(position) != null ? ITEM : PROGRESS;
     }
 
+    /**
+     * called to update data set
+     *
+     * @param movies list of new data
+     */
     public void setData(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
     }
 
+    /**
+     * clear all data
+     */
     public void clear() {
         this.movies.clear();
         notifyDataSetChanged();
     }
 
+    /**
+     * add data fetched from API
+     *
+     * @param movies list of fetched data
+     */
     public void addAll(List<Movie> movies) {
         this.movies.addAll(movies);
         notifyDataSetChanged();
@@ -255,12 +267,9 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      */
     public void addLoader(Movie movie) {
         movies.add(movie);
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                //notify the adapter of the change in data set
-                notifyItemInserted(movies.size() - 1);
-            }
+        new Handler().post(() -> {
+            //notify the adapter of the change in data set
+            notifyItemInserted(movies.size() - 1);
         });
 
     }

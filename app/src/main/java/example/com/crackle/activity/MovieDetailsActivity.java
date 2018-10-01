@@ -1,14 +1,11 @@
 package example.com.crackle.activity;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -17,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,8 +40,6 @@ import example.com.crackle.listener.MovieApiClient;
 import example.com.crackle.model.Certification;
 import example.com.crackle.model.Image;
 import example.com.crackle.model.Movie;
-import example.com.crackle.model.Video;
-import example.com.crackle.room.MovieDatabase;
 import example.com.crackle.utils.AppExecutors;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
@@ -57,7 +51,6 @@ import static example.com.crackle.utils.Constants.API_KEY;
 import static example.com.crackle.utils.Constants.APPEND_TO_RESPONSE_VALUE;
 import static example.com.crackle.utils.Constants.BACKDROP_IMG;
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
-import static example.com.crackle.utils.Constants.LOG_TAG;
 import static example.com.crackle.utils.Constants.PLAYSTORE_BASE_URI;
 import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_PARAMETER_CATEGORY;
 import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_VALUE_CATEGORY;
@@ -96,13 +89,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private Movie movie;
     private int movieId;
-    private boolean isFavorite;
     private List<Image> images;
     private List<Certification> certifications;
     private Toast toast;
 
-    private MovieDetailsViewModel viewModel;
-    private MovieDatabase movieDatabase;
+    private MovieDetailsActivityViewModel viewModel;
     private AppExecutors appExecutors;
 
     @Override
@@ -132,10 +123,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
 
         //get database instance
-        movieDatabase = MovieDatabase.getInstance(this);
 
         //get reference to executor instance to handle background tasks
         appExecutors = AppExecutors.getExecutorInstance();
+
+        //get reference to view model
+        viewModel = ViewModelProviders.of(this).get(MovieDetailsActivityViewModel.class);
 
 
         //initialize data sets
@@ -152,7 +145,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
             if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
                 //get movie object from intent
                 movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
-                if (movieDatabase.movieDao().isFavorite(movie.getMovieId())) {
+                if (viewModel.movieDao().isFavorite(movie.getMovieId())) {
                     favorites.setImageResource(R.drawable.ic_favorite);
                 } else {
                     favorites.setImageResource(R.drawable.ic_favorite_border);
@@ -390,10 +383,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
             case R.id.favorites:
                 Animation anim = AnimationUtils.loadAnimation(this, R.anim.shake);
                 favorites.startAnimation(anim);
-                isFavorite = movieDatabase.movieDao().isFavorite(movieId);
+                boolean isFavorite = viewModel.movieDao().isFavorite(movieId);
                 if (isFavorite) {
                     appExecutors.getDiskIO().execute(() -> {
-                        movieDatabase.movieDao().removeMovieFromFavorites(movie);
+                        viewModel.movieDao().removeMovieFromFavorites(movie);
                         runOnUiThread(() -> {
                             displayToastMessage(R.string.favorites_removed);
                             favorites.setImageResource(R.drawable.ic_favorite_border);
@@ -401,7 +394,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     });
                 } else {
                     appExecutors.getDiskIO().execute(() -> {
-                        movieDatabase.movieDao().addMovieToFavorites(movie);
+                        viewModel.movieDao().addMovieToFavorites(movie);
                         runOnUiThread(() -> {
                             displayToastMessage(R.string.favorites_added);
                             favorites.setImageResource(R.drawable.ic_favorite);
@@ -409,10 +402,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     });
                 }
                 movie.setFavorite(!isFavorite);
-                appExecutors.getDiskIO().execute(() -> {
-                    movieDatabase.movieDao().updateMovieFavorite(movieId, movie.isFavorite());
-                });
-                isFavorite = !isFavorite;
+                appExecutors.getDiskIO().execute(() -> viewModel.movieDao().updateMovieFavorite(movieId, movie.isFavorite()));
                 break;
         }
     }

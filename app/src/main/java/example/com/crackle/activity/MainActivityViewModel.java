@@ -13,11 +13,11 @@ import example.com.crackle.room.MovieDatabase;
 
 import static example.com.crackle.utils.Constants.LOG_TAG;
 
-public class MovieDetailsViewModel extends AndroidViewModel {
+public class MainActivityViewModel extends AndroidViewModel {
 
     private LiveData<List<Movie>> movies;
 
-    public MovieDetailsViewModel(Application application) {
+    public MainActivityViewModel(Application application) {
         super(application);
         Log.d(LOG_TAG, "Initializing Movie Mutable LiveData object inside ViewModel");
         MovieDao movieDao = MovieDatabase.getInstance(application).movieDao();
