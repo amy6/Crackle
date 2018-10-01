@@ -3,7 +3,7 @@ package example.com.crackle.utils;
 import example.com.crackle.BuildConfig;
 import example.com.crackle.activity.MainActivity;
 
-public class Constants {
+public final class Constants {
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 

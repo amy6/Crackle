@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import example.com.crackle.model.Movie;
-import example.com.crackle.room.MovieRepository;
+import example.com.crackle.database.MovieRepository;
 
 public class MainActivityViewModel extends AndroidViewModel {
 

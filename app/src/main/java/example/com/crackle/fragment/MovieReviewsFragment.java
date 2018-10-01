@@ -47,10 +47,6 @@ public class MovieReviewsFragment extends Fragment {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    private MovieApiClient client;
-    private Call<ReviewResults> call;
-    private List<Review> reviewList;
-
 
     public MovieReviewsFragment() {
         // Required empty public constructor
@@ -65,7 +61,7 @@ public class MovieReviewsFragment extends Fragment {
      * @return inflated view for fragment
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_movie_reviews, container, false);
@@ -85,49 +81,52 @@ public class MovieReviewsFragment extends Fragment {
 
         //set up RecyclerView - define caching properties and default animator
         Utils.setupRecyclerView(getContext(), recyclerView, LINEAR_LAYOUT_VERTICAL);
-        ;
 
         //initialize data set and set up the adapter
-        reviewList = new ArrayList<>();
+        List<Review> reviewList = new ArrayList<>();
         final MovieReviewAdapter adapter = new MovieReviewAdapter(getContext(), reviewList);
         recyclerView.setAdapter(adapter);
 
         //initialize retrofit client and call object that wraps the response
-        client = MovieApiService.getClient().create(MovieApiClient.class);
-        //invoke movie reviews call passing the movie id and API KEY
-        call = client.getMovieReviews(((Movie) getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
-        //invoke API call asynchronously
-        call.enqueue(new Callback<ReviewResults>() {
-            @Override
-            public void onResponse(@NonNull Call<ReviewResults> call, @NonNull Response<ReviewResults> response) {
-                progressBar.setVisibility(View.GONE);
-                //verify if the response body or the fetched results are empty/null
-                if (response.body() == null || response.body().getReviewList() == null) {
-                    return;
-                }
+        MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
 
-                //update data set, notify the adapter
-                //update view visibility accordingly
-                if (response.body().getReviewList().size() > 0) {
-                    reviewList.addAll(response.body().getReviewList());
-                    adapter.notifyDataSetChanged();
-                    emptyTextView.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerView.setVisibility(View.GONE);
-                    emptyTextView.setVisibility(View.VISIBLE);
-                }
+        if (getArguments() != null) {
+            Movie movie = getArguments().getParcelable(MOVIE);
 
+            if (movie != null) {
+                //invoke movie reviews call passing the movie id and API KEY
+                Call<ReviewResults> call = client.getMovieReviews(movie.getMovieId(), API_KEY);
+                //invoke API call asynchronously
+                call.enqueue(new Callback<ReviewResults>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ReviewResults> call, @NonNull Response<ReviewResults> response) {
+                        progressBar.setVisibility(View.GONE);
+                        //verify if the response body or the fetched results are empty/null
+                        if (response.body() == null || response.body().getReviewList() == null) {
+                            return;
+                        }
+
+                        //update data set, notify the adapter, update view visibility accordingly
+                        if (response.body().getReviewList().size() > 0) {
+                            reviewList.addAll(response.body().getReviewList());
+                            adapter.notifyDataSetChanged();
+                            emptyTextView.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                        } else {
+                            recyclerView.setVisibility(View.GONE);
+                            emptyTextView.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ReviewResults> call, @NonNull Throwable t) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(getContext(), R.string.error_movie_review, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-
-            @Override
-            public void onFailure(@NonNull Call<ReviewResults> call, @NonNull Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), R.string.error_movie_review, Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
+        }
     }
 
     /**

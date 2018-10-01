@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +26,8 @@ import example.com.crackle.adapter.MovieVideoAdapter;
 import example.com.crackle.listener.MovieApiClient;
 import example.com.crackle.model.CreditResults;
 import example.com.crackle.model.Crew;
-import example.com.crackle.model.DetailResults;
 import example.com.crackle.model.Movie;
 import example.com.crackle.model.Video;
-import example.com.crackle.model.VideoResults;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
@@ -39,7 +36,6 @@ import retrofit2.Response;
 
 import static example.com.crackle.utils.Constants.API_KEY;
 import static example.com.crackle.utils.Constants.LINEAR_LAYOUT_HORIZONTAL;
-import static example.com.crackle.utils.Constants.LOG_TAG;
 import static example.com.crackle.utils.Constants.MOVIE;
 
 
@@ -70,9 +66,6 @@ public class MovieInfoFragment extends Fragment {
     RecyclerView recyclerView;
     @BindView(R.id.emptyTextView)
     TextView emptyTextView;
-
-    private List<Crew> crewList;
-    private List<Video> videoList;
 
 
     public MovieInfoFragment() {
@@ -106,79 +99,83 @@ public class MovieInfoFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        //initialize data set and set up the adapter
+        List<Video> videoList = new ArrayList<>();
+        List<Crew> crewList = new ArrayList<>();
+
         //set up RecyclerView - define caching properties and default animator
         Utils.setupRecyclerView(getContext(), recyclerView, LINEAR_LAYOUT_HORIZONTAL);
 
-        //initialize data set and set up the adapter
-        videoList = new ArrayList<>();
+        //set up adapter for RecyclerView
         final MovieVideoAdapter adapter = new MovieVideoAdapter(getContext(), videoList);
         recyclerView.setAdapter(adapter);
 
-        //get movie object
-        Movie movie = getArguments().getParcelable(MOVIE);
-
-        //initialize data set
-        crewList = new ArrayList<>();
         //fetch list of language code and corresponding names
         HashMap<String, String> languageMap = Utils.fetchAllLanguages(getContext());
 
-        //initialize retrofit client and call object that wraps the response
-        MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
-        //invoke movie credits call passing the movie id and API KEY
-        Call<CreditResults> creditResultsCall = client.getMovieCredits(((Movie) getArguments().getParcelable(MOVIE)).getMovieId(), API_KEY);
-        //invoke API call asynchronously
-        creditResultsCall.enqueue(new Callback<CreditResults>() {
-            @Override
-            public void onResponse(@NonNull Call<CreditResults> call, @NonNull Response<CreditResults> response) {
-                //verify if the response body or the fetched results are empty/null
-                if (response.body() == null || response.body().getCrewList() == null || response.body().getCrewList().size() == 0) {
-                    return;
+        //get movie object
+        if (getArguments() != null) {
+            Movie movie = getArguments().getParcelable(MOVIE);
+            if (movie != null) {
+
+                //set up view data
+                plotTextView.setText(movie.getPlot());
+                releaseDateTextView.setText(movie.getReleaseDate());
+                String rating = movie.getUserRating() == 0 ? getString(R.string.no_ratings) : DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10");
+                tmdbRating.setText(rating);
+                ratingBar.setRating((float) (movie.getUserRating() / 2f));
+                popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
+                language.setText(languageMap.get(movie.getLanguage()));
+                if (!TextUtils.isEmpty(movie.getHomepage())) {
+                    homepage.setText(movie.getHomepage());
+                }
+                if (!TextUtils.isEmpty(movie.getOriginalTitle())) {
+                    originalTitle.setText(movie.getOriginalTitle());
                 }
 
-                //update data set, update the views accordingly
-                crewList.addAll(response.body().getCrewList());
-                directorTextView.setText("");
-                for (int i = 0; i < crewList.size(); i++) {
-                    if (crewList.get(i).getJob().equalsIgnoreCase("director")) {
-                        directorTextView.append(crewList.get(i).getName());
-                        if (i < crewList.size() - 1 && crewList.get(i + 1).getJob().equalsIgnoreCase("director")) {
-                            directorTextView.append("\n");
+                //initialize retrofit client and call object that wraps the response
+                MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
+                //invoke movie credits call passing the movie id and API KEY
+                Call<CreditResults> creditResultsCall = client.getMovieCredits(movie.getMovieId(), API_KEY);
+                //invoke API call asynchronously
+                creditResultsCall.enqueue(new Callback<CreditResults>() {
+                    @Override
+                    public void onResponse(@NonNull Call<CreditResults> call, @NonNull Response<CreditResults> response) {
+                        //verify if the response body or the fetched results are empty/null
+                        if (response.body() == null || response.body().getCrewList() == null || response.body().getCrewList().size() == 0) {
+                            return;
+                        }
+
+                        //update data set, update the views accordingly
+                        crewList.addAll(response.body().getCrewList());
+                        directorTextView.setText("");
+                        for (int i = 0; i < crewList.size(); i++) {
+                            if (crewList.get(i).getJob().equalsIgnoreCase("director")) {
+                                directorTextView.append(crewList.get(i).getName());
+                                if (i < crewList.size() - 1 && crewList.get(i + 1).getJob().equalsIgnoreCase("director")) {
+                                    directorTextView.append("\n");
+                                }
+                            }
                         }
                     }
+
+                    @Override
+                    public void onFailure(@NonNull Call<CreditResults> call, @NonNull Throwable t) {
+                        Toast.makeText(getContext(), R.string.error_movie_director, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                //display trailer thumbnails
+                if (movie.getVideoResults() != null && movie.getVideoResults().getVideos() != null && movie.getVideoResults().getVideos().size() > 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyTextView.setVisibility(View.GONE);
+                    videoList.addAll(movie.getVideoResults().getVideos());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    emptyTextView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
             }
-
-            @Override
-            public void onFailure(@NonNull Call<CreditResults> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), R.string.error_movie_director, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        //display trailer thumbnails
-        if (movie.getVideoResults() != null && movie.getVideoResults().getVideos() != null && movie.getVideoResults().getVideos().size() > 0) {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyTextView.setVisibility(View.GONE);
-            videoList.addAll(movie.getVideoResults().getVideos());
-            adapter.notifyDataSetChanged();
-        } else {
-            emptyTextView.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        }
-
-
-        //set up view data
-        plotTextView.setText(movie.getPlot());
-        releaseDateTextView.setText(movie.getReleaseDate());
-        String rating = movie.getUserRating() == 0 ? getString(R.string.no_ratings) : DecimalFormat.getNumberInstance().format(movie.getUserRating()).concat("/10");
-        tmdbRating.setText(rating);
-        ratingBar.setRating((float) (movie.getUserRating() / 2f));
-        popularity.setText(DecimalFormat.getNumberInstance().format(movie.getPopularity()));
-        language.setText(languageMap.get(movie.getLanguage()));
-        if (!TextUtils.isEmpty(movie.getHomepage())) {
-            homepage.setText(movie.getHomepage());
-        }
-        if (!TextUtils.isEmpty(movie.getOriginalTitle())) {
-            originalTitle.setText(movie.getOriginalTitle());
         }
     }
 

@@ -5,7 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
 import example.com.crackle.model.Movie;
-import example.com.crackle.room.MovieRepository;
+import example.com.crackle.database.MovieRepository;
 
 public class MovieDetailsActivityViewModel extends AndroidViewModel {
 

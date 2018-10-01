@@ -1,4 +1,4 @@
-package example.com.crackle.room;
+package example.com.crackle.database;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;

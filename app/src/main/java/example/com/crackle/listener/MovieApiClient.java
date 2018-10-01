@@ -1,12 +1,9 @@
 package example.com.crackle.listener;
 
-import example.com.crackle.model.ImageResults;
+import example.com.crackle.model.CreditResults;
 import example.com.crackle.model.Movie;
 import example.com.crackle.model.MovieResults;
 import example.com.crackle.model.ReviewResults;
-import example.com.crackle.model.CreditResults;
-import example.com.crackle.model.DetailResults;
-import example.com.crackle.model.VideoResults;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

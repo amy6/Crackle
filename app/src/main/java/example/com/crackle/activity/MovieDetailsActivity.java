@@ -99,6 +99,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private MovieDetailsActivityViewModel viewModel;
     private Toast toast;
+    private String youtubeTrailerLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,6 +229,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     //fetch movie trailers
                     if (response.body().getVideoResults() != null && response.body().getVideoResults().getVideos() != null && response.body().getVideoResults().getVideos().size() > 0) {
                         movie.setVideoResults(response.body().getVideoResults());
+                        youtubeTrailerLink = movie.getVideoResults().getVideos().get(0).getTitle();
                     }
 
                     if (response.body().getCertificationResults() != null && response.body().getCertificationResults().getCertificationList() != null && response.body().getCertificationResults().getCertificationList().size() > 0) {
@@ -362,11 +364,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 //set text content
-                intent.putExtra(Intent.EXTRA_TEXT,
-                        String.format(getString(R.string.movie_share_intent_text),
-                                movie.getTitle(),
-                                TMDB_MOVIE_BASE_URI,
-                                String.valueOf(movie.getMovieId())));
+                String intentContent = String.format(getString(R.string.movie_share_intent_text),
+                        movie.getTitle(),
+                        TMDB_MOVIE_BASE_URI,
+                        String.valueOf(movie.getMovieId()));
+                //add youtube trailer link
+                if (youtubeTrailerLink != null && !TextUtils.isEmpty(youtubeTrailerLink)) {
+                    intentContent = intentContent.concat(String.format(getString(R.string.youtube_link_text), youtubeTrailerLink));
+                }
+                intentContent = intentContent.concat(getString(R.string.crackle_text));
+                intent.putExtra(Intent.EXTRA_TEXT, intentContent);
                 //set custom chooser title
                 intent = Intent.createChooser(intent,
                         String.format(getString(R.string.movie_share_intent_chooser_text),

@@ -39,7 +39,9 @@
     <string name="action_tmdb">View on TMDB</string>
     <string name="action_imdb">View on IMDB</string>
     <string name="error_movie_intent">No suitable app to perform the action</string>
-    <string name="movie_share_intent_text">Check out %s  on TMDB\n%s %s\n\nBrought to you by Crackle</string>
+    <string name="movie_share_intent_text">Check out %s  on TMDB\n%s %s</string>
+    <string name="youtube_link_text">\nWatch trailer on Youtube:\n%s</string>
+    <string name="crackle_text">\n\nBrought to you by Crackle</string>
     <string name="movie_share_intent_chooser_text">Share \"%s\" via</string>
     <string name="error_movie_images">Error getting movie images</string>
     <string name="favorites_removed">Removed from favorites</string>
