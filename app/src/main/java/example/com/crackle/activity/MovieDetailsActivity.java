@@ -40,7 +40,6 @@ import example.com.crackle.listener.MovieApiClient;
 import example.com.crackle.model.Certification;
 import example.com.crackle.model.Image;
 import example.com.crackle.model.Movie;
-import example.com.crackle.utils.AppExecutors;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
@@ -91,10 +90,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     private int movieId;
     private List<Image> images;
     private List<Certification> certifications;
-    private Toast toast;
 
     private MovieDetailsActivityViewModel viewModel;
-    private AppExecutors appExecutors;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +121,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
 
         //get reference to executor instance to handle background tasks
-        appExecutors = AppExecutors.getExecutorInstance();
 
         //get reference to view model
         viewModel = ViewModelProviders.of(this).get(MovieDetailsActivityViewModel.class);
@@ -387,25 +384,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 boolean isFavorite = viewModel.isFavorite(movieId);
                 if (isFavorite) {
                     //handle removing the movie from favorites db
-                    appExecutors.getDiskIO().execute(() -> {
-                        viewModel.removeMovieFromFavorites(movie);
-                        runOnUiThread(() -> {
-                            displayToastMessage(R.string.favorites_removed);
-                            favorites.setImageResource(R.drawable.ic_favorite_border);
-                        });
-                    });
+                    viewModel.removeMovieFromFavorites(movie);
+                    displayToastMessage(R.string.favorites_removed);
+                    favorites.setImageResource(R.drawable.ic_favorite_border);
                 } else {
                     //handle adding the movie to the favorites db
-                    appExecutors.getDiskIO().execute(() -> {
-                        viewModel.addMovieToFavorites(movie);
-                        runOnUiThread(() -> {
-                            displayToastMessage(R.string.favorites_added);
-                            favorites.setImageResource(R.drawable.ic_favorite);
-                        });
-                    });
+                    viewModel.addMovieToFavorites(movie);
+                    displayToastMessage(R.string.favorites_added);
+                    favorites.setImageResource(R.drawable.ic_favorite);
                 }
                 //update saved state
-                appExecutors.getDiskIO().execute(() -> viewModel.updateMovieFavorite(movieId, !isFavorite));
+                viewModel.updateMovieFavorite(movieId, !isFavorite);
                 break;
         }
     }

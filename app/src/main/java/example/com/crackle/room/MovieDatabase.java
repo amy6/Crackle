@@ -28,7 +28,6 @@ public abstract class MovieDatabase extends RoomDatabase {
                 if (movieDatabaseInstance == null) {
                     movieDatabaseInstance = Room.databaseBuilder(context, MovieDatabase.class,
                             MovieDatabase.DATABASE_NAME)
-                            .allowMainThreadQueries()
                             .fallbackToDestructiveMigration()
                             .build();
                     Log.d(LOG_TAG, "Initializing the database instance");

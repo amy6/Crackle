@@ -270,6 +270,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     //disable refresh layout
                     refreshLayout.setEnabled(false);
 
+                    //reset scroll position to 0
+                    recyclerView.scrollToPosition(0);
+
                     //set boolean flag to indicate the sort order chosen
                     mostPopularOptionChecked = false;
                     topRatedOptionChecked = false;
