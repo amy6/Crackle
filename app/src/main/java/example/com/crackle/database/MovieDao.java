@@ -28,4 +28,5 @@ public interface MovieDao {
 
     @Delete
     void removeMovieFromFavorites(Movie movie);
+
 }

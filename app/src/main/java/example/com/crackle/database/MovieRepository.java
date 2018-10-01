@@ -14,7 +14,6 @@ public class MovieRepository {
     private AppExecutors appExecutors;
 
     private LiveData<List<Movie>> movies;
-    private boolean isFavorite;
 
     public MovieRepository(Application application) {
         //get reference to DAO to access database
@@ -30,10 +29,7 @@ public class MovieRepository {
     }
 
     public boolean isFavorite(int movieId) {
-        appExecutors.getDiskIO().execute(() -> {
-            isFavorite = movieDao.isFavorite(movieId);
-        });
-        return isFavorite;
+        return movieDao.isFavorite(movieId);
     }
 
     public void updateMovieFavorite(int movieId, boolean isFavorite) {

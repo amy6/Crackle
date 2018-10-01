@@ -46,6 +46,7 @@ import example.com.crackle.listener.MovieApiClient;
 import example.com.crackle.model.Certification;
 import example.com.crackle.model.Image;
 import example.com.crackle.model.Movie;
+import example.com.crackle.utils.AppExecutors;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
@@ -147,12 +148,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
             if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
                 //get movie object from intent
                 movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
-                //set whether the movie is saved as a favorite or not
-                if (viewModel.isFavorite(movie.getMovieId())) {
-                    favorites.setImageResource(R.drawable.ic_favorite);
-                } else {
-                    favorites.setImageResource(R.drawable.ic_favorite_border);
-                }
+                movieId = movie.getMovieId();
+                AppExecutors.getExecutorInstance().getDiskIO().execute(() -> {
+                    boolean isFavorite = viewModel.isFavorite(movieId);
+                    runOnUiThread(() -> {
+                        if (isFavorite) {
+                            favorites.setImageResource(R.drawable.ic_favorite);
+                        } else {
+                            favorites.setImageResource(R.drawable.ic_favorite_border);
+                        }
+                    });
+                });
             }
         }
 
@@ -265,9 +271,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     private void fetchMovieGenre() {
         //get the list of all genre code and corresponding names from local json file
         SparseArray<String> genreMap = Utils.fetchAllGenres(this);
-
-        //fetch movie id
-        movieId = movie.getMovieId();
 
         //set the fields for the movie
         title.setText(movie.getTitle());
@@ -424,21 +427,27 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 Animation anim = AnimationUtils.loadAnimation(this, R.anim.shake);
                 favorites.startAnimation(anim);
 
-                //get saved state of the movie from the database
-                boolean isFavorite = viewModel.isFavorite(movieId);
-                if (isFavorite) {
-                    //handle removing the movie from favorites db
-                    viewModel.removeMovieFromFavorites(movie);
-                    displayToastMessage(R.string.favorites_removed);
-                    favorites.setImageResource(R.drawable.ic_favorite_border);
-                } else {
-                    //handle adding the movie to the favorites db
-                    viewModel.addMovieToFavorites(movie);
-                    displayToastMessage(R.string.favorites_added);
-                    favorites.setImageResource(R.drawable.ic_favorite);
-                }
-                //update saved state
-                viewModel.updateMovieFavorite(movieId, !isFavorite);
+                AppExecutors.getExecutorInstance().getDiskIO().execute(() -> {
+                    //get saved state of the movie from the database
+                    boolean isFavorite = viewModel.isFavorite(movieId);
+                    if (isFavorite) {
+                        //handle removing the movie from favorites db
+                        viewModel.removeMovieFromFavorites(movie);
+                        runOnUiThread(() -> {
+                            displayToastMessage(R.string.favorites_removed);
+                            favorites.setImageResource(R.drawable.ic_favorite_border);
+                        });
+                    } else {
+                        //handle adding the movie to the favorites db
+                        viewModel.addMovieToFavorites(movie);
+                        runOnUiThread(() -> {
+                            displayToastMessage(R.string.favorites_added);
+                            favorites.setImageResource(R.drawable.ic_favorite);
+                        });
+                    }
+                    //update saved state
+                    viewModel.updateMovieFavorite(movieId, !isFavorite);
+                });
                 break;
         }
     }

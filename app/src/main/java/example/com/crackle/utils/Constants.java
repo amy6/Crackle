@@ -8,6 +8,7 @@ public final class Constants {
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     public static final String MOVIE = "MOVIE";
+    private static final String MOVIE_ID = "MOVIE_ID";
 
     //constants associated with API calls
     public static final String API_KEY = BuildConfig.TMDB_API_KEY;

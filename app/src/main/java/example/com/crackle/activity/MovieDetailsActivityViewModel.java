@@ -4,8 +4,8 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
-import example.com.crackle.model.Movie;
 import example.com.crackle.database.MovieRepository;
+import example.com.crackle.model.Movie;
 
 public class MovieDetailsActivityViewModel extends AndroidViewModel {
 
@@ -31,4 +31,5 @@ public class MovieDetailsActivityViewModel extends AndroidViewModel {
     public void removeMovieFromFavorites(Movie movie) {
         movieRepository.removeMovieFromFavorites(movie);
     }
+
 }
