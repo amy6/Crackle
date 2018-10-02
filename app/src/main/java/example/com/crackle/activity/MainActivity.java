@@ -202,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        cancelToast();
         //verify the selected menu option
         switch (item.getItemId()) {
             case R.id.sort_most_popular:
@@ -558,12 +559,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
      * @param message message to be displayed
      */
     private void displayToast(String message) {
+        cancelToast();
+        toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    private void cancelToast() {
         if (toast != null) {
             //cancel any outstanding toasts
             toast.cancel();
         }
-        toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        toast.show();
     }
 
     /**
@@ -587,5 +592,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //save recycler view scroll state
         outState.putParcelable(RECYCLER_VIEW_LAYOUT_MANAGER_STATE, recyclerView.getLayoutManager().onSaveInstanceState());
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cancelToast();
     }
 }

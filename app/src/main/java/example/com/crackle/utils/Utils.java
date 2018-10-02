@@ -56,6 +56,11 @@ public class Utils {
      * @return duration in the format of h:m
      */
     public static String formatDuration(Context context, int timeInMins) {
+
+        if (timeInMins == 0) {
+            return context.getString(R.string.not_available);
+        }
+
         String duration;
         int hours = timeInMins / 60;
         int minutes = timeInMins % 60;

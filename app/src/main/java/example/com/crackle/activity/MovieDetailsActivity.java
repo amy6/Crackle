@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ import butterknife.ButterKnife;
 import example.com.crackle.R;
 import example.com.crackle.adapter.MovieFragmentPagerAdapter;
 import example.com.crackle.adapter.MovieImageAdapter;
+import example.com.crackle.database.MovieDatabase;
 import example.com.crackle.listener.MovieApiClient;
 import example.com.crackle.model.Certification;
 import example.com.crackle.model.Image;
@@ -57,6 +59,7 @@ import static example.com.crackle.utils.Constants.API_KEY;
 import static example.com.crackle.utils.Constants.APPEND_TO_RESPONSE_VALUE;
 import static example.com.crackle.utils.Constants.BACKDROP_IMG;
 import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
+import static example.com.crackle.utils.Constants.LOG_TAG;
 import static example.com.crackle.utils.Constants.PLAYSTORE_BASE_URI;
 import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_PARAMETER_CATEGORY;
 import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_VALUE_CATEGORY;
@@ -101,6 +104,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     private MovieDetailsActivityViewModel viewModel;
     private Toast toast;
     private String youtubeTrailerLink;
+    private boolean isFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,20 +154,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
                 movieId = movie.getMovieId();
                 AppExecutors.getExecutorInstance().getDiskIO().execute(() -> {
-                    boolean isFavorite = viewModel.isFavorite(movieId);
-                    runOnUiThread(() -> {
-                        if (isFavorite) {
-                            favorites.setImageResource(R.drawable.ic_favorite);
-                        } else {
-                            favorites.setImageResource(R.drawable.ic_favorite_border);
-                        }
-                    });
+                    isFavorite = viewModel.isFavorite(movieId);
+                    if (isFavorite) {
+                        movie = MovieDatabase.getInstance(this).movieDao().getMovie(movieId);
+                        runOnUiThread(() -> favorites.setImageResource(R.drawable.ic_favorite));
+                    } else {
+                        runOnUiThread(() -> favorites.setImageResource(R.drawable.ic_favorite_border));
+                    }
                 });
             }
         }
-
-        //get the list of genres for the movie
-        fetchMovieGenre();
 
         //set up Retrofit call to get movie details
         fetchMovieDetails(client);
@@ -175,8 +175,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
      * @param client reference to Retrofit client
      */
     private void fetchMovieDetails(MovieApiClient client) {
+
         if (movieId != 0) {
             Call<Movie> detailResultsCall = client.getMovieDetails(movieId, API_KEY);
+
+            //get the list of genres for the movie
+            fetchMovieGenre();
 
             detailResultsCall.enqueue(new Callback<Movie>() {
                 @Override
@@ -207,7 +211,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
                 @Override
                 public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
-                    displayToastMessage(R.string.error_movie_details);
+                    if (movie != null) {
+                        Log.d(LOG_TAG, "Movie already set by favorites");
+                    } else {
+                        displayToastMessage(R.string.error_movie_details);
+                    }
                 }
             });
 
@@ -259,7 +267,29 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
                 @Override
                 public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
-                    displayToastMessage(R.string.error_movie_details);
+                    if (movie.isFavorite() && movie != null) {
+                        Log.d(LOG_TAG, "Movie already set by favorites");
+                        duration.setText(Utils.formatDuration(MovieDetailsActivity.this, movie.getDuration()));
+                        movie.setUserRating(movie.getUserRating());
+                        movie.setHomepage(movie.getHomepage());
+                        movie.setOriginalTitle(movie.getOriginalTitle());
+
+                        //set up viewpager to display movie info, cast and reviews
+                        viewPager.setAdapter(new MovieFragmentPagerAdapter(getSupportFragmentManager(), movie));
+                        tabLayout.setupWithViewPager(viewPager);
+
+                        ArrayList<Image> imageUrl = new ArrayList<>();
+                        Image backdropImage = new Image(movie.getBackdropImageUrl());
+                        imageUrl.add(backdropImage);
+                        images.addAll(imageUrl);
+
+                        //set up viewpager for backdrop image list
+                        viewPagerIndicator.setupWithViewPager(backdropImageViewPager);
+                        MovieImageAdapter adapter = new MovieImageAdapter(MovieDetailsActivity.this, images);
+                        backdropImageViewPager.setAdapter(adapter);
+                    } else {
+                        displayToastMessage(R.string.error_movie_details);
+                    }
                 }
             });
         }
@@ -458,11 +488,22 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
      * @param messageId string resource id for the message to be displayed
      */
     private void displayToastMessage(int messageId) {
+        cancelToast();
+
+        toast = Toast.makeText(this, messageId, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    private void cancelToast() {
         //dismiss any outstanding toast messages
         if (toast != null) {
             toast.cancel();
         }
-        toast = Toast.makeText(this, messageId, Toast.LENGTH_SHORT);
-        toast.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cancelToast();
     }
 }

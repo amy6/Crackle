@@ -29,4 +29,7 @@ public interface MovieDao {
     @Delete
     void removeMovieFromFavorites(Movie movie);
 
+    @Query("SELECT * FROM movie WHERE movie_id = :movieId")
+    Movie getMovie(int movieId);
+
 }
