@@ -5,11 +5,8 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
-import android.util.Log;
 
 import example.com.crackle.model.Movie;
-
-import static example.com.crackle.utils.Constants.LOG_TAG;
 
 @Database(entities = {Movie.class}, version = 3, exportSchema = false)
 @TypeConverters(GenreConverter.class)
@@ -32,7 +29,6 @@ public abstract class MovieDatabase extends RoomDatabase {
                             MovieDatabase.DATABASE_NAME)
                             .fallbackToDestructiveMigration()
                             .build();
-                    Log.d(LOG_TAG, "Initializing the database instance");
                 }
             }
         }
