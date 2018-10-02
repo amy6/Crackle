@@ -261,6 +261,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 if (item.isChecked()) {
                     return false;
                 } else {
+                    //ignore internet connectivity check for displaying favorites
+                    if (Utils.checkInternetConnection(this)) {
+                        errorLayout.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
                     progressBar.setVisibility(View.VISIBLE);
                     //set the item as selected
                     item.setChecked(true);
