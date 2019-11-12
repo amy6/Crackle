@@ -86,7 +86,7 @@ public class MovieReviewsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         //initialize retrofit client and call object that wraps the response
-        MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
+        MovieApiClient client = MovieApiService.INSTANCE.getClient().create(MovieApiClient.class);
 
         if (getArguments() != null) {
             Movie movie = getArguments().getParcelable(Constants.MOVIE);

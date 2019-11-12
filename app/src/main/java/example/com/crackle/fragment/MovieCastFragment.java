@@ -89,7 +89,7 @@ public class MovieCastFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         //initialize retrofit client and call object that wraps the response
-        MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
+        MovieApiClient client = MovieApiService.INSTANCE.getClient().create(MovieApiClient.class);
         //invoke movie credits call passing the movie id and API KEY
         Call<CreditResults> call = client.getMovieCredits(((Movie) getArguments().getParcelable(Constants.MOVIE)).getMovieId(), Constants.API_KEY);
         //invoke API call asynchronously

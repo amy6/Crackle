@@ -125,7 +125,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         }
 
         //set up Retrofit client
-        MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
+        MovieApiClient client = MovieApiService.INSTANCE.getClient().create(MovieApiClient.class);
 
         //get reference to view model
         viewModel = ViewModelProviders.of(this).get(MovieDetailsActivityViewModel.class);

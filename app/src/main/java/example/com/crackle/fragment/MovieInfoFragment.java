@@ -132,7 +132,7 @@ public class MovieInfoFragment extends Fragment {
                 }
 
                 //initialize retrofit client and call object that wraps the response
-                MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
+                MovieApiClient client = MovieApiService.INSTANCE.getClient().create(MovieApiClient.class);
                 //invoke movie credits call passing the movie id and API KEY
                 Call<CreditResults> creditResultsCall = client.getMovieCredits(movie.getMovieId(), Constants.API_KEY);
                 //invoke API call asynchronously

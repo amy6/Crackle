@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
 
         //get reference to TMDB API client
-        client = MovieApiService.getClient().create(MovieApiClient.class);
+        client = MovieApiService.INSTANCE.getClient().create(MovieApiClient.class);
 
         //set up button click listener for error/empty state views
         errorButton.setOnClickListener(this);
