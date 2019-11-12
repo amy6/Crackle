@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.*
 
-object GenreConverter {
+class GenreConverter {
 
     @TypeConverter
     fun fromInt(value: String): ArrayList<Int>? {
