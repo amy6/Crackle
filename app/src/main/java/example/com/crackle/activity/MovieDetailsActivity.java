@@ -145,7 +145,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 //get movie object from intent
                 movie = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
                 movieId = movie.getMovieId();
-                AppExecutors.getExecutorInstance().getDiskIO().execute(() -> {
+                AppExecutors.Companion.getExecutorInstance().getDiskIO().execute(() -> {
                     isFavorite = viewModel.isFavorite(movieId);
                     if (isFavorite) {
                         movie = MovieDatabase.Companion.getInstance(this).movieDao().getMovie(movieId);
@@ -449,7 +449,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 Animation anim = AnimationUtils.loadAnimation(this, R.anim.shake);
                 favorites.startAnimation(anim);
 
-                AppExecutors.getExecutorInstance().getDiskIO().execute(() -> {
+                AppExecutors.Companion.getExecutorInstance().getDiskIO().execute(() -> {
                     //get saved state of the movie from the database
                     boolean isFavorite = viewModel.isFavorite(movieId);
                     if (isFavorite) {
