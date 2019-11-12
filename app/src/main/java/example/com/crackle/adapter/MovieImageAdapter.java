@@ -1,12 +1,13 @@
 package example.com.crackle.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 
@@ -16,10 +17,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import example.com.crackle.R;
 import example.com.crackle.model.Image;
+import example.com.crackle.utils.Constants;
 import example.com.crackle.utils.Utils;
-
-import static example.com.crackle.utils.Constants.BACKDROP_IMG;
-import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
 
 public class MovieImageAdapter extends PagerAdapter {
 
@@ -49,10 +48,10 @@ public class MovieImageAdapter extends PagerAdapter {
         ButterKnife.bind(this, view);
 
         //set up url for backdrop images
-        String backdropImageUrl = IMAGE_URL_SIZE.concat(imageUrl.get(position).getFilePath()
+        String backdropImageUrl = Constants.IMAGE_URL_SIZE.concat(imageUrl.get(position).getFilePath()
                 != null ? imageUrl.get(position).getFilePath() : "");
         Glide.with(context)
-                .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
+                .setDefaultRequestOptions(Utils.setupGlide(Constants.BACKDROP_IMG))
                 .load(backdropImageUrl)
                 .into(imageView);
 

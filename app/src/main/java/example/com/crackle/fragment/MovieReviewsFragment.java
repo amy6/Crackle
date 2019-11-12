@@ -2,16 +2,17 @@ package example.com.crackle.fragment;
 
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +25,12 @@ import example.com.crackle.listener.MovieApiClient;
 import example.com.crackle.model.Movie;
 import example.com.crackle.model.Review;
 import example.com.crackle.model.ReviewResults;
+import example.com.crackle.utils.Constants;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static example.com.crackle.utils.Constants.API_KEY;
-import static example.com.crackle.utils.Constants.LINEAR_LAYOUT_VERTICAL;
-import static example.com.crackle.utils.Constants.MOVIE;
 
 
 /**
@@ -80,7 +78,7 @@ public class MovieReviewsFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         //set up RecyclerView - define caching properties and default animator
-        Utils.setupRecyclerView(getContext(), recyclerView, LINEAR_LAYOUT_VERTICAL);
+        Utils.setupRecyclerView(getContext(), recyclerView, Constants.LINEAR_LAYOUT_VERTICAL);
 
         //initialize data set and set up the adapter
         List<Review> reviewList = new ArrayList<>();
@@ -91,11 +89,11 @@ public class MovieReviewsFragment extends Fragment {
         MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
 
         if (getArguments() != null) {
-            Movie movie = getArguments().getParcelable(MOVIE);
+            Movie movie = getArguments().getParcelable(Constants.MOVIE);
 
             if (movie != null) {
                 //invoke movie reviews call passing the movie id and API KEY
-                Call<ReviewResults> call = client.getMovieReviews(movie.getMovieId(), API_KEY);
+                Call<ReviewResults> call = client.getMovieReviews(movie.getMovieId(), Constants.API_KEY);
                 //invoke API call asynchronously
                 call.enqueue(new Callback<ReviewResults>() {
                     @Override
@@ -138,7 +136,7 @@ public class MovieReviewsFragment extends Fragment {
     public static Fragment newInstance(Movie movie) {
         MovieReviewsFragment fragment = new MovieReviewsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(MOVIE, movie);
+        args.putParcelable(Constants.MOVIE, movie);
         fragment.setArguments(args);
         return fragment;
     }

@@ -5,8 +5,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static example.com.crackle.utils.Constants.BASE_URL;
-
 public class MovieApiService {
 
     //declare static Retrofit instance
@@ -34,7 +32,7 @@ public class MovieApiService {
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(httpClient.build())
                     //specify base URL for the API
-                    .baseUrl(BASE_URL)
+                    .baseUrl(Constants.BASE_URL)
                     .build();
         }
 

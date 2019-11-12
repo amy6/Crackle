@@ -1,12 +1,13 @@
 package example.com.crackle.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
@@ -17,10 +18,8 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import example.com.crackle.R;
 import example.com.crackle.model.Cast;
+import example.com.crackle.utils.Constants;
 import example.com.crackle.utils.Utils;
-
-import static example.com.crackle.utils.Constants.CAST_IMG;
-import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
 
 public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.MovieCastViewHolder> {
 
@@ -56,9 +55,9 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Movi
         //get the current cast
         Cast cast = castList.get(position);
         //update view data
-        String imageUrl = IMAGE_URL_SIZE.concat(cast.getProfileUrl() != null ? cast.getProfileUrl() : "");
+        String imageUrl = Constants.IMAGE_URL_SIZE.concat(cast.getProfileUrl() != null ? cast.getProfileUrl() : "");
         Glide.with(context)
-                .setDefaultRequestOptions(Utils.setupGlide(CAST_IMG))
+                .setDefaultRequestOptions(Utils.setupGlide(Constants.CAST_IMG))
                 .load(imageUrl)
                 .into(holder.profileImage);
         holder.name.setText(cast.getName());

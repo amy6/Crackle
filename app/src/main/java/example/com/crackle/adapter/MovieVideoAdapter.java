@@ -3,8 +3,6 @@ package example.com.crackle.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +10,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
@@ -21,13 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import example.com.crackle.R;
 import example.com.crackle.model.Video;
+import example.com.crackle.utils.Constants;
 import example.com.crackle.utils.Utils;
-
-import static example.com.crackle.utils.Constants.BACKDROP_IMG;
-import static example.com.crackle.utils.Constants.SITE_FILTER_YOUTUBE;
-import static example.com.crackle.utils.Constants.YOUTUBE_IMG_BASE_URI;
-import static example.com.crackle.utils.Constants.YOUTUBE_IMG_EXTENSION;
-import static example.com.crackle.utils.Constants.YOUTUBE_VID_BASE_URI;
 
 public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.VideoViewHolder> {
 
@@ -62,12 +58,12 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
         //get current video item
         Video video = videos.get(position);
-        if (video.getSite().equalsIgnoreCase(SITE_FILTER_YOUTUBE)) {
+        if (video.getSite().equalsIgnoreCase(Constants.SITE_FILTER_YOUTUBE)) {
             //set up url for thumbnail
-            Uri uri = Uri.parse(YOUTUBE_IMG_BASE_URI + video.getKey()  + YOUTUBE_IMG_EXTENSION);
+            Uri uri = Uri.parse(Constants.YOUTUBE_IMG_BASE_URI + video.getKey()  + Constants.YOUTUBE_IMG_EXTENSION);
             holder.name.setText(video.getTitle());
             Glide.with(context)
-                    .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
+                    .setDefaultRequestOptions(Utils.setupGlide(Constants.BACKDROP_IMG))
                     .load(video.getKey() != null ? uri : "")
                     .into(holder.imageView);
         }
@@ -111,7 +107,7 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
                 //initialize a new intent with action
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 //set intent data
-                intent.setData(Uri.parse(YOUTUBE_VID_BASE_URI + video.getKey()));
+                intent.setData(Uri.parse(Constants.YOUTUBE_VID_BASE_URI + video.getKey()));
                 //handle resolving intent
                 if (intent.resolveActivity(context.getPackageManager()) != null) {
                     context.startActivity(intent);

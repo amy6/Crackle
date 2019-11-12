@@ -1,20 +1,10 @@
 package example.com.crackle.activity;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
@@ -29,11 +19,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,21 +50,12 @@ import example.com.crackle.model.Certification;
 import example.com.crackle.model.Image;
 import example.com.crackle.model.Movie;
 import example.com.crackle.utils.AppExecutors;
+import example.com.crackle.utils.Constants;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static example.com.crackle.utils.Constants.API_KEY;
-import static example.com.crackle.utils.Constants.APPEND_TO_RESPONSE_VALUE;
-import static example.com.crackle.utils.Constants.BACKDROP_IMG;
-import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
-import static example.com.crackle.utils.Constants.LOG_TAG;
-import static example.com.crackle.utils.Constants.PLAYSTORE_BASE_URI;
-import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_PARAMETER_CATEGORY;
-import static example.com.crackle.utils.Constants.PLAYSTORE_QUERY_VALUE_CATEGORY;
-import static example.com.crackle.utils.Constants.TMDB_MOVIE_BASE_URI;
 
 public class MovieDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -177,7 +169,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
     private void fetchMovieDetails(MovieApiClient client) {
 
         if (movieId != 0) {
-            Call<Movie> detailResultsCall = client.getMovieDetails(movieId, API_KEY);
+            Call<Movie> detailResultsCall = client.getMovieDetails(movieId, Constants.API_KEY);
 
             //get the list of genres for the movie
             fetchMovieGenre();
@@ -212,14 +204,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 @Override
                 public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
                     if (movie != null) {
-                        Log.d(LOG_TAG, "Movie already set by favorites");
+                        Log.d(Constants.LOG_TAG, "Movie already set by favorites");
                     } else {
                         displayToastMessage(R.string.error_movie_details);
                     }
                 }
             });
 
-            Call<Movie> extraDetailResultsCall = client.getMovieDetails(movieId, API_KEY, APPEND_TO_RESPONSE_VALUE);
+            Call<Movie> extraDetailResultsCall = client.getMovieDetails(movieId, Constants.API_KEY, Constants.APPEND_TO_RESPONSE_VALUE);
 
             extraDetailResultsCall.enqueue(new Callback<Movie>() {
                 @Override
@@ -268,7 +260,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 @Override
                 public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
                     if (movie.isFavorite() && movie != null) {
-                        Log.d(LOG_TAG, "Movie already set by favorites");
+                        Log.d(Constants.LOG_TAG, "Movie already set by favorites");
                         duration.setText(Utils.formatDuration(MovieDetailsActivity.this, movie.getDuration()));
                         movie.setUserRating(movie.getUserRating());
                         movie.setHomepage(movie.getHomepage());
@@ -308,9 +300,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
 
         //define default image in case the result is null
         String posterImageUrl = movie.getImageUrl() != null ?
-                IMAGE_URL_SIZE.concat(movie.getImageUrl()) : "";
+                Constants.IMAGE_URL_SIZE.concat(movie.getImageUrl()) : "";
         Glide.with(this)
-                .setDefaultRequestOptions(Utils.setupGlide(BACKDROP_IMG))
+                .setDefaultRequestOptions(Utils.setupGlide(Constants.BACKDROP_IMG))
                 .load(posterImageUrl)
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -399,7 +391,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 //set text content
                 String intentContent = String.format(getString(R.string.movie_share_intent_text),
                         movie.getTitle(),
-                        TMDB_MOVIE_BASE_URI,
+                        Constants.TMDB_MOVIE_BASE_URI,
                         String.valueOf(movie.getMovieId()));
                 //add youtube trailer link
                 if (youtubeTrailerLink != null && !TextUtils.isEmpty(youtubeTrailerLink)) {
@@ -417,16 +409,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
             case R.id.action_playstore:
                 intent.setAction(Intent.ACTION_VIEW);
                 //set PlayStore category to movies
-                intent.setData(Uri.parse(PLAYSTORE_BASE_URI +
+                intent.setData(Uri.parse(Constants.PLAYSTORE_BASE_URI +
                         movie.getTitle()).buildUpon()
-                        .appendQueryParameter(PLAYSTORE_QUERY_PARAMETER_CATEGORY,
-                                PLAYSTORE_QUERY_VALUE_CATEGORY).build());
+                        .appendQueryParameter(Constants.PLAYSTORE_QUERY_PARAMETER_CATEGORY,
+                                Constants.PLAYSTORE_QUERY_VALUE_CATEGORY).build());
                 break;
 
             //intent to open movie profile on TMDB
             case R.id.action_tmdb:
                 intent.setAction(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(TMDB_MOVIE_BASE_URI + movie.getMovieId()));
+                intent.setData(Uri.parse(Constants.TMDB_MOVIE_BASE_URI + movie.getMovieId()));
                 break;
 
             //close details screen on click of back

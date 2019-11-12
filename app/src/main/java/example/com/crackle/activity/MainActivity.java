@@ -1,12 +1,6 @@
 package example.com.crackle.activity;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +10,13 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,20 +29,12 @@ import example.com.crackle.listener.MovieApiClient;
 import example.com.crackle.listener.OnLoadMoreListener;
 import example.com.crackle.model.Movie;
 import example.com.crackle.model.MovieResults;
+import example.com.crackle.utils.Constants;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static example.com.crackle.utils.Constants.API_KEY;
-import static example.com.crackle.utils.Constants.GRID_LAYOUT;
-import static example.com.crackle.utils.Constants.MOST_POPULAR_OPTION_CHECKED;
-import static example.com.crackle.utils.Constants.MOST_POPULAR_START_PAGE;
-import static example.com.crackle.utils.Constants.MOVIES_LIST;
-import static example.com.crackle.utils.Constants.RECYCLER_VIEW_LAYOUT_MANAGER_STATE;
-import static example.com.crackle.utils.Constants.TOP_RATED_OPTION_CHECKED;
-import static example.com.crackle.utils.Constants.TOP_RATED_START_PAGE;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,
         OnLoadMoreListener, View.OnClickListener {
@@ -91,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         movies = new ArrayList<>();
 
         //set up RecyclerView - define caching properties and default animator
-        Utils.setupRecyclerView(this, recyclerView, GRID_LAYOUT);
+        Utils.setupRecyclerView(this, recyclerView, Constants.GRID_LAYOUT);
 
         //set up adapter
         movieAdapter = new MovieAdapter(this, movies, recyclerView);
@@ -131,29 +124,29 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //restore any previously saved data on activity state changed
         if (savedInstanceState != null) {
             //restore movies list data
-            if (savedInstanceState.containsKey(MOVIES_LIST)) {
+            if (savedInstanceState.containsKey(Constants.MOVIES_LIST)) {
                 progressBar.setVisibility(View.GONE);
-                movies = savedInstanceState.getParcelableArrayList(MOVIES_LIST);
+                movies = savedInstanceState.getParcelableArrayList(Constants.MOVIES_LIST);
                 movieAdapter.setData(movies);
             }
             //restore page numbers for paginated data
-            if (savedInstanceState.containsKey(MOST_POPULAR_START_PAGE)) {
-                mostPopularMoviesStartPage = savedInstanceState.getInt(MOST_POPULAR_START_PAGE);
+            if (savedInstanceState.containsKey(Constants.MOST_POPULAR_START_PAGE)) {
+                mostPopularMoviesStartPage = savedInstanceState.getInt(Constants.MOST_POPULAR_START_PAGE);
             }
-            if (savedInstanceState.containsKey(TOP_RATED_START_PAGE)) {
-                topRatedMoviesStartPage = savedInstanceState.getInt(TOP_RATED_START_PAGE);
+            if (savedInstanceState.containsKey(Constants.TOP_RATED_START_PAGE)) {
+                topRatedMoviesStartPage = savedInstanceState.getInt(Constants.TOP_RATED_START_PAGE);
             }
             //get the currently selected menu item
-            if (savedInstanceState.containsKey(MOST_POPULAR_OPTION_CHECKED)) {
-                mostPopularOptionChecked = savedInstanceState.getBoolean(MOST_POPULAR_OPTION_CHECKED);
+            if (savedInstanceState.containsKey(Constants.MOST_POPULAR_OPTION_CHECKED)) {
+                mostPopularOptionChecked = savedInstanceState.getBoolean(Constants.MOST_POPULAR_OPTION_CHECKED);
             }
-            if (savedInstanceState.containsKey(TOP_RATED_OPTION_CHECKED)) {
-                topRatedOptionChecked = savedInstanceState.getBoolean(TOP_RATED_OPTION_CHECKED);
+            if (savedInstanceState.containsKey(Constants.TOP_RATED_OPTION_CHECKED)) {
+                topRatedOptionChecked = savedInstanceState.getBoolean(Constants.TOP_RATED_OPTION_CHECKED);
             }
             //get recycler view layout manager state to restore scroll position
-            if (savedInstanceState.containsKey(RECYCLER_VIEW_LAYOUT_MANAGER_STATE)) {
+            if (savedInstanceState.containsKey(Constants.RECYCLER_VIEW_LAYOUT_MANAGER_STATE)) {
                 recyclerView.getLayoutManager().onRestoreInstanceState(
-                        savedInstanceState.getParcelable(RECYCLER_VIEW_LAYOUT_MANAGER_STATE));
+                        savedInstanceState.getParcelable(Constants.RECYCLER_VIEW_LAYOUT_MANAGER_STATE));
             }
         }
 
@@ -333,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
         //define the call object that wraps the API response
-        call = client.getPopularMovies(API_KEY, mostPopularMoviesStartPage);
+        call = client.getPopularMovies(Constants.API_KEY, mostPopularMoviesStartPage);
         //invoke the call asynchronously
         call.enqueue(new Callback<MovieResults>() {
             @Override
@@ -391,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
         //define the call object that wraps the API response
-        call = client.getTopRatedMovies(API_KEY, topRatedMoviesStartPage);
+        call = client.getTopRatedMovies(Constants.API_KEY, topRatedMoviesStartPage);
         //invoke the call asynchronously
         call.enqueue(new Callback<MovieResults>() {
             @Override
@@ -579,18 +572,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //save state of menu items
-        outState.putBoolean(MOST_POPULAR_OPTION_CHECKED, mostPopularOptionChecked);
-        outState.putBoolean(TOP_RATED_OPTION_CHECKED, topRatedOptionChecked);
+        outState.putBoolean(Constants.MOST_POPULAR_OPTION_CHECKED, mostPopularOptionChecked);
+        outState.putBoolean(Constants.TOP_RATED_OPTION_CHECKED, topRatedOptionChecked);
 
         //save movie array list
-        outState.putParcelableArrayList(MOVIES_LIST, movies);
+        outState.putParcelableArrayList(Constants.MOVIES_LIST, movies);
 
         //save start page numbers for all categories
-        outState.putInt(MOST_POPULAR_START_PAGE, mostPopularMoviesStartPage);
-        outState.putInt(TOP_RATED_START_PAGE, topRatedMoviesStartPage);
+        outState.putInt(Constants.MOST_POPULAR_START_PAGE, mostPopularMoviesStartPage);
+        outState.putInt(Constants.TOP_RATED_START_PAGE, topRatedMoviesStartPage);
 
         //save recycler view scroll state
-        outState.putParcelable(RECYCLER_VIEW_LAYOUT_MANAGER_STATE, recyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(Constants.RECYCLER_VIEW_LAYOUT_MANAGER_STATE, recyclerView.getLayoutManager().onSaveInstanceState());
         super.onSaveInstanceState(outState);
     }
 

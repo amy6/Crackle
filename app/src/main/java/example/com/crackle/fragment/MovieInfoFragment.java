@@ -2,10 +2,6 @@ package example.com.crackle.fragment;
 
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -28,15 +29,12 @@ import example.com.crackle.model.CreditResults;
 import example.com.crackle.model.Crew;
 import example.com.crackle.model.Movie;
 import example.com.crackle.model.Video;
+import example.com.crackle.utils.Constants;
 import example.com.crackle.utils.MovieApiService;
 import example.com.crackle.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static example.com.crackle.utils.Constants.API_KEY;
-import static example.com.crackle.utils.Constants.LINEAR_LAYOUT_HORIZONTAL;
-import static example.com.crackle.utils.Constants.MOVIE;
 
 
 /**
@@ -104,7 +102,7 @@ public class MovieInfoFragment extends Fragment {
         List<Crew> crewList = new ArrayList<>();
 
         //set up RecyclerView - define caching properties and default animator
-        Utils.setupRecyclerView(getContext(), recyclerView, LINEAR_LAYOUT_HORIZONTAL);
+        Utils.setupRecyclerView(getContext(), recyclerView, Constants.LINEAR_LAYOUT_HORIZONTAL);
 
         //set up adapter for RecyclerView
         final MovieVideoAdapter adapter = new MovieVideoAdapter(getContext(), videoList);
@@ -115,7 +113,7 @@ public class MovieInfoFragment extends Fragment {
 
         //get movie object
         if (getArguments() != null) {
-            Movie movie = getArguments().getParcelable(MOVIE);
+            Movie movie = getArguments().getParcelable(Constants.MOVIE);
             if (movie != null) {
 
                 //set up view data
@@ -136,7 +134,7 @@ public class MovieInfoFragment extends Fragment {
                 //initialize retrofit client and call object that wraps the response
                 MovieApiClient client = MovieApiService.getClient().create(MovieApiClient.class);
                 //invoke movie credits call passing the movie id and API KEY
-                Call<CreditResults> creditResultsCall = client.getMovieCredits(movie.getMovieId(), API_KEY);
+                Call<CreditResults> creditResultsCall = client.getMovieCredits(movie.getMovieId(), Constants.API_KEY);
                 //invoke API call asynchronously
                 creditResultsCall.enqueue(new Callback<CreditResults>() {
                     @Override
@@ -189,7 +187,7 @@ public class MovieInfoFragment extends Fragment {
     public static Fragment newInstance(Movie movie) {
         MovieInfoFragment fragment = new MovieInfoFragment();
         Bundle args = new Bundle();
-        args.putParcelable(MOVIE, movie);
+        args.putParcelable(Constants.MOVIE, movie);
         fragment.setArguments(args);
         return fragment;
     }

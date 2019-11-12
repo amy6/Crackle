@@ -1,8 +1,6 @@
 package example.com.crackle.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import example.com.crackle.R;
 import example.com.crackle.model.Review;
-
-import static example.com.crackle.utils.Constants.MAX_LINES;
+import example.com.crackle.utils.Constants;
 
 public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.MovieReviewViewHolder> {
 
@@ -64,9 +64,9 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
             public void run() {
                 final int lineCount = holder.content.getLineCount();
 
-                if (lineCount > MAX_LINES) {
+                if (lineCount > Constants.MAX_LINES) {
                     //initially display the content in the set max number of lines
-                    holder.content.setMaxLines(MAX_LINES);
+                    holder.content.setMaxLines(Constants.MAX_LINES);
                     holder.content.setEllipsize(TextUtils.TruncateAt.END);
                     //show a button to enable expanding truncated text
                     holder.button.setVisibility(View.VISIBLE);
@@ -84,7 +84,7 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
                             } else {
                                 expandable = true;
                                 //reset the max lines when "show less" is clicked
-                                holder.content.setMaxLines(MAX_LINES);
+                                holder.content.setMaxLines(Constants.MAX_LINES);
                                 holder.button.setImageResource(R.drawable.ic_keyboard_arrow_down);
                             }
 

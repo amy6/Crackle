@@ -3,13 +3,14 @@ package example.com.crackle.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.DisplayMetrics;
+import android.util.SparseArray;
+import android.view.View;
+
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.util.SparseArray;
-import android.view.View;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -26,8 +27,6 @@ import example.com.crackle.R;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static example.com.crackle.utils.Constants.BACKDROP_IMG;
-import static example.com.crackle.utils.Constants.CAST_IMG;
-import static example.com.crackle.utils.Constants.ITEM_VIEW_CACHE_SIZE;
 import static example.com.crackle.utils.Constants.POSTER_IMG;
 
 public class Utils {
@@ -183,7 +182,7 @@ public class Utils {
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .error(R.drawable.ic_error_outline);
                 break;
-            case CAST_IMG:
+            case Constants.CAST_IMG:
                 requestOptions
                         .placeholder(R.drawable.ic_account_circle)
                         .error(R.drawable.ic_account_circle);
@@ -211,7 +210,7 @@ public class Utils {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                 break;
         }
-        recyclerView.setItemViewCacheSize(ITEM_VIEW_CACHE_SIZE);
+        recyclerView.setItemViewCacheSize(Constants.ITEM_VIEW_CACHE_SIZE);
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -4,17 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -31,13 +32,8 @@ import example.com.crackle.activity.MainActivity;
 import example.com.crackle.activity.MovieDetailsActivity;
 import example.com.crackle.listener.OnLoadMoreListener;
 import example.com.crackle.model.Movie;
+import example.com.crackle.utils.Constants;
 import example.com.crackle.utils.Utils;
-
-import static example.com.crackle.utils.Constants.IMAGE_URL_SIZE;
-import static example.com.crackle.utils.Constants.ITEM;
-import static example.com.crackle.utils.Constants.LOG_TAG;
-import static example.com.crackle.utils.Constants.POSTER_IMG;
-import static example.com.crackle.utils.Constants.PROGRESS;
 
 public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -70,9 +66,9 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         @Override
                         public int getSpanSize(int position) {
                             switch (getItemViewType(position)) {
-                                case ITEM:
+                                case Constants.ITEM:
                                     return 1;
-                                case PROGRESS:
+                                case Constants.PROGRESS:
                                     return layoutManager.getSpanCount();
                                 default:
                                     return -1;
@@ -87,9 +83,9 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                     //if RecyclerView is scrolled to end, call load more to fetch next page of results
                     if (!loading && itemCount <= (lastVisibleItemPosition + viewThreshold)) {
-                        Log.d(LOG_TAG, "RecyclerView has been scrolled to end");
+                        Log.d(Constants.LOG_TAG, "RecyclerView has been scrolled to end");
                         if (onLoadMoreListener != null) {
-                            Log.d(LOG_TAG, "Listener is active");
+                            Log.d(Constants.LOG_TAG, "Listener is active");
                             onLoadMoreListener.onLoadMore();
                         }
                         setLoading(true);
@@ -113,11 +109,11 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         RecyclerView.ViewHolder viewHolder = null;
         //inflate the views based on view type
         switch (viewType) {
-            case ITEM:
+            case Constants.ITEM:
                 View itemView = LayoutInflater.from(context).inflate(R.layout.layout_movie_item, parent, false);
                 viewHolder = new MovieViewHolder(itemView);
                 break;
-            case PROGRESS:
+            case Constants.PROGRESS:
                 View progressView = LayoutInflater.from(context).inflate(R.layout.layout_progress_item, parent, false);
                 viewHolder = new ProgressViewHolder(progressView);
                 break;
@@ -140,9 +136,9 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             //get the current movie
             Movie movie = movies.get(position);
             //update view data
-            String imageUrl = IMAGE_URL_SIZE.concat(movie.getImageUrl() != null ? movie.getImageUrl() : "");
+            String imageUrl = Constants.IMAGE_URL_SIZE.concat(movie.getImageUrl() != null ? movie.getImageUrl() : "");
             Glide.with(context)
-                    .setDefaultRequestOptions(Utils.setupGlide(POSTER_IMG))
+                    .setDefaultRequestOptions(Utils.setupGlide(Constants.POSTER_IMG))
                     .load(imageUrl)
                     //set up a listener to handle success and failure of image loading
                     .listener(new RequestListener<Drawable>() {
@@ -184,7 +180,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      */
     @Override
     public int getItemViewType(int position) {
-        return movies.get(position) != null ? ITEM : PROGRESS;
+        return movies.get(position) != null ? Constants.ITEM : Constants.PROGRESS;
     }
 
     /**
