@@ -148,7 +148,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 AppExecutors.getExecutorInstance().getDiskIO().execute(() -> {
                     isFavorite = viewModel.isFavorite(movieId);
                     if (isFavorite) {
-                        movie = MovieDatabase.getInstance(this).movieDao().getMovie(movieId);
+                        movie = MovieDatabase.Companion.getInstance(this).movieDao().getMovie(movieId);
                         runOnUiThread(() -> favorites.setImageResource(R.drawable.ic_favorite));
                     } else {
                         runOnUiThread(() -> favorites.setImageResource(R.drawable.ic_favorite_border));
