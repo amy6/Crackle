@@ -1,8 +1,8 @@
 package example.com.crackle.activity;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.annotation.NonNull;
 
 import example.com.crackle.database.MovieRepository;
 import example.com.crackle.model.Movie;
