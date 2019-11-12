@@ -138,7 +138,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             //update view data
             String imageUrl = Constants.IMAGE_URL_SIZE.concat(movie.getImageUrl() != null ? movie.getImageUrl() : "");
             Glide.with(context)
-                    .setDefaultRequestOptions(Utils.setupGlide(Constants.POSTER_IMG))
+                    .setDefaultRequestOptions(Utils.INSTANCE.setupGlide(Constants.POSTER_IMG))
                     .load(imageUrl)
                     //set up a listener to handle success and failure of image loading
                     .listener(new RequestListener<Drawable>() {

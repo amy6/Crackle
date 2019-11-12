@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         movies = new ArrayList<>();
 
         //set up RecyclerView - define caching properties and default animator
-        Utils.setupRecyclerView(this, recyclerView, Constants.GRID_LAYOUT);
+        Utils.INSTANCE.setupRecyclerView(this, recyclerView, Constants.GRID_LAYOUT);
 
         //set up adapter
         movieAdapter = new MovieAdapter(this, movies, recyclerView);
@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     return false;
                 } else {
                     //ignore internet connectivity check for displaying favorites
-                    if (Utils.checkInternetConnection(this)) {
+                    if (Utils.INSTANCE.checkInternetConnection(this)) {
                         errorLayout.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
                     }
@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void getPopularMovies() {
 
         //exit early if internet is not connected
-        if (Utils.checkInternetConnection(this)) {
+        if (Utils.INSTANCE.checkInternetConnection(this)) {
             updateEmptyStateViews(R.drawable.no_internet_connection, R.string.no_internet_connection,
                     R.drawable.ic_cloud_off, R.string.error_try_again);
             return;
@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void getTopRatedMovies() {
 
         //exit early if internet is not connected
-        if (Utils.checkInternetConnection(this)) {
+        if (Utils.INSTANCE.checkInternetConnection(this)) {
             updateEmptyStateViews(R.drawable.no_internet_connection, R.string.no_internet_connection, R.drawable.ic_cloud_off, R.string.error_try_again);
             return;
         }

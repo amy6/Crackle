@@ -63,7 +63,7 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
             Uri uri = Uri.parse(Constants.YOUTUBE_IMG_BASE_URI + video.getKey()  + Constants.YOUTUBE_IMG_EXTENSION);
             holder.name.setText(video.getTitle());
             Glide.with(context)
-                    .setDefaultRequestOptions(Utils.setupGlide(Constants.BACKDROP_IMG))
+                    .setDefaultRequestOptions(Utils.INSTANCE.setupGlide(Constants.BACKDROP_IMG))
                     .load(video.getKey() != null ? uri : "")
                     .into(holder.imageView);
         }

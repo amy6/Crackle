@@ -81,7 +81,7 @@ public class MovieCastFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         //set up RecyclerView - define caching properties and default animator
-        Utils.setupRecyclerView(getContext(), recyclerView, Constants.GRID_LAYOUT);
+        Utils.INSTANCE.setupRecyclerView(getContext(), recyclerView, Constants.GRID_LAYOUT);
 
         //initialize data set and set up the adapter
         castList = new ArrayList<>();

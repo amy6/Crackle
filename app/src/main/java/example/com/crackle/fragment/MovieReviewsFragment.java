@@ -78,7 +78,7 @@ public class MovieReviewsFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         //set up RecyclerView - define caching properties and default animator
-        Utils.setupRecyclerView(getContext(), recyclerView, Constants.LINEAR_LAYOUT_VERTICAL);
+        Utils.INSTANCE.setupRecyclerView(getContext(), recyclerView, Constants.LINEAR_LAYOUT_VERTICAL);
 
         //initialize data set and set up the adapter
         List<Review> reviewList = new ArrayList<>();

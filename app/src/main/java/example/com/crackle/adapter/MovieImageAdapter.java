@@ -51,7 +51,7 @@ public class MovieImageAdapter extends PagerAdapter {
         String backdropImageUrl = Constants.IMAGE_URL_SIZE.concat(imageUrl.get(position).getFilePath()
                 != null ? imageUrl.get(position).getFilePath() : "");
         Glide.with(context)
-                .setDefaultRequestOptions(Utils.setupGlide(Constants.BACKDROP_IMG))
+                .setDefaultRequestOptions(Utils.INSTANCE.setupGlide(Constants.BACKDROP_IMG))
                 .load(backdropImageUrl)
                 .into(imageView);
 

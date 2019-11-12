@@ -102,14 +102,14 @@ public class MovieInfoFragment extends Fragment {
         List<Crew> crewList = new ArrayList<>();
 
         //set up RecyclerView - define caching properties and default animator
-        Utils.setupRecyclerView(getContext(), recyclerView, Constants.LINEAR_LAYOUT_HORIZONTAL);
+        Utils.INSTANCE.setupRecyclerView(getContext(), recyclerView, Constants.LINEAR_LAYOUT_HORIZONTAL);
 
         //set up adapter for RecyclerView
         final MovieVideoAdapter adapter = new MovieVideoAdapter(getContext(), videoList);
         recyclerView.setAdapter(adapter);
 
         //fetch list of language code and corresponding names
-        HashMap<String, String> languageMap = Utils.fetchAllLanguages(getContext());
+        HashMap<String, String> languageMap = Utils.INSTANCE.fetchAllLanguages(getContext());
 
         //get movie object
         if (getArguments() != null) {

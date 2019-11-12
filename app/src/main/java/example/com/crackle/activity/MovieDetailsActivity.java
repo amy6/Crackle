@@ -184,7 +184,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     //fetch movie duration from details api call
                     int runtime = response.body().getDuration();
                     //display run time in h:m format
-                    duration.setText(Utils.formatDuration(MovieDetailsActivity.this, runtime));
+                    duration.setText(Utils.INSTANCE.formatDuration(MovieDetailsActivity.this, runtime));
 
                     //set movie homepage
                     if (response.body().getHomepage() != null && !TextUtils.isEmpty(response.body().getHomepage())) {
@@ -261,7 +261,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                 public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
                     if (movie.isFavorite() && movie != null) {
                         Log.d(Constants.LOG_TAG, "Movie already set by favorites");
-                        duration.setText(Utils.formatDuration(MovieDetailsActivity.this, movie.getDuration()));
+                        duration.setText(Utils.INSTANCE.formatDuration(MovieDetailsActivity.this, movie.getDuration()));
                         movie.setUserRating(movie.getUserRating());
                         movie.setHomepage(movie.getHomepage());
                         movie.setOriginalTitle(movie.getOriginalTitle());
@@ -292,7 +292,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
      */
     private void fetchMovieGenre() {
         //get the list of all genre code and corresponding names from local json file
-        SparseArray<String> genreMap = Utils.fetchAllGenres(this);
+        SparseArray<String> genreMap = Utils.INSTANCE.fetchAllGenres(this);
 
         //set the fields for the movie
         title.setText(movie.getTitle());
@@ -302,7 +302,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         String posterImageUrl = movie.getImageUrl() != null ?
                 Constants.IMAGE_URL_SIZE.concat(movie.getImageUrl()) : "";
         Glide.with(this)
-                .setDefaultRequestOptions(Utils.setupGlide(Constants.BACKDROP_IMG))
+                .setDefaultRequestOptions(Utils.INSTANCE.setupGlide(Constants.BACKDROP_IMG))
                 .load(posterImageUrl)
                 .listener(new RequestListener<Drawable>() {
                     @Override
