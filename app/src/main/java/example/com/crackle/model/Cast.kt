@@ -2,6 +2,6 @@ package example.com.crackle.model
 
 import com.google.gson.annotations.SerializedName
 
-class Cast(@field:SerializedName("name")
+data class Cast(@field:SerializedName("name")
            val name: String, @field:SerializedName("profile_path")
            val profileUrl: String)

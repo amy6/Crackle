@@ -2,5 +2,5 @@ package example.com.crackle.model
 
 import com.google.gson.annotations.SerializedName
 
-class MovieResults(@field:SerializedName("results")
+data class MovieResults(@field:SerializedName("results")
                    val movies: List<Movie>)

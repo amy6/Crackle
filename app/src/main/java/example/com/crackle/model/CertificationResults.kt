@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class CertificationResults(@field:SerializedName("countries")
+data class CertificationResults(@field:SerializedName("countries")
                            val certificationList: List<Certification>) : Parcelable

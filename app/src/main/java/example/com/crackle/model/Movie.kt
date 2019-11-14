@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "movie")
-class Movie : Parcelable {
+data class Movie : Parcelable {
     @PrimaryKey
     @ColumnInfo(name = "movie_id")
     @SerializedName("id")
