@@ -141,10 +141,10 @@ class MovieInfoFragment : Fragment() {
                     }
                 })
                 //display trailer thumbnails
-                if (movie.videoResults != null && movie.videoResults.videos != null && movie.videoResults.videos.size > 0) {
+                if (movie.videoResults != null && movie.videoResults!!.videos != null && movie.videoResults!!.videos.size > 0) {
                     recyclerView!!.visibility = View.VISIBLE
                     emptyTextView!!.visibility = View.GONE
-                    videoList.addAll(movie.videoResults.videos)
+                    videoList.addAll(movie.videoResults!!.videos)
                     adapter.notifyDataSetChanged()
                 } else {
                     emptyTextView!!.visibility = View.VISIBLE

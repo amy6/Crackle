@@ -195,22 +195,22 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
                         return
                     }
                     //fetch backdrop images
-                    if (response.body()!!.imageResults != null && response.body()!!.imageResults.backdrops != null && response.body()!!.imageResults.backdrops.size > 0) { //add fetched images to the list
-                        if (response.body()!!.imageResults.backdrops.size > 8) {
+                    if (response.body()!!.imageResults != null && response.body()!!.imageResults!!.backdrops != null && response.body()!!.imageResults!!.backdrops.size > 0) { //add fetched images to the list
+                        if (response.body()!!.imageResults?.backdrops!!.size > 8) {
                             for (i in 0..7) {
-                                images!!.add(response.body()!!.imageResults.backdrops[i])
+                                images!!.add(response.body()!!.imageResults!!.backdrops[i])
                             }
                         } else {
-                            images!!.addAll(response.body()!!.imageResults.backdrops)
+                            images!!.addAll(response.body()!!.imageResults!!.backdrops)
                         }
                     }
                     //fetch movie trailers
-                    if (response.body()!!.videoResults != null && response.body()!!.videoResults.videos != null && response.body()!!.videoResults.videos.size > 0) {
+                    if (response.body()!!.videoResults != null && response.body()!!.videoResults!!.videos != null && response.body()!!.videoResults!!.videos.size > 0) {
                         movie!!.videoResults = response.body()!!.videoResults
-                        youtubeTrailerLink = movie!!.videoResults.videos[0].title
+                        youtubeTrailerLink = movie!!.videoResults!!.videos[0].title
                     }
-                    if (response.body()!!.certificationResults != null && response.body()!!.certificationResults.certificationList != null && response.body()!!.certificationResults.certificationList.size > 0) {
-                        certifications = response.body()!!.certificationResults.certificationList
+                    if (response.body()!!.certificationResults != null && response.body()!!.certificationResults!!.certificationList != null && response.body()!!.certificationResults!!.certificationList.size > 0) {
+                        certifications = response.body()!!.certificationResults!!.certificationList
                         for (certification in certifications!!) {
                             if (certification.iso == "IN") {
                                 if (!TextUtils.isEmpty(certification.certification)) {
@@ -236,7 +236,7 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
                         viewPager!!.adapter = MovieFragmentPagerAdapter(supportFragmentManager, movie!!)
                         tabLayout!!.setupWithViewPager(viewPager)
                         val imageUrl = ArrayList<Image>()
-                        val backdropImage = Image(movie!!.backdropImageUrl)
+                        val backdropImage = Image(movie!!.backdropImageUrl!!)
                         imageUrl.add(backdropImage)
                         images!!.addAll(imageUrl)
                         //set up viewpager for backdrop image list
@@ -258,7 +258,7 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
         val genreMap = fetchAllGenres(this)
         //set the fields for the movie
         title!!.text = movie!!.title
-        year!!.text = movie!!.releaseDate.substring(0, 4)
+        year!!.text = movie!!.releaseDate!!.substring(0, 4)
         //define default image in case the result is null
         val posterImageUrl = if (movie!!.imageUrl != null) Constants.IMAGE_URL_SIZE + movie!!.imageUrl else ""
         Glide.with(this)
@@ -277,7 +277,7 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
                 .into(posterImage!!)
         //get genre names based on genre codes
         if (movie!!.genres != null) {
-            val genreId: List<Int> = ArrayList(movie!!.genres)
+            val genreId: List<Int> = ArrayList(movie!!.genres!!)
             var count = 0
             for (id in genreId) {
                 genre!!.append(genreMap!![id])
