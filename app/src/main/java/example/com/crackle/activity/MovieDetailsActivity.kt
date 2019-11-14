@@ -36,7 +36,6 @@ import example.com.crackle.R
 import example.com.crackle.adapter.MovieFragmentPagerAdapter
 import example.com.crackle.adapter.MovieImageAdapter
 import example.com.crackle.database.MovieDatabase.Companion.getInstance
-import example.com.crackle.listener.MovieApiClient
 import example.com.crackle.model.Certification
 import example.com.crackle.model.Image
 import example.com.crackle.model.Movie
@@ -120,8 +119,7 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
             val w = window
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
-        //set up Retrofit client
-        val client = client.create(MovieApiClient::class.java)
+
         //get reference to view model
         viewModel = ViewModelProviders.of(this).get(MovieDetailsActivityViewModel::class.java)
         //initialize data sets
@@ -147,7 +145,7 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
             }
         }
         //set up Retrofit call to get movie details
-        fetchMovieDetails(client)
+        fetchMovieDetails()
     }
 
     /**
@@ -155,7 +153,7 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
      *
      * @param client reference to Retrofit client
      */
-    private fun fetchMovieDetails(client: MovieApiClient) {
+    private fun fetchMovieDetails() {
         if (movieId != 0) {
             val detailResultsCall = client.getMovieDetails(movieId, Constants.API_KEY)
             //get the list of genres for the movie

@@ -13,7 +13,6 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import example.com.crackle.R
 import example.com.crackle.adapter.MovieReviewAdapter
-import example.com.crackle.listener.MovieApiClient
 import example.com.crackle.model.Movie
 import example.com.crackle.model.Review
 import example.com.crackle.model.ReviewResults
@@ -66,8 +65,7 @@ class MovieReviewsFragment : Fragment() {
         val reviewList: MutableList<Review> = ArrayList()
         val adapter = MovieReviewAdapter(context!!, reviewList)
         recyclerView!!.adapter = adapter
-        //initialize retrofit client and call object that wraps the response
-        val client = client.create(MovieApiClient::class.java)
+
         if (arguments != null) {
             val movie: Movie = arguments!!.getParcelable(Constants.MOVIE)!!
             if (movie != null) { //invoke movie reviews call passing the movie id and API KEY

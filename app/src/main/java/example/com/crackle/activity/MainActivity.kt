@@ -17,12 +17,11 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import example.com.crackle.R
 import example.com.crackle.adapter.MovieAdapter
-import example.com.crackle.listener.MovieApiClient
 import example.com.crackle.listener.OnLoadMoreListener
 import example.com.crackle.model.Movie
 import example.com.crackle.model.MovieResults
 import example.com.crackle.utils.Constants
-import example.com.crackle.utils.MovieApiService
+import example.com.crackle.utils.MovieApiService.client
 import example.com.crackle.utils.Utils.checkInternetConnection
 import example.com.crackle.utils.Utils.setupRecyclerView
 import retrofit2.Call
@@ -54,7 +53,6 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
     private var movies: ArrayList<Movie?>? = null
     private var movieAdapter: MovieAdapter? = null
     private var viewModel: MainActivityViewModel? = null
-    private var client: MovieApiClient? = null
     private var call: Call<MovieResults>? = null
     private var mostPopularMoviesStartPage = 1
     private var topRatedMoviesStartPage = 1
@@ -99,8 +97,7 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
         refreshLayout!!.setOnRefreshListener(this)
         //customize refresh layout color scheme
         refreshLayout!!.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent))
-        //get reference to TMDB API client
-        client = MovieApiService.client.create(MovieApiClient::class.java)
+
         //set up button click listener for error/empty state views
         errorButton!!.setOnClickListener(this)
         //restore any previously saved data on activity state changed
@@ -288,7 +285,7 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
                 return
             }
             //define the call object that wraps the API response
-            call = client!!.getPopularMovies(Constants.API_KEY, mostPopularMoviesStartPage)
+            call = client.getPopularMovies(Constants.API_KEY, mostPopularMoviesStartPage)
             //invoke the call asynchronously
             call!!.enqueue(object : Callback<MovieResults?> {
                 override fun onResponse(call: Call<MovieResults?>, response: Response<MovieResults?>) { //remove pagination loading indicator
@@ -345,7 +342,7 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
                 return
             }
             //define the call object that wraps the API response
-            call = client!!.getTopRatedMovies(Constants.API_KEY, topRatedMoviesStartPage)
+            call = client.getTopRatedMovies(Constants.API_KEY, topRatedMoviesStartPage)
             //invoke the call asynchronously
             call!!.enqueue(object : Callback<MovieResults?> {
                 override fun onResponse(call: Call<MovieResults?>, response: Response<MovieResults?>) { //remove pagination loading indicator

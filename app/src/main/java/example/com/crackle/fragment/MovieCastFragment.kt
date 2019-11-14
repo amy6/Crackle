@@ -14,7 +14,6 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import example.com.crackle.R
 import example.com.crackle.adapter.MovieCastAdapter
-import example.com.crackle.listener.MovieApiClient
 import example.com.crackle.model.Cast
 import example.com.crackle.model.CreditResults
 import example.com.crackle.model.Movie
@@ -67,8 +66,7 @@ class MovieCastFragment : Fragment() {
         castList = ArrayList()
         val adapter = MovieCastAdapter(context!!, castList)
         recyclerView!!.adapter = adapter
-        //initialize retrofit client and call object that wraps the response
-        val client = client.create(MovieApiClient::class.java)
+
         //invoke movie credits call passing the movie id and API KEY
         val call = client.getMovieCredits((arguments!!.getParcelable<Parcelable>(Constants.MOVIE) as Movie?)!!.movieId, Constants.API_KEY)
         //invoke API call asynchronously

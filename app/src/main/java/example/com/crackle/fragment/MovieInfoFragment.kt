@@ -14,7 +14,6 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import example.com.crackle.R
 import example.com.crackle.adapter.MovieVideoAdapter
-import example.com.crackle.listener.MovieApiClient
 import example.com.crackle.model.CreditResults
 import example.com.crackle.model.Crew
 import example.com.crackle.model.Movie
@@ -115,8 +114,7 @@ class MovieInfoFragment : Fragment() {
                 if (!TextUtils.isEmpty(movie.originalTitle)) {
                     originalTitle!!.text = movie.originalTitle
                 }
-                //initialize retrofit client and call object that wraps the response
-                val client = client.create(MovieApiClient::class.java)
+
                 //invoke movie credits call passing the movie id and API KEY
                 val creditResultsCall = client.getMovieCredits(movie.movieId, Constants.API_KEY)
                 //invoke API call asynchronously
