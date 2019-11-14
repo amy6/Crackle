@@ -181,8 +181,8 @@ class MovieAdapter(private val context: Context, private var movies: MutableList
      *
      * @param movies list of fetched data
      */
-    fun addAll(movies: List<Movie>) {
-        this.movies!!.addAll(movies)
+    fun addAll(movies: List<Movie?>?) {
+        movies?.let { this.movies!!.addAll(it) }
         notifyDataSetChanged()
     }
 
