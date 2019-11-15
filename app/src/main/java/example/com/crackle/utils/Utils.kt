@@ -5,7 +5,6 @@ import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.util.SparseArray
-import android.view.View
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,9 +31,7 @@ object Utils {
     fun checkInternetConnection(context: Context): Boolean {
         val connectivityManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         var networkInfo: NetworkInfo? = null
-        if (connectivityManager != null) {
-            networkInfo = connectivityManager.activeNetworkInfo
-        }
+        networkInfo = connectivityManager.activeNetworkInfo
 
         return networkInfo == null || !networkInfo.isConnectedOrConnecting
     }
@@ -195,8 +192,6 @@ object Utils {
             2 -> recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
         recyclerView.setItemViewCacheSize(Constants.ITEM_VIEW_CACHE_SIZE)
-        recyclerView.isDrawingCacheEnabled = true
-        recyclerView.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.setHasFixedSize(true)
     }
