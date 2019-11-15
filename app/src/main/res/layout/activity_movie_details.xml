@@ -42,6 +42,7 @@
             app:layout_collapseMode="pin"
             app:tabBackground="@color/colorPrimaryLight"
             app:tabGravity="fill"
+            app:tabMaxWidth="0dp"
             app:tabIndicatorHeight="@dimen/dimens_2dp"
             app:tabMode="fixed" />
 
