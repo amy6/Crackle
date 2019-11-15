@@ -50,6 +50,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
+
     @JvmField
     @BindView(R.id.poster_image)
     var posterImage: ImageView? = null
@@ -92,6 +93,7 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
     @JvmField
     @BindView(R.id.favorites)
     var favorites: FloatingActionButton? = null
+
     private var movie: Movie? = null
     private var movieId = 0
     private var images: MutableList<Image>? = null
@@ -100,6 +102,7 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
     private var toast: Toast? = null
     private var youtubeTrailerLink: String? = null
     private var isFavorite = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
@@ -150,8 +153,6 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
 
     /**
      * invokes TMDB API to get movie details
-     *
-     * @param client reference to Retrofit client
      */
     private fun fetchMovieDetails() {
         if (movieId != 0) {
@@ -195,7 +196,7 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
                         return
                     }
                     //fetch backdrop images
-                    if (response.body()!!.imageResults != null && response.body()!!.imageResults!!.backdrops != null && response.body()!!.imageResults!!.backdrops.size > 0) { //add fetched images to the list
+                    if (response.body()!!.imageResults != null && response.body()!!.imageResults!!.backdrops.isNotEmpty()) { //add fetched images to the list
                         if (response.body()!!.imageResults?.backdrops!!.size > 8) {
                             for (i in 0..7) {
                                 images!!.add(response.body()!!.imageResults!!.backdrops[i])
@@ -205,11 +206,11 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
                         }
                     }
                     //fetch movie trailers
-                    if (response.body()!!.videoResults != null && response.body()!!.videoResults!!.videos != null && response.body()!!.videoResults!!.videos.size > 0) {
+                    if (response.body()!!.videoResults != null && response.body()!!.videoResults!!.videos.isNotEmpty()) {
                         movie!!.videoResults = response.body()!!.videoResults
                         youtubeTrailerLink = movie!!.videoResults!!.videos[0].title
                     }
-                    if (response.body()!!.certificationResults != null && response.body()!!.certificationResults!!.certificationList != null && response.body()!!.certificationResults!!.certificationList.size > 0) {
+                    if (response.body()!!.certificationResults != null && response.body()!!.certificationResults!!.certificationList.isNotEmpty()) {
                         certifications = response.body()!!.certificationResults!!.certificationList
                         for (certification in certifications!!) {
                             if (certification.iso == "IN") {
@@ -341,9 +342,9 @@ class MovieDetailsActivity : AppCompatActivity(), OnClickListener {
                         Constants.TMDB_MOVIE_BASE_URI, movie!!.movieId.toString())
                 //add youtube trailer link
                 if (youtubeTrailerLink != null && !TextUtils.isEmpty(youtubeTrailerLink)) {
-                    intentContent = intentContent + String.format(getString(R.string.youtube_link_text), youtubeTrailerLink)
+                    intentContent += String.format(getString(R.string.youtube_link_text), youtubeTrailerLink)
                 }
-                intentContent = intentContent + getString(R.string.crackle_text)
+                intentContent += getString(R.string.crackle_text)
                 intent.putExtra(Intent.EXTRA_TEXT, intentContent)
                 //set custom chooser title
                 intent = Intent.createChooser(intent, String.format(getString(R.string.movie_share_intent_chooser_text),

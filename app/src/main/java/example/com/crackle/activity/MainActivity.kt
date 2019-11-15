@@ -29,6 +29,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener, OnClickListener {
+
     @JvmField
     @BindView(R.id.recyclerView)
     var recyclerView: RecyclerView? = null
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
     @JvmField
     @BindView(R.id.swipeRefreshLayout)
     var refreshLayout: SwipeRefreshLayout? = null
+
     private var movies: ArrayList<Movie?>? = null
     private var movieAdapter: MovieAdapter? = null
     private var viewModel: MainActivityViewModel? = null
@@ -63,6 +65,7 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
     private var topRatedOptionChecked = false
     private var toast: Toast? = null
     private var fromErrorButton = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -93,6 +96,7 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
                 }
             }
         })
+
         //register refresh layout listener
         refreshLayout!!.setOnRefreshListener(this)
         //customize refresh layout color scheme
@@ -100,6 +104,7 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
 
         //set up button click listener for error/empty state views
         errorButton!!.setOnClickListener(this)
+
         //restore any previously saved data on activity state changed
         if (savedInstanceState != null) { //restore movies list data
             if (savedInstanceState.containsKey(Constants.MOVIES_LIST)) {
@@ -234,7 +239,7 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
                     progressBar!!.visibility = View.GONE
                     //get the list of favorite movies from the database
                     val favoriteMovies = viewModel!!.favoriteMovies.value
-                    if (favoriteMovies != null && favoriteMovies.size > 0) { //update the list, notify the adapter
+                    if (favoriteMovies != null && favoriteMovies.isNotEmpty()) { //update the list, notify the adapter
                         movieAdapter!!.addAll(favoriteMovies)
                     } else { //display empty state views if there are no favorites saved
                         updateEmptyStateViews(R.drawable.no_search_results, R.string.no_favorites,
@@ -252,33 +257,25 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
      * @return boolean flag indicating whether any required modifications were successfully handled
      */
     override fun onPrepareOptionsMenu(menu: Menu): Boolean { //set the checked item based on the boolean flag saved along activity lifecycle
-        if (mostPopularOptionChecked) {
-            mostPopularMenuItem!!.isChecked = true
-        } else if (topRatedOptionChecked) {
-            topRatedMenuItem!!.isChecked = true
-        } else {
-            favoritesMenuItem!!.isChecked = true
+        when {
+            mostPopularOptionChecked -> {
+                mostPopularMenuItem!!.isChecked = true
+            }
+            topRatedOptionChecked -> {
+                topRatedMenuItem!!.isChecked = true
+            }
+            else -> {
+                favoritesMenuItem!!.isChecked = true
+            }
         }
         return true
-    }//display error messages on failure//remove pagination loading indicator
-    //hide refresh layout progress indicator
-    //enable refresh action
-    //verify if the response body or the fetched results are empty/null
-    //update data set, notify the adapter
-    //hide progress indicator and empty state views
-    //display recycler view
-    //notify the adapter that a new page data load is complete
-    //increment the page number
-    //enable pagination in case user wants to load the next page
-//exit early if internet is not connected
-    //define the call object that wraps the API response
-    //invoke the call asynchronously
+    }
 
     /**
      * invoke TMDB API To fetch movies sorted by popularity
      */
     private val popularMovies: Unit
-        private get() { //exit early if internet is not connected
+        get() { //exit early if internet is not connected
             if (checkInternetConnection(this)) {
                 updateEmptyStateViews(R.drawable.no_internet_connection, R.string.no_internet_connection,
                         R.drawable.ic_cloud_off, R.string.error_try_again)
@@ -295,7 +292,7 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
                     //enable refresh action
                     refreshLayout!!.isEnabled = true
                     //verify if the response body or the fetched results are empty/null
-                    if (response.body() == null || response.body()!!.movies == null || response.body()!!.movies.size == 0) {
+                    if (response.body() == null || response.body()!!.movies.isEmpty()) {
                         updateEmptyStateViews(R.drawable.no_search_results, R.string.no_search_results, R.drawable.ic_movie, R.string.error_no_results)
                         return
                     }
@@ -318,25 +315,13 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
                     updateEmptyStateViews(R.drawable.no_search_results, R.string.no_search_results, R.drawable.ic_error_outline, R.string.browse_movies)
                 }
             })
-        }//display error messages on failure//remove pagination loading indicator
-    //hide refresh layout progress indicator
-    //enable refresh action
-    //verify if the response body or the fetched results are empty/null
-    //update data set, notify the adapter
-    //hide progress indicator and empty state views
-    //display recycler view
-    //notify the adapter that a new page data load is complete
-    //increment the page number
-    //enable pagination in case user wants to load the next page
-//exit early if internet is not connected
-    //define the call object that wraps the API response
-    //invoke the call asynchronously
+        }
 
     /**
      * invoke TMDB API To fetch movies sorted by ratings
      */
     private val topRatedMovies: Unit
-        private get() { //exit early if internet is not connected
+        get() { //exit early if internet is not connected
             if (checkInternetConnection(this)) {
                 updateEmptyStateViews(R.drawable.no_internet_connection, R.string.no_internet_connection, R.drawable.ic_cloud_off, R.string.error_try_again)
                 return
@@ -352,7 +337,7 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
                     //enable refresh action
                     refreshLayout!!.isEnabled = true
                     //verify if the response body or the fetched results are empty/null
-                    if (response.body() == null || response.body()!!.movies == null || response.body()!!.movies.size == 0) {
+                    if (response.body() == null || response.body()!!.movies.isEmpty()) {
                         updateEmptyStateViews(R.drawable.no_search_results, R.string.no_search_results, R.drawable.ic_movie, R.string.error_no_results)
                         return
                     }
@@ -451,21 +436,25 @@ class MainActivity : AppCompatActivity(), OnRefreshListener, OnLoadMoreListener,
      */
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.errorButton -> if ((view as Button).text.toString().trim { it <= ' ' }.equals(getString(R.string.error_try_again), ignoreCase = true)) { //call refresh action on clicking "Try Again"
-                progressBar!!.visibility = View.VISIBLE
-                fromErrorButton = true
-                onRefresh()
-            } else if (view.text.toString().trim { it <= ' ' }.equals(getString(R.string.browse_movies), ignoreCase = true)) { //display movies on clicking "Browse Movies"
-                errorLayout!!.visibility = View.GONE
-                progressBar!!.visibility = View.VISIBLE
-                //reset start page
-                mostPopularMoviesStartPage = 1
-                topRatedMoviesStartPage = 1
-                //display popular movies category by default
-                mostPopularMenuItem!!.isChecked = true
-                popularMovies
-            } else { //close the app on server error
-                finish()
+            R.id.errorButton -> when {
+                (view as Button).text.toString().trim { it <= ' ' }.equals(getString(R.string.error_try_again), ignoreCase = true) -> { //call refresh action on clicking "Try Again"
+                    progressBar!!.visibility = View.VISIBLE
+                    fromErrorButton = true
+                    onRefresh()
+                }
+                view.text.toString().trim { it <= ' ' }.equals(getString(R.string.browse_movies), ignoreCase = true) -> { //display movies on clicking "Browse Movies"
+                    errorLayout!!.visibility = View.GONE
+                    progressBar!!.visibility = View.VISIBLE
+                    //reset start page
+                    mostPopularMoviesStartPage = 1
+                    topRatedMoviesStartPage = 1
+                    //display popular movies category by default
+                    mostPopularMenuItem!!.isChecked = true
+                    popularMovies
+                }
+                else -> { //close the app on server error
+                    finish()
+                }
             }
         }
     }
