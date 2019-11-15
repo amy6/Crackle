@@ -11,11 +11,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-
-import com.bumptech.glide.Glide
-
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.bumptech.glide.Glide
 import example.com.crackle.R
 import example.com.crackle.model.Video
 import example.com.crackle.utils.Constants
@@ -49,7 +47,7 @@ class MovieVideoAdapter(private val context: Context, private val videos: List<V
             holder.name!!.text = video.title
             Glide.with(context)
                     .setDefaultRequestOptions(Utils.setupGlide(Constants.BACKDROP_IMG))
-                    .load(if (video.key != null) uri else "")
+                    .load(uri)
                     .into(holder.imageView!!)
         }
     }
@@ -88,18 +86,16 @@ class MovieVideoAdapter(private val context: Context, private val videos: List<V
         override fun onClick(view: View) {
             //get the current video
             val video = videos!![adapterPosition]
-            if (video != null) {
-                //initialize a new intent with action
-                val intent = Intent(Intent.ACTION_VIEW)
-                //set intent data
-                intent.data = Uri.parse(Constants.YOUTUBE_VID_BASE_URI + video.key)
-                //handle resolving intent
-                if (intent.resolveActivity(context.packageManager) != null) {
-                    context.startActivity(intent)
-                } else {
-                    //display appropriate error message
-                    Toast.makeText(context, R.string.error_video_play, Toast.LENGTH_SHORT).show()
-                }
+            //initialize a new intent with action
+            val intent = Intent(Intent.ACTION_VIEW)
+            //set intent data
+            intent.data = Uri.parse(Constants.YOUTUBE_VID_BASE_URI + video.key)
+            //handle resolving intent
+            if (intent.resolveActivity(context.packageManager) != null) {
+                context.startActivity(intent)
+            } else {
+                //display appropriate error message
+                Toast.makeText(context, R.string.error_video_play, Toast.LENGTH_SHORT).show()
             }
         }
     }

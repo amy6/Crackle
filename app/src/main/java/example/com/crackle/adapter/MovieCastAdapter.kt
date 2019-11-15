@@ -38,7 +38,7 @@ class MovieCastAdapter(private val context: Context, private val castList: List<
         //get the current cast
         val cast = castList!![position]
         //update view data
-        val imageUrl = Constants.IMAGE_URL_SIZE + (cast.profileUrl ?: "")
+        val imageUrl = Constants.IMAGE_URL_SIZE + cast.profileUrl
         Glide.with(context)
                 .setDefaultRequestOptions(Utils.setupGlide(Constants.CAST_IMG))
                 .load(imageUrl)

@@ -6,11 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
-
-import com.bumptech.glide.Glide
-
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.bumptech.glide.Glide
 import example.com.crackle.R
 import example.com.crackle.model.Image
 import example.com.crackle.utils.Constants
@@ -35,10 +33,7 @@ class MovieImageAdapter(private val context: Context, private val imageUrl: List
         ButterKnife.bind(this, view)
 
         //set up url for backdrop images
-        val backdropImageUrl = Constants.IMAGE_URL_SIZE + if (imageUrl!![position].filePath != null)
-            imageUrl[position].filePath
-        else
-            ""
+        val backdropImageUrl = Constants.IMAGE_URL_SIZE + imageUrl!![position].filePath
         Glide.with(context)
                 .setDefaultRequestOptions(Utils.setupGlide(Constants.BACKDROP_IMG))
                 .load(backdropImageUrl)

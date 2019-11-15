@@ -51,10 +51,10 @@ class MovieAdapter(private val context: Context, private var movies: MutableList
                     //set span size depending on the type of view being displayed
                     layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int {
-                            when (getItemViewType(position)) {
-                                Constants.ITEM -> return 1
-                                Constants.PROGRESS -> return layoutManager.spanCount
-                                else -> return -1
+                            return when (getItemViewType(position)) {
+                                Constants.ITEM -> 1
+                                Constants.PROGRESS -> layoutManager.spanCount
+                                else -> -1
                             }
                         }
                     }
