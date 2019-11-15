@@ -28,6 +28,7 @@ import retrofit2.Response
  * A simple [Fragment] subclass.
  */
 class MovieCastFragment : Fragment() {
+
     @JvmField
     @BindView(R.id.recyclerView)
     var recyclerView: RecyclerView? = null
@@ -37,7 +38,9 @@ class MovieCastFragment : Fragment() {
     @JvmField
     @BindView(R.id.progressBar)
     var progressBar: ProgressBar? = null
+
     private var castList: List<Cast>? = null
+
     /**
      * inflates the view for the fragment
      *
@@ -74,12 +77,12 @@ class MovieCastFragment : Fragment() {
             override fun onResponse(call: Call<CreditResults?>, response: Response<CreditResults?>) {
                 progressBar!!.visibility = View.GONE
                 //verify if the response body or the fetched results are empty/null
-                if (response.body() == null || response.body()!!.castList == null) {
+                if (response.body() == null) {
                     return
                 }
                 //update data set, notify the adapter
 //update view visibility accordingly
-                if (response.body()!!.castList.size > 0) {
+                if (response.body()!!.castList.isNotEmpty()) {
                     (castList as ArrayList<Cast>).addAll(response.body()!!.castList)
                     adapter.notifyDataSetChanged()
                     emptyTextView!!.visibility = View.GONE

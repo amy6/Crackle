@@ -31,6 +31,7 @@ import java.text.DecimalFormat
  * A simple [Fragment] subclass.
  */
 class MovieInfoFragment : Fragment() {
+
     @JvmField
     @BindView(R.id.tmdbRating)
     var tmdbRating: TextView? = null
@@ -100,56 +101,55 @@ class MovieInfoFragment : Fragment() {
         //get movie object
         if (arguments != null) {
             val movie: Movie = arguments!!.getParcelable(Constants.MOVIE)!!
-            if (movie != null) { //set up view data
-                plotTextView!!.text = movie.plot
-                releaseDateTextView!!.text = movie.releaseDate
-                val rating = if (movie.userRating == 0.0) getString(R.string.no_ratings) else DecimalFormat.getNumberInstance().format(movie.userRating) + "/10"
-                tmdbRating!!.text = rating
-                ratingBar!!.rating = (movie.userRating / 2f).toFloat()
-                popularity!!.text = DecimalFormat.getNumberInstance().format(movie.popularity)
-                language!!.text = languageMap!![movie.language]
-                if (!TextUtils.isEmpty(movie.homepage)) {
-                    homepage!!.text = movie.homepage
-                }
-                if (!TextUtils.isEmpty(movie.originalTitle)) {
-                    originalTitle!!.text = movie.originalTitle
-                }
+            //set up view data
+            plotTextView!!.text = movie.plot
+            releaseDateTextView!!.text = movie.releaseDate
+            val rating = if (movie.userRating == 0.0) getString(R.string.no_ratings) else DecimalFormat.getNumberInstance().format(movie.userRating) + "/10"
+            tmdbRating!!.text = rating
+            ratingBar!!.rating = (movie.userRating / 2f).toFloat()
+            popularity!!.text = DecimalFormat.getNumberInstance().format(movie.popularity)
+            language!!.text = languageMap!![movie.language]
+            if (!TextUtils.isEmpty(movie.homepage)) {
+                homepage!!.text = movie.homepage
+            }
+            if (!TextUtils.isEmpty(movie.originalTitle)) {
+                originalTitle!!.text = movie.originalTitle
+            }
 
-                //invoke movie credits call passing the movie id and API KEY
-                val creditResultsCall = client.getMovieCredits(movie.movieId, Constants.API_KEY)
-                //invoke API call asynchronously
-                creditResultsCall.enqueue(object : Callback<CreditResults?> {
-                    override fun onResponse(call: Call<CreditResults?>, response: Response<CreditResults?>) { //verify if the response body or the fetched results are empty/null
-                        if (response.body() == null || response.body()!!.crewList == null || response.body()!!.crewList.size == 0) {
-                            return
-                        }
-                        //update data set, update the views accordingly
-                        crewList.addAll(response.body()!!.crewList)
-                        directorTextView!!.text = ""
-                        for (i in crewList.indices) {
-                            if (crewList[i].job.equals("director", ignoreCase = true)) {
-                                directorTextView!!.append(crewList[i].name)
-                                if (i < crewList.size - 1 && crewList[i + 1].job.equals("director", ignoreCase = true)) {
-                                    directorTextView!!.append("\n")
-                                }
+            //invoke movie credits call passing the movie id and API KEY
+            val creditResultsCall = client.getMovieCredits(movie.movieId, Constants.API_KEY)
+            //invoke API call asynchronously
+            creditResultsCall.enqueue(object : Callback<CreditResults?> {
+                override fun onResponse(call: Call<CreditResults?>, response: Response<CreditResults?>) { //verify if the response body or the fetched results are empty/null
+                    if (response.body() == null || response.body()!!.crewList.isEmpty()) {
+                        return
+                    }
+                    //update data set, update the views accordingly
+                    crewList.addAll(response.body()!!.crewList)
+                    directorTextView!!.text = ""
+                    for (i in crewList.indices) {
+                        if (crewList[i].job.equals("director", ignoreCase = true)) {
+                            directorTextView!!.append(crewList[i].name)
+                            if (i < crewList.size - 1 && crewList[i + 1].job.equals("director", ignoreCase = true)) {
+                                directorTextView!!.append("\n")
                             }
                         }
                     }
-
-                    override fun onFailure(call: Call<CreditResults?>, t: Throwable) {
-                        Toast.makeText(context, R.string.error_movie_director, Toast.LENGTH_SHORT).show()
-                    }
-                })
-                //display trailer thumbnails
-                if (movie.videoResults != null && movie.videoResults!!.videos != null && movie.videoResults!!.videos.size > 0) {
-                    recyclerView!!.visibility = View.VISIBLE
-                    emptyTextView!!.visibility = View.GONE
-                    videoList.addAll(movie.videoResults!!.videos)
-                    adapter.notifyDataSetChanged()
-                } else {
-                    emptyTextView!!.visibility = View.VISIBLE
-                    recyclerView!!.visibility = View.GONE
                 }
+
+                override fun onFailure(call: Call<CreditResults?>, t: Throwable) {
+                    Toast.makeText(context, R.string.error_movie_director, Toast.LENGTH_SHORT).show()
+                }
+            })
+            //display trailer thumbnails
+            if (movie.videoResults != null && movie.videoResults!!.videos.isNotEmpty()) {
+                recyclerView!!.visibility = View.VISIBLE
+                emptyTextView!!.visibility = View.GONE
+                videoList.addAll(movie.videoResults!!.videos)
+                adapter.notifyDataSetChanged()
+            } else {
+                emptyTextView!!.visibility = View.VISIBLE
+                recyclerView!!.visibility = View.GONE
             }
         }
     }

@@ -27,6 +27,7 @@ import retrofit2.Response
  * A simple [Fragment] subclass.
  */
 class MovieReviewsFragment : Fragment() {
+
     @JvmField
     @BindView(R.id.recyclerView)
     var recyclerView: RecyclerView? = null
@@ -68,34 +69,33 @@ class MovieReviewsFragment : Fragment() {
 
         if (arguments != null) {
             val movie: Movie = arguments!!.getParcelable(Constants.MOVIE)!!
-            if (movie != null) { //invoke movie reviews call passing the movie id and API KEY
-                val call = client.getMovieReviews(movie.movieId, Constants.API_KEY)
-                //invoke API call asynchronously
-                call.enqueue(object : Callback<ReviewResults?> {
-                    override fun onResponse(call: Call<ReviewResults?>, response: Response<ReviewResults?>) {
-                        progressBar!!.visibility = View.GONE
-                        //verify if the response body or the fetched results are empty/null
-                        if (response.body() == null || response.body()!!.reviewList == null) {
-                            return
-                        }
-                        //update data set, notify the adapter, update view visibility accordingly
-                        if (response.body()!!.reviewList.size > 0) {
-                            reviewList.addAll(response.body()!!.reviewList)
-                            adapter.notifyDataSetChanged()
-                            emptyTextView!!.visibility = View.GONE
-                            recyclerView!!.visibility = View.VISIBLE
-                        } else {
-                            recyclerView!!.visibility = View.GONE
-                            emptyTextView!!.visibility = View.VISIBLE
-                        }
+            //invoke movie reviews call passing the movie id and API KEY
+            val call = client.getMovieReviews(movie.movieId, Constants.API_KEY)
+            //invoke API call asynchronously
+            call.enqueue(object : Callback<ReviewResults?> {
+                override fun onResponse(call: Call<ReviewResults?>, response: Response<ReviewResults?>) {
+                    progressBar!!.visibility = View.GONE
+                    //verify if the response body or the fetched results are empty/null
+                    if (response.body() == null) {
+                        return
                     }
+                    //update data set, notify the adapter, update view visibility accordingly
+                    if (response.body()!!.reviewList.isNotEmpty()) {
+                        reviewList.addAll(response.body()!!.reviewList)
+                        adapter.notifyDataSetChanged()
+                        emptyTextView!!.visibility = View.GONE
+                        recyclerView!!.visibility = View.VISIBLE
+                    } else {
+                        recyclerView!!.visibility = View.GONE
+                        emptyTextView!!.visibility = View.VISIBLE
+                    }
+                }
 
-                    override fun onFailure(call: Call<ReviewResults?>, t: Throwable) {
-                        progressBar!!.visibility = View.GONE
-                        Toast.makeText(context, R.string.error_movie_review, Toast.LENGTH_SHORT).show()
-                    }
-                })
-            }
+                override fun onFailure(call: Call<ReviewResults?>, t: Throwable) {
+                    progressBar!!.visibility = View.GONE
+                    Toast.makeText(context, R.string.error_movie_review, Toast.LENGTH_SHORT).show()
+                }
+            })
         }
     }
 
